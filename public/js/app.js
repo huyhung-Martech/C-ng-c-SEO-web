@@ -878,7 +878,7 @@ function renderNetworkGraph(data) {
     if (broken.length === 0) {
       brokenContainer.innerHTML = `
         <div class="clean-links-notice">
-          <strong>✓ Hoàn hảo!</strong> Hệ thống đã gửi HEAD requests kiểm tra toàn bộ liên kết nội bộ và không tìm thấy lỗi 404 nào.
+          <strong>✓ Hoàn hảo!</strong> Hệ thống đã kích hoạt xác thực hai tầng (Two-Phase GET Verification) kiểm tra toàn bộ liên kết nội bộ và không phát hiện bất kỳ liên kết gãy (HTTP 404/410) nào.
         </div>
       `;
     } else {
@@ -899,6 +899,28 @@ function renderNetworkGraph(data) {
         `;
         brokenContainer.appendChild(item);
       });
+    }
+
+    const authRestricted = net.auth_restricted_links || [];
+    if (authRestricted.length > 0) {
+      const authBox = document.createElement("div");
+      authBox.className = "auth-links-notice";
+      authBox.style.cssText = "margin-top: 14px; padding: 12px 16px; border-radius: 8px; border: 1px solid rgba(245, 158, 11, 0.3); background: rgba(245, 158, 11, 0.08);";
+      authBox.innerHTML = `
+        <div style="font-size:0.88rem; color:#f59e0b; font-weight:600; margin-bottom:6px;">
+          ℹ️ Ghi nhận ${authRestricted.length} liên kết yêu cầu xác thực / phân quyền (HTTP 401/403) — Đã được phân loại an toàn, không tính vào lỗi gãy 404:
+        </div>
+        <div style="font-size:0.82rem; color:var(--text-muted); display:flex; flex-direction:column; gap:6px;">
+          ${authRestricted.map(a => `
+            <div>
+              <span class="badge badge-amber font-mono" style="font-size:0.75rem;">HTTP ${a.status}</span>
+              <span class="font-mono text-cyan">${escapeHtml(a.target_url)}</span>
+              <span style="opacity:0.75;"> (tại: ${escapeHtml(a.source_url)})</span>
+            </div>
+          `).join("")}
+        </div>
+      `;
+      brokenContainer.appendChild(authBox);
     }
   }
 

@@ -12,6 +12,7 @@ Industrial-Strength Autonomous AI Agent & Recursive Network Crawler
 """
 
 import http.server
+import http.cookiejar
 import socketserver
 import urllib.request
 import urllib.parse
@@ -22,6 +23,8 @@ import re
 import os
 import sys
 import time
+import gzip
+import zlib
 from collections import Counter, defaultdict
 from html.parser import HTMLParser
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -34,10 +37,26 @@ ssl_context = ssl.create_default_context()
 ssl_context.check_hostname = False
 ssl_context.verify_mode = ssl.CERT_NONE
 
+# Global CookieJar and Opener for persistent sessions (preserving Cloudflare & session cookies)
+cookie_jar = http.cookiejar.CookieJar()
+cookie_processor = urllib.request.HTTPCookieProcessor(cookie_jar)
+https_handler = urllib.request.HTTPSHandler(context=ssl_context)
+browser_opener = urllib.request.build_opener(cookie_processor, https_handler)
+
+# High-fidelity modern Chromium browser fingerprint headers
 DEFAULT_HEADERS = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36",
-    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
-    "Accept-Language": "vi,en-US;q=0.9,en;q=0.8"
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+    "Accept-Language": "vi-VN,vi;q=0.9,en-US;q=0.8,en;q=0.7",
+    "Cache-Control": "max-age=0",
+    "Sec-Ch-Ua": '"Chromium";v="128", "Not;A=Brand";v="24", "Google Chrome";v="128"',
+    "Sec-Ch-Ua-Mobile": "?0",
+    "Sec-Ch-Ua-Platform": '"Windows"',
+    "Sec-Fetch-Dest": "document",
+    "Sec-Fetch-Mode": "navigate",
+    "Sec-Fetch-Site": "same-origin",
+    "Sec-Fetch-User": "?1",
+    "Upgrade-Insecure-Requests": "1"
 }
 
 STATIC_EXTENSIONS = (
@@ -184,16 +203,35 @@ class FastHTMLParser(HTMLParser):
                 self.text_content.append(stripped)
 
 
-def fetch_url(url, user_agent=None, method="GET", timeout=10):
+def fetch_url(url, user_agent=None, method="GET", timeout=10, referer=None, extra_headers=None):
     headers = dict(DEFAULT_HEADERS)
     if user_agent:
         headers["User-Agent"] = user_agent
+    if referer:
+        headers["Referer"] = referer
+    if extra_headers:
+        headers.update(extra_headers)
+
     req = urllib.request.Request(url, headers=headers, method=method)
     start_time = time.time()
     try:
-        with urllib.request.urlopen(req, context=ssl_context, timeout=timeout) as response:
+        with browser_opener.open(req, timeout=timeout) as response:
             latency_ms = int((time.time() - start_time) * 1000)
-            content = response.read()
+            raw_bytes = response.read()
+            encoding = response.headers.get("Content-Encoding", "").lower()
+            if encoding == "gzip":
+                try:
+                    content = gzip.decompress(raw_bytes)
+                except Exception:
+                    content = raw_bytes
+            elif encoding == "deflate":
+                try:
+                    content = zlib.decompress(raw_bytes)
+                except Exception:
+                    content = raw_bytes
+            else:
+                content = raw_bytes
+
             charset = response.headers.get_content_charset() or "utf-8"
             try:
                 html = content.decode(charset, errors="replace")
@@ -211,12 +249,19 @@ def fetch_url(url, user_agent=None, method="GET", timeout=10):
     except urllib.error.HTTPError as e:
         latency_ms = int((time.time() - start_time) * 1000)
         try:
-            body = e.read().decode("utf-8", errors="replace")
+            raw_body = e.read()
+            encoding = e.headers.get("Content-Encoding", "").lower() if e.headers else ""
+            if encoding == "gzip":
+                try:
+                    raw_body = gzip.decompress(raw_body)
+                except Exception:
+                    pass
+            body = raw_body.decode("utf-8", errors="replace")
         except Exception:
             body = ""
         return {
             "status": e.code,
-            "headers": dict(e.headers),
+            "headers": dict(e.headers) if e.headers else {},
             "url": url,
             "latency_ms": latency_ms,
             "html": body,
@@ -233,6 +278,80 @@ def fetch_url(url, user_agent=None, method="GET", timeout=10):
             "html": "",
             "size_bytes": 0,
             "error": str(e)
+        }
+
+
+def verify_link_health(url, referer=None, timeout=6):
+    """
+    Two-Phase Enterprise Link Health Verification:
+    - Phase 1: Fast Probe (HEAD request with Chromium headers and matching referer).
+    - Phase 2: If Phase 1 returns ANY non-200 code (especially 401, 403, 405, 500),
+      NEVER immediately flag it as broken. Many modern CDNs (Cloudflare, Akamai), WAFs,
+      and dynamic frameworks (Next.js, WordPress) reject HEAD requests from automated scripts,
+      while regular user browsers navigate via GET and receive 200 OK.
+      Immediately fall back to a full GET request before determining link health.
+    - SEO Classification:
+      * 200-399 -> HEALTHY (False positive 401 completely eliminated)
+      * 404, 410 -> TRUE BROKEN LINK (Page does not exist)
+      * 401, 403 -> ACCESS RESTRICTED (Auth/Session required, NOT a broken link)
+      * 0 / Connection Error -> UNREACHABLE
+    """
+    # Phase 1: Fast HEAD attempt
+    res = fetch_url(url, method="HEAD", timeout=timeout, referer=referer)
+    status = res.get("status", 0)
+
+    if 200 <= status < 400:
+        return {
+            "status": status,
+            "is_broken": False,
+            "is_auth_restricted": False,
+            "category": "HEALTHY",
+            "error": None
+        }
+
+    # Phase 2: Fallback to full GET request
+    get_res = fetch_url(url, method="GET", timeout=timeout, referer=referer)
+    get_status = get_res.get("status", 0)
+
+    if 200 <= get_status < 400:
+        return {
+            "status": get_status,
+            "is_broken": False,
+            "is_auth_restricted": False,
+            "category": "HEALTHY",
+            "error": None
+        }
+    elif get_status in (404, 410):
+        return {
+            "status": get_status,
+            "is_broken": True,
+            "is_auth_restricted": False,
+            "category": "BROKEN_404",
+            "error": f"HTTP {get_status} (Trang không tồn tại)"
+        }
+    elif get_status in (401, 403):
+        return {
+            "status": get_status,
+            "is_broken": False,
+            "is_auth_restricted": True,
+            "category": "AUTH_RESTRICTED",
+            "error": f"HTTP {get_status} (Yêu cầu đăng nhập / Phân quyền bảo mật)"
+        }
+    elif get_status == 0:
+        return {
+            "status": 0,
+            "is_broken": True,
+            "is_auth_restricted": False,
+            "category": "UNREACHABLE",
+            "error": get_res.get("error") or "Không thể kết nối (Timeout / DNS Failure)"
+        }
+    else:
+        return {
+            "status": get_status,
+            "is_broken": False,
+            "is_auth_restricted": False,
+            "category": f"SERVER_STATUS_{get_status}",
+            "error": f"HTTP {get_status}"
         }
 
 
@@ -517,25 +636,42 @@ def recursive_network_crawl(root_url, sitemap_html="", max_pages=15, stream_call
                         "speed": speed
                     })
 
-    # LIVE BROKEN LINK CHECKER (Testing internal links found)
+    # LIVE BROKEN LINK CHECKER (Two-Phase Enterprise Health Verification)
     if stream_callback:
-        stream_callback({"type": "stage", "msg": "Đang kiểm tra kết nối các liên kết nội bộ để phát hiện link 404..."})
+        stream_callback({"type": "stage", "msg": "Đang kiểm tra kết nối các liên kết nội bộ với xác thực GET hai tầng..."})
 
     broken_links = []
-    links_to_test = list(all_internal_links_seen)[:20]
+    auth_restricted_links = []
+    links_to_test = list(all_internal_links_seen)[:30]
     with ThreadPoolExecutor(max_workers=5) as executor:
-        f_pings = {executor.submit(fetch_url, l, None, "HEAD", 6): l for l in links_to_test}
+        f_pings = {
+            executor.submit(
+                verify_link_health,
+                l,
+                list(inlinks_map.get(l, []))[0] if inlinks_map.get(l) else base_clean,
+                6
+            ): l for l in links_to_test
+        }
         for fut in as_completed(f_pings):
             target_l = f_pings[fut]
             try:
-                ping_res = fut.result()
-                if ping_res["status"] == 404 or (ping_res["status"] >= 400 and ping_res["status"] != 403):
-                    source_candidates = list(inlinks_map.get(target_l, []))
+                check = fut.result()
+                source_candidates = list(inlinks_map.get(target_l, []))
+                src = source_candidates[0] if source_candidates else base_clean
+
+                if check["is_broken"]:
                     broken_links.append({
-                        "source_url": source_candidates[0] if source_candidates else base_clean,
+                        "source_url": src,
                         "broken_target_url": target_l,
-                        "status": ping_res["status"],
-                        "error": f"HTTP {ping_res['status']}"
+                        "status": check["status"],
+                        "error": check["error"]
+                    })
+                elif check["is_auth_restricted"]:
+                    auth_restricted_links.append({
+                        "source_url": src,
+                        "target_url": target_l,
+                        "status": check["status"],
+                        "reason": check["error"]
                     })
             except Exception:
                 pass
@@ -568,6 +704,7 @@ def recursive_network_crawl(root_url, sitemap_html="", max_pages=15, stream_call
     return {
         "subpages": subpages_list,
         "broken_links": broken_links,
+        "auth_restricted_links": auth_restricted_links,
         "orphan_pages": orphan_pages,
         "dead_end_pages": dead_end_pages,
         "total_internal_links": sum(len(v) for v in outlinks_map.values()),
@@ -1056,9 +1193,13 @@ def build_production_patches(hostname, raw_url, main_audit, broken_links):
     # 1. Nginx 301 Redirect Patch with Broken Links fix
     broken_rules = ""
     for b in broken_links:
-        broken_path = urllib.parse.urlparse(b["broken_target_url"]).path
-        fixed_path = broken_path.replace("/vichinh-sach-bao-mat", "/vi/chinh-sach-bao-mat")
-        broken_rules += f"    location = {broken_path} {{\n        return 301 https://{www}{fixed_path};\n    }}\n"
+        target_url = b.get("broken_target_url", "")
+        broken_path = urllib.parse.urlparse(target_url).path
+        if broken_path and broken_path != "/":
+            clean_dest = re.sub(r'/{2,}', '/', broken_path)
+            if clean_dest == broken_path:
+                clean_dest = "/"
+            broken_rules += f"    location = {broken_path} {{\n        return 301 https://{www}{clean_dest};\n    }}\n"
 
     nginx_patch = f"""# ==============================================================================
 # BẢN VÁ NGINX CHUẨN SẢN XUẤT (SỬA LỖI DOMAIN SPLITTING & LINK GÃY 404)
@@ -1240,8 +1381,8 @@ def execute_full_audit_pipeline(raw_url, mode="deep", max_pages=12, quality_thre
         f_robots = executor.submit(fetch_url, f"{scheme}://{hostname}/robots.txt")
         f_sitemap = executor.submit(fetch_url, f"{scheme}://{hostname}/sitemap.xml")
         f_llms = executor.submit(fetch_url, f"{scheme}://{hostname}/llms.txt")
-        f_non_www = executor.submit(fetch_url, f"{scheme}://{non_www_domain}", None, "HEAD")
-        f_www = executor.submit(fetch_url, f"{scheme}://{www_domain}", None, "HEAD")
+        f_non_www = executor.submit(fetch_url, f"{scheme}://{non_www_domain}", None, "GET")
+        f_www = executor.submit(fetch_url, f"{scheme}://{www_domain}", None, "GET")
         f_bot_gpt = executor.submit(fetch_url, base_clean, "Mozilla/5.0 (compatible; GPTBot/1.2; +https://openai.com/gptbot)")
         f_bot_google = executor.submit(fetch_url, base_clean, "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)")
         f_bot_perplexity = executor.submit(fetch_url, base_clean, "Mozilla/5.0 (compatible; PerplexityBot/1.0; +https://perplexity.ai/perplexitybot)")
@@ -1382,6 +1523,7 @@ def execute_full_audit_pipeline(raw_url, mode="deep", max_pages=12, quality_thre
     crawl_res = recursive_network_crawl(base_clean, res_sitemap["html"], max_pages=max_pages, stream_callback=stream_callback)
     subpages = crawl_res["subpages"]
     broken_links = crawl_res["broken_links"]
+    auth_restricted_links = crawl_res.get("auth_restricted_links", [])
     orphan_pages = crawl_res["orphan_pages"]
     dead_end_pages = crawl_res["dead_end_pages"]
 
@@ -1398,7 +1540,7 @@ def execute_full_audit_pipeline(raw_url, mode="deep", max_pages=12, quality_thre
             "fix": "Phân chia lại từ khóa chính và liên kết bài viết con về bài trụ cột (Pillar Content)."
         })
 
-    # Broken links issue
+    # Broken links issue (Only verified 404/410/dead links)
     if broken_links:
         tech_score -= min(25, len(broken_links) * 10)
         for b in broken_links:
@@ -1406,9 +1548,21 @@ def execute_full_audit_pipeline(raw_url, mode="deep", max_pages=12, quality_thre
                 "phase": 2,
                 "severity": "CRITICAL",
                 "category": "Broken Internal Link (Liên kết gãy)",
-                "title": f"Phát hiện liên kết nội bộ trả về HTTP 404: {b['broken_target_url']}",
+                "title": f"Phát hiện liên kết nội bộ trả về {b.get('error', 'HTTP 404')}: {b['broken_target_url']}",
                 "description": f"Liên kết được tìm thấy tại trang: {b['source_url']}. Link 404 trong navigation làm lãng phí crawl budget của Google.",
                 "fix": f"Sửa lại URL trong mã nguồn hoặc cấu hình Nginx 301 từ {b['broken_target_url']} sang URL đúng."
+            })
+
+    # Auth/Access Restricted links (HTTP 401/403) - Informational, does NOT penalize tech_score!
+    if auth_restricted_links:
+        for a in auth_restricted_links:
+            issues.append({
+                "phase": 2,
+                "severity": "LOW",
+                "category": "Access-Restricted Links (Khu vực bảo mật / phân quyền)",
+                "title": f"Liên kết nội bộ yêu cầu xác thực / phân quyền (HTTP {a['status']}): {a['target_url']}",
+                "description": f"Liên kết tìm thấy tại trang: {a['source_url']}. Đây là URL yêu cầu quyền truy cập (Auth/Session), không phải liên kết gãy 404.",
+                "fix": "Nếu là trang quản trị hoặc nội bộ, hãy đảm bảo trang được chặn index bằng thẻ meta noindex hoặc loại bỏ khỏi menu công khai."
             })
 
     # Factual Ratio & llms.txt
@@ -1588,6 +1742,7 @@ Khi người dùng truy vấn thông tin về học phí, tuyển sinh hoặc ch
             "total_pages_crawled": len(subpages),
             "total_internal_links": crawl_res["total_internal_links"],
             "broken_links": broken_links,
+            "auth_restricted_links": auth_restricted_links,
             "orphan_pages": orphan_pages,
             "dead_end_pages": dead_end_pages
         },
@@ -1729,9 +1884,13 @@ class AuditHTTPHandler(http.server.SimpleHTTPRequestHandler):
         self.wfile.write(body)
 
 
+class ThreadedTCPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
+    daemon_threads = True
+    allow_reuse_address = True
+
+
 def run_server():
-    socketserver.TCPServer.allow_reuse_address = True
-    with socketserver.TCPServer(("0.0.0.0", PORT), AuditHTTPHandler) as httpd:
+    with ThreadedTCPServer(("0.0.0.0", PORT), AuditHTTPHandler) as httpd:
         print(f"================================================================")
         print(f"🚀 SEO MASTER SUITE ENGINE ACTIVE AT: http://localhost:{PORT}")
         print(f"   Recursive Network Crawler + Link Graph + Real-time SSE Stream")
