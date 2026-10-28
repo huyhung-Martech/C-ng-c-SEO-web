@@ -1157,6 +1157,393 @@ function renderNetworkGraph(data) {
 
   // Render Outbound Authority & Anchors
   renderBacklinkAuthority(data.backlink_authority || {});
+
+  // Trigger Interactive Force-Directed Link Graph Visualizer (Obsidian / Screaming Frog Canvas)
+  initForceGraphEngine(subpages, net.edges || [], broken, orphan);
+}
+
+// ==============================================================================
+// FORCE-DIRECTED LINK GRAPH SIMULATION ENGINE (Obsidian / Screaming Frog Style)
+// ==============================================================================
+let forceSimulation = {
+  running: true,
+  showLabels: true,
+  nodes: [],
+  edges: [],
+  pan: { x: 0, y: 0 },
+  zoom: 1.0,
+  isDraggingNode: null,
+  isPanning: false,
+  startMouse: { x: 0, y: 0 },
+  hoveredNode: null,
+  animId: null
+};
+
+function initForceGraphEngine(subpages, edges, brokenLinks = [], orphanPages = []) {
+  const canvas = document.getElementById("forceGraphCanvas");
+  const wrap = document.getElementById("forceCanvasWrap");
+  const placeholder = document.getElementById("graphPlaceholder");
+  const tooltip = document.getElementById("graphTooltipHud");
+  if (!canvas || !wrap) return;
+
+  if (forceSimulation.animId) {
+    cancelAnimationFrame(forceSimulation.animId);
+    forceSimulation.animId = null;
+  }
+
+  if (!subpages || subpages.length === 0) {
+    if (placeholder) placeholder.style.display = "flex";
+    return;
+  }
+  if (placeholder) placeholder.style.display = "none";
+
+  const rect = wrap.getBoundingClientRect();
+  const dpr = window.devicePixelRatio || 1;
+  const width = rect.width || 940;
+  const height = rect.height || 520;
+
+  canvas.width = width * dpr;
+  canvas.height = height * dpr;
+  const ctx = canvas.getContext("2d");
+  ctx.scale(dpr, dpr);
+
+  const nodeMap = new Map();
+  const orphanSet = new Set((orphanPages || []).map(o => o.url));
+  const brokenSet = new Set((brokenLinks || []).map(b => b.broken_target_url));
+
+  const nodes = subpages.map((p, idx) => {
+    const isHome = idx === 0;
+    const isOrphan = orphanSet.has(p.url) || (p.inlinks_count === 0 && !isHome);
+    const isBroken = brokenSet.has(p.url) || p.status === 404;
+    const isThin = (p.word_count || 0) < 300;
+    const isPillar = (p.inlinks_count || 0) >= 4 || (p.pruning_action === "HEALTHY" && p.word_count > 1200);
+
+    let nodeType = "healthy";
+    let color = "#10b981";
+    let radius = 7;
+
+    if (isHome) {
+      nodeType = "home";
+      color = "#06b6d4";
+      radius = 16;
+    } else if (isBroken) {
+      nodeType = "broken";
+      color = "#f43f5e";
+      radius = 9;
+    } else if (isOrphan) {
+      nodeType = "orphan";
+      color = "#f43f5e";
+      radius = 7;
+    } else if (isPillar) {
+      nodeType = "pillar";
+      color = "#a855f7";
+      radius = 11;
+    } else if (isThin) {
+      nodeType = "thin";
+      color = "#f59e0b";
+      radius = 6;
+    }
+
+    const angle = (idx / Math.max(1, subpages.length)) * Math.PI * 2 + (Math.random() * 0.4 - 0.2);
+    const dist = isHome ? 0 : 80 + Math.random() * (Math.min(width, height) * 0.35);
+
+    const node = {
+      id: p.url,
+      url: p.url,
+      title: p.title || p.url,
+      x: width / 2 + Math.cos(angle) * dist,
+      y: height / 2 + Math.sin(angle) * dist,
+      vx: (Math.random() - 0.5) * 2,
+      vy: (Math.random() - 0.5) * 2,
+      radius: radius,
+      color: color,
+      nodeType: nodeType,
+      inlinks: p.inlinks_count || 0,
+      outlinks: p.outlinks_count || 0,
+      words: p.word_count || 0,
+      score: p.page_score || 80,
+      isHome: isHome
+    };
+    nodeMap.set(p.url, node);
+    return node;
+  });
+
+  const resolvedEdges = [];
+  (edges || []).forEach(e => {
+    const srcNode = nodeMap.get(e.source);
+    const tgtNode = nodeMap.get(e.target);
+    if (srcNode && tgtNode && srcNode !== tgtNode) {
+      resolvedEdges.push({ source: srcNode, target: tgtNode });
+    }
+  });
+
+  if (resolvedEdges.length === 0 && nodes.length > 1) {
+    const homeNode = nodes[0];
+    for (let i = 1; i < nodes.length; i++) {
+      if (!orphanSet.has(nodes[i].url)) {
+        resolvedEdges.push({ source: homeNode, target: nodes[i] });
+      }
+    }
+  }
+
+  forceSimulation.nodes = nodes;
+  forceSimulation.edges = resolvedEdges;
+  forceSimulation.pan = { x: 0, y: 0 };
+  forceSimulation.zoom = 1.0;
+  forceSimulation.running = true;
+
+  // Toolbar actions
+  const btnReset = document.getElementById("btnGraphResetZoom");
+  if (btnReset) {
+    btnReset.onclick = () => {
+      forceSimulation.pan = { x: 0, y: 0 };
+      forceSimulation.zoom = 1.0;
+    };
+  }
+
+  const btnPause = document.getElementById("btnGraphPause");
+  if (btnPause) {
+    btnPause.onclick = () => {
+      forceSimulation.running = !forceSimulation.running;
+      btnPause.textContent = forceSimulation.running ? "⏸️ Pause" : "▶️ Play";
+      btnPause.classList.toggle("active", !forceSimulation.running);
+    };
+  }
+
+  const btnLabels = document.getElementById("btnGraphLabels");
+  if (btnLabels) {
+    btnLabels.onclick = () => {
+      forceSimulation.showLabels = !forceSimulation.showLabels;
+      btnLabels.classList.toggle("active", forceSimulation.showLabels);
+    };
+  }
+
+  setupGraphInteractions(wrap, canvas, tooltip, width, height);
+
+  // Physics simulation loop
+  function step() {
+    if (forceSimulation.running) {
+      const repulseStrength = 360;
+      for (let i = 0; i < nodes.length; i++) {
+        const n1 = nodes[i];
+        for (let j = i + 1; j < nodes.length; j++) {
+          const n2 = nodes[j];
+          let dx = n2.x - n1.x;
+          let dy = n2.y - n1.y;
+          let distSq = dx * dx + dy * dy + 0.1;
+          let dist = Math.sqrt(distSq);
+          if (dist < 320) {
+            let force = (repulseStrength / distSq);
+            let fx = (dx / dist) * force;
+            let fy = (dy / dist) * force;
+            if (n1 !== forceSimulation.isDraggingNode) { n1.vx -= fx; n1.vy -= fy; }
+            if (n2 !== forceSimulation.isDraggingNode) { n2.vx += fx; n2.vy += fy; }
+          }
+        }
+      }
+
+      const springLength = 80;
+      const springK = 0.045;
+      for (let i = 0; i < resolvedEdges.length; i++) {
+        const e = resolvedEdges[i];
+        let dx = e.target.x - e.source.x;
+        let dy = e.target.y - e.source.y;
+        let dist = Math.sqrt(dx * dx + dy * dy) || 1;
+        let force = (dist - springLength) * springK;
+        let fx = (dx / dist) * force;
+        let fy = (dy / dist) * force;
+        if (e.source !== forceSimulation.isDraggingNode) { e.source.vx += fx; e.source.vy += fy; }
+        if (e.target !== forceSimulation.isDraggingNode) { e.target.vx -= fx; e.target.vy -= fy; }
+      }
+
+      const cx = width / 2;
+      const cy = height / 2;
+      for (let i = 0; i < nodes.length; i++) {
+        const n = nodes[i];
+        if (n === forceSimulation.isDraggingNode) continue;
+        n.vx += (cx - n.x) * 0.008;
+        n.vy += (cy - n.y) * 0.008;
+
+        n.vx *= 0.88;
+        n.vy *= 0.88;
+
+        n.x += n.vx;
+        n.y += n.vy;
+      }
+    }
+
+    drawGraph(ctx, width, height);
+    forceSimulation.animId = requestAnimationFrame(step);
+  }
+
+  step();
+}
+
+function setupGraphInteractions(wrap, canvas, tooltip, width, height) {
+  function getCoords(e) {
+    const rect = canvas.getBoundingClientRect();
+    const screenX = (e.clientX - rect.left) * (width / rect.width);
+    const screenY = (e.clientY - rect.top) * (height / rect.height);
+    const worldX = (screenX - (width / 2 + forceSimulation.pan.x)) / forceSimulation.zoom + width / 2;
+    const worldY = (screenY - (height / 2 + forceSimulation.pan.y)) / forceSimulation.zoom + height / 2;
+    return { worldX, worldY, screenX, screenY, clientX: e.clientX, clientY: e.clientY };
+  }
+
+  function findNode(worldX, worldY) {
+    for (let i = forceSimulation.nodes.length - 1; i >= 0; i--) {
+      const n = forceSimulation.nodes[i];
+      const dx = n.x - worldX;
+      const dy = n.y - worldY;
+      if (dx * dx + dy * dy <= (n.radius + 8) * (n.radius + 8)) {
+        return n;
+      }
+    }
+    return null;
+  }
+
+  canvas.onmousedown = (e) => {
+    const c = getCoords(e);
+    const hit = findNode(c.worldX, c.worldY);
+    if (hit) {
+      forceSimulation.isDraggingNode = hit;
+      hit.vx = 0;
+      hit.vy = 0;
+    } else {
+      forceSimulation.isPanning = true;
+      forceSimulation.startMouse = { x: e.clientX, y: e.clientY };
+    }
+  };
+
+  window.onmousemove = (e) => {
+    if (forceSimulation.isDraggingNode) {
+      const c = getCoords(e);
+      forceSimulation.isDraggingNode.x = c.worldX;
+      forceSimulation.isDraggingNode.y = c.worldY;
+      forceSimulation.isDraggingNode.vx = 0;
+      forceSimulation.isDraggingNode.vy = 0;
+    } else if (forceSimulation.isPanning) {
+      const dx = e.clientX - forceSimulation.startMouse.x;
+      const dy = e.clientY - forceSimulation.startMouse.y;
+      forceSimulation.pan.x += dx;
+      forceSimulation.pan.y += dy;
+      forceSimulation.startMouse = { x: e.clientX, y: e.clientY };
+    } else {
+      const c = getCoords(e);
+      const hit = findNode(c.worldX, c.worldY);
+      forceSimulation.hoveredNode = hit;
+      if (hit && tooltip) {
+        tooltip.style.display = "block";
+        const wrapRect = wrap.getBoundingClientRect();
+        let left = e.clientX - wrapRect.left + 15;
+        let top = e.clientY - wrapRect.top + 15;
+        if (left + 280 > wrapRect.width) left = wrapRect.width - 290;
+        if (top + 110 > wrapRect.height) top = wrapRect.height - 120;
+        tooltip.style.left = `${Math.max(10, left)}px`;
+        tooltip.style.top = `${Math.max(10, top)}px`;
+        tooltip.innerHTML = `
+          <div class="graph-tooltip-title">${escapeHtml(hit.title)}</div>
+          <div class="graph-tooltip-url font-mono">${escapeHtml(hit.url)}</div>
+          <div class="graph-tooltip-stats font-mono">
+            <span>📥 Inlinks: <strong>${hit.inlinks}</strong></span>
+            <span>📤 Outlinks: <strong>${hit.outlinks}</strong></span>
+            <span>📝 ${hit.words.toLocaleString()} từ</span>
+            <span class="badge ${hit.nodeType === 'broken' || hit.nodeType === 'orphan' ? 'badge-rose' : 'badge-cyan'}">${hit.nodeType.toUpperCase()}</span>
+          </div>
+        `;
+      } else if (tooltip) {
+        tooltip.style.display = "none";
+      }
+    }
+  };
+
+  window.onmouseup = () => {
+    forceSimulation.isDraggingNode = null;
+    forceSimulation.isPanning = false;
+  };
+
+  canvas.onwheel = (e) => {
+    e.preventDefault();
+    const zoomDelta = e.deltaY < 0 ? 1.12 : 0.89;
+    forceSimulation.zoom = Math.max(0.4, Math.min(3.5, forceSimulation.zoom * zoomDelta));
+  };
+}
+
+function drawGraph(ctx, width, height) {
+  ctx.clearRect(0, 0, width, height);
+
+  ctx.save();
+  ctx.translate(width / 2 + forceSimulation.pan.x, height / 2 + forceSimulation.pan.y);
+  ctx.scale(forceSimulation.zoom, forceSimulation.zoom);
+  ctx.translate(-width / 2, -height / 2);
+
+  const hovered = forceSimulation.hoveredNode;
+
+  // Draw Edges
+  for (let i = 0; i < forceSimulation.edges.length; i++) {
+    const e = forceSimulation.edges[i];
+    const isConn = hovered && (e.source === hovered || e.target === hovered);
+
+    ctx.beginPath();
+    ctx.moveTo(e.source.x, e.source.y);
+    ctx.lineTo(e.target.x, e.target.y);
+
+    if (isConn) {
+      ctx.strokeStyle = "rgba(6, 182, 212, 0.85)";
+      ctx.lineWidth = 2.2;
+    } else if (hovered) {
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.04)";
+      ctx.lineWidth = 0.8;
+    } else {
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.12)";
+      ctx.lineWidth = 1.0;
+    }
+    ctx.stroke();
+  }
+
+  // Draw Nodes
+  for (let i = 0; i < forceSimulation.nodes.length; i++) {
+    const n = forceSimulation.nodes[i];
+    const isHovered = hovered === n;
+    const isNeighbor = hovered && forceSimulation.edges.some(e => 
+      (e.source === hovered && e.target === n) || (e.target === hovered && e.source === n)
+    );
+
+    // Outer halo / glow for Home, Pillars or Hovered
+    if (n.isHome || n.nodeType === "pillar" || isHovered) {
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, n.radius + (isHovered ? 6 : 4), 0, Math.PI * 2);
+      ctx.fillStyle = isHovered ? "rgba(6, 182, 212, 0.35)" : n.color.replace(")", ", 0.25)").replace("rgb", "rgba").replace("#06b6d4", "rgba(6,182,212,0.25)").replace("#a855f7", "rgba(168,85,247,0.25)");
+      ctx.fill();
+    }
+
+    // Node body
+    ctx.beginPath();
+    ctx.arc(n.x, n.y, n.radius, 0, Math.PI * 2);
+    ctx.fillStyle = (hovered && !isHovered && !isNeighbor) ? "rgba(100, 100, 110, 0.4)" : n.color;
+    ctx.fill();
+    ctx.strokeStyle = "#ffffff";
+    ctx.lineWidth = isHovered ? 2.5 : 1.2;
+    ctx.stroke();
+
+    // Node labels
+    const showLabel = forceSimulation.showLabels || isHovered || isNeighbor || n.isHome || n.nodeType === "pillar";
+    if (showLabel) {
+      const labelText = n.title.length > 24 ? n.title.slice(0, 22) + "..." : n.title;
+      ctx.font = `${n.isHome ? 'bold 11px' : '10px'} Inter, sans-serif`;
+      const textWidth = ctx.measureText(labelText).width;
+
+      // Label background pill
+      const px = n.x + n.radius + 4;
+      const py = n.y - 6;
+      ctx.fillStyle = "rgba(12, 12, 15, 0.88)";
+      ctx.fillRect(px - 2, py - 8, textWidth + 6, 14);
+
+      ctx.fillStyle = isHovered ? "#ffffff" : "rgba(220, 225, 235, 0.9)";
+      ctx.fillText(labelText, px + 1, py + 3);
+    }
+  }
+
+  ctx.restore();
 }
 
 function renderBacklinkAuthority(backlinks) {
@@ -1225,6 +1612,9 @@ function renderContentSilos(silos) {
   const sThinEl = document.getElementById("logicThinClustersCount");
   if (sThinEl) sThinEl.textContent = `${thinCount} cụm`;
 
+  // Trigger Topic Silo Architecture & Conversion Pipeline Flowchart (Mermaid / SVG Style)
+  renderSiloPipelineFlowchart(silos, currentAuditData?.hostname || "Domain");
+
   if (!container) return;
   container.innerHTML = "";
 
@@ -1284,6 +1674,137 @@ function renderContentSilos(silos) {
       openContentBriefModal(siloName, pillarTitle);
     });
   });
+}
+
+// ==============================================================================
+// TOPIC SILO & CONVERSION PIPELINE FLOWCHART (Mermaid / SVG Style)
+// ==============================================================================
+function renderSiloPipelineFlowchart(silos, hostname) {
+  const container = document.getElementById("siloPipelineContainer");
+  const badge = document.getElementById("siloFlowHealthBadge");
+  if (!container) return;
+
+  if (!silos || silos.length === 0) {
+    container.innerHTML = `<div style="text-align:center; padding:24px; color:var(--text-muted);">Chưa có dữ liệu cụm chủ đề để tạo sơ đồ luồng.</div>`;
+    return;
+  }
+
+  // Filter top 3 meaningful silos
+  const topSilos = silos.filter(s => s.name !== "Trang Chủ & Hub Điều Hướng").slice(0, 3);
+  if (topSilos.length === 0) {
+    topSilos.push(...silos.slice(0, 3));
+  }
+
+  const svgWidth = 840;
+  const svgHeight = Math.max(260, topSilos.length * 85 + 40);
+
+  // Column X coordinates
+  const col1X = 20;   // Home Hub
+  const col2X = 260;  // Pillar Pages
+  const col3X = 520;  // Satellite Sub-articles
+  const col4X = 700;  // Conversion Goal (CTA)
+
+  const nodeW = 180;
+  const nodeH = 50;
+
+  const homeY = svgHeight / 2 - nodeH / 2;
+  const ctaY = svgHeight / 2 - nodeH / 2;
+
+  let linksSvg = "";
+  let nodesSvg = "";
+
+  // 1. Home Hub Node
+  nodesSvg += `
+    <g class="flow-node-box" transform="translate(${col1X}, ${homeY})">
+      <rect width="${nodeW}" height="${nodeH}" rx="8" fill="#141418" stroke="#06b6d4" stroke-width="1.8" filter="drop-shadow(0 4px 12px rgba(6,182,212,0.25))"/>
+      <text x="12" y="22" fill="#06b6d4" font-size="10" font-family="Inter, sans-serif" font-weight="700">TẦNG 1: TRANG CHỦ &amp; HUB</text>
+      <text x="12" y="38" fill="#ffffff" font-size="12" font-family="Inter, sans-serif" font-weight="600">${escapeHtml(hostname || 'Domain Root')}</text>
+    </g>
+  `;
+
+  // 2. Pillars & Satellites
+  topSilos.forEach((s, idx) => {
+    const spacing = (svgHeight - 40) / Math.max(1, topSilos.length);
+    const pillarY = 20 + idx * spacing + (spacing - nodeH) / 2;
+    const subArticle = (s.articles && s.articles.length > 0) ? s.articles[0].title : `${s.articles_count} bài viết vệ tinh`;
+    const subClean = subArticle.length > 20 ? subArticle.slice(0, 18) + '...' : subArticle;
+
+    // Link: Home -> Pillar
+    const p1x = col1X + nodeW;
+    const p1y = homeY + nodeH / 2;
+    const p2x = col2X;
+    const p2y = pillarY + nodeH / 2;
+    const mid1X = (p1x + p2x) / 2;
+
+    linksSvg += `
+      <path d="M ${p1x} ${p1y} C ${mid1X} ${p1y}, ${mid1X} ${p2y}, ${p2x} ${p2y}" class="flow-link-path" />
+      <polygon points="${p2x},${p2y} ${p2x - 6},${p2y - 4} ${p2x - 6},${p2y + 4}" fill="#a855f7" />
+    `;
+
+    // Pillar Node
+    const pillarName = s.name.length > 18 ? s.name.slice(0, 16) + '...' : s.name;
+    nodesSvg += `
+      <g class="flow-node-box" transform="translate(${col2X}, ${pillarY})">
+        <rect width="${nodeW - 10}" height="${nodeH}" rx="8" fill="#141418" stroke="#a855f7" stroke-width="1.8" filter="drop-shadow(0 4px 12px rgba(168,85,247,0.25))"/>
+        <text x="10" y="20" fill="#a855f7" font-size="9" font-family="Inter, sans-serif" font-weight="700">TẦNG 2: BÀI TRỤ CỘT (PILLAR)</text>
+        <text x="10" y="37" fill="#ffffff" font-size="11" font-family="Inter, sans-serif" font-weight="600">${escapeHtml(pillarName)}</text>
+      </g>
+    `;
+
+    // Link: Pillar -> Satellite
+    const s1x = col2X + nodeW - 10;
+    const s1y = pillarY + nodeH / 2;
+    const s2x = col3X;
+    const s2y = pillarY + nodeH / 2;
+    const mid2X = (s1x + s2x) / 2;
+
+    linksSvg += `
+      <path d="M ${s1x} ${s1y} C ${mid2X} ${s1y}, ${mid2X} ${s2y}, ${s2x} ${s2y}" class="flow-link-path" />
+      <polygon points="${s2x},${s2y} ${s2x - 6},${s2y - 4} ${s2x - 6},${s2y + 4}" fill="#10b981" />
+    `;
+
+    // Satellite Node
+    nodesSvg += `
+      <g class="flow-node-box" transform="translate(${col3X}, ${pillarY})">
+        <rect width="140" height="${nodeH}" rx="8" fill="#141418" stroke="#10b981" stroke-width="1.5"/>
+        <text x="10" y="20" fill="#10b981" font-size="9" font-family="Inter, sans-serif" font-weight="700">TẦNG 3: VỆ TINH (${s.articles_count})</text>
+        <text x="10" y="37" fill="#e2e8f0" font-size="11" font-family="Inter, sans-serif">${escapeHtml(subClean)}</text>
+      </g>
+    `;
+
+    // Link: Satellite -> CTA Goal
+    const c1x = col3X + 140;
+    const c1y = pillarY + nodeH / 2;
+    const c2x = col4X;
+    const c2y = ctaY + nodeH / 2;
+    const mid3X = (c1x + c2x) / 2;
+
+    linksSvg += `
+      <path d="M ${c1x} ${c1y} C ${mid3X} ${c1y}, ${mid3X} ${c2y}, ${c2x} ${c2y}" class="flow-link-path" />
+      <polygon points="${c2x},${c2y} ${c2x - 6},${c2y - 4} ${c2x - 6},${c2y + 4}" fill="#f59e0b" />
+    `;
+  });
+
+  // 3. CTA Goal Node
+  nodesSvg += `
+    <g class="flow-node-box" transform="translate(${col4X}, ${ctaY})">
+      <rect width="120" height="${nodeH}" rx="8" fill="#141418" stroke="#f59e0b" stroke-width="1.8" filter="drop-shadow(0 4px 12px rgba(245,158,11,0.25))"/>
+      <text x="10" y="20" fill="#f59e0b" font-size="9" font-family="Inter, sans-serif" font-weight="700">TẦNG 4: CHUYỂN ĐỔI</text>
+      <text x="10" y="37" fill="#ffffff" font-size="11" font-family="Inter, sans-serif" font-weight="700">🎯 Form CTA / Lead</text>
+    </g>
+  `;
+
+  container.innerHTML = `
+    <svg class="silo-flow-svg" viewBox="0 0 ${svgWidth} ${svgHeight}">
+      ${linksSvg}
+      ${nodesSvg}
+    </svg>
+  `;
+
+  if (badge) {
+    badge.className = "badge badge-emerald";
+    badge.textContent = `${topSilos.length} Cụm Silo Khép Kín`;
+  }
 }
 
 function renderCompetitorPlaybook(playbook) {

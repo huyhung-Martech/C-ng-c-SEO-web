@@ -979,6 +979,43 @@
             </div>
           </div>
 
+          <!-- Interactive Force-Directed Link Graph (Canvas 2D Engine - Obsidian / Screaming Frog Style) -->
+          <div class="glass-card force-graph-card" id="forceGraphSection" style="margin-bottom: 24px;">
+            <div class="card-header-flex">
+              <div>
+                <h3 class="card-title text-cyan">🕸️ Sơ Đồ Mạng Lưới Động &amp; Cụm Liên Kết (Force-Directed Link Graph)</h3>
+                <p class="text-muted" style="font-size: 0.82rem; margin-top: 4px;">
+                  Mô phỏng vật lý đa hạt thời gian thực: Hạt to = Trang trụ cột (Nhiều Inlinks / PageRank cao). Có thể kéo thả hạt, lăn chuột để Zoom in/out, rê chuột để xem luồng liên kết.
+                </p>
+              </div>
+              <div class="graph-controls-toolbar">
+                <button type="button" class="btn-graph-action" id="btnGraphResetZoom" title="Đặt lại góc nhìn">⟲ Reset Zoom</button>
+                <button type="button" class="btn-graph-action" id="btnGraphPause" title="Tạm dừng / Tiếp tục vật lý">⏸️ Pause</button>
+                <button type="button" class="btn-graph-action" id="btnGraphLabels" title="Ẩn/Hiện nhãn bài">🏷️ Nhãn</button>
+              </div>
+            </div>
+
+            <!-- Canvas Legend Strip -->
+            <div class="graph-legend-strip">
+              <span class="g-legend-item"><span class="g-dot dot-home"></span> Trang Chủ &amp; Hub</span>
+              <span class="g-legend-item"><span class="g-dot dot-pillar"></span> Trụ Cột (Pillar Page)</span>
+              <span class="g-legend-item"><span class="g-dot dot-healthy"></span> Bài Viết Đạt Chuẩn</span>
+              <span class="g-legend-item"><span class="g-dot dot-thin"></span> Thin Content (&lt;300t)</span>
+              <span class="g-legend-item"><span class="g-dot dot-orphan"></span> Trang Mồ Côi / 404</span>
+            </div>
+
+            <!-- Interactive Canvas Container -->
+            <div class="force-canvas-wrap" id="forceCanvasWrap">
+              <canvas id="forceGraphCanvas" width="940" height="520"></canvas>
+              <!-- Floating Tooltip HUD -->
+              <div id="graphTooltipHud" class="graph-tooltip-hud" style="display: none;"></div>
+              <!-- Empty notice -->
+              <div id="graphPlaceholder" class="graph-placeholder-notice" style="display: none;">
+                <span>Chưa có dữ liệu đồ thị. Vui lòng chạy Audit để tải mạng lưới liên kết.</span>
+              </div>
+            </div>
+          </div>
+
           <!-- Live Broken Links List -->
           <div class="glass-card" id="brokenLinksCard" style="margin-bottom: 24px;">
             <h3 class="card-title text-rose">🚨 Danh Sách Các Liên Kết Nội Bộ Bị Gãy (HTTP 404 Live Pings)</h3>
@@ -1074,6 +1111,23 @@
             <div class="stat-tile warning-tile">
               <span class="stat-number" id="logicThinClustersCount">--</span>
               <span class="stat-label">Cụm cần mở rộng nội dung</span>
+            </div>
+          </div>
+
+          <!-- Visual Silo & Conversion Pipeline Flowchart (Mermaid / SVG Style) -->
+          <div class="glass-card silo-flow-card" id="siloPipelineCard" style="margin-bottom: 24px;">
+            <div class="card-header-flex">
+              <div>
+                <h3 class="card-title text-cyan">📐 Sơ Đồ Kiến Trúc Phễu Chủ Đề &amp; Dòng Chảy Liên Kết (Topic Silo Flow)</h3>
+                <p class="text-muted" style="font-size: 0.82rem; margin-top: 4px;">
+                  Mô hình phân tầng thông tin chuẩn Silo: Từ Trang Chủ ➔ Bài Viết Trụ Cột (Pillars) ➔ Cụm Vệ Tinh (Clusters) ➔ Phễu Chuyển Đổi (CTA).
+                </p>
+              </div>
+              <span class="badge badge-emerald" id="siloFlowHealthBadge">Chuẩn Silo Architecture</span>
+            </div>
+            
+            <div class="silo-pipeline-container" id="siloPipelineContainer">
+              <!-- Dynamically generated SVG Flowchart -->
             </div>
           </div>
 

@@ -1070,6 +1070,16 @@ def recursive_network_crawl(root_url, sitemap_html="", max_pages=15, stream_call
     content_silos = analyze_content_silos_and_logic(subpages_list, base_clean)
     backlink_authority = analyze_backlink_and_authority(inlinks_map, outlinks_map, external_links_map, anchor_texts_map, pages_data)
 
+    # Build directed graph edges for Force-Directed Graph Visualizer
+    graph_edges = []
+    seen_edges = set()
+    for src, targets in outlinks_map.items():
+        if src in pages_data:
+            for tgt in targets:
+                if (tgt in pages_data or tgt in all_internal_links_seen) and (src, tgt) not in seen_edges:
+                    seen_edges.add((src, tgt))
+                    graph_edges.append({"source": src, "target": tgt})
+
     return {
         "subpages": subpages_list,
         "broken_links": broken_links,
@@ -1078,7 +1088,8 @@ def recursive_network_crawl(root_url, sitemap_html="", max_pages=15, stream_call
         "dead_end_pages": dead_end_pages,
         "total_internal_links": sum(len(v) for v in outlinks_map.values()),
         "content_silos": content_silos,
-        "backlink_authority": backlink_authority
+        "backlink_authority": backlink_authority,
+        "edges": graph_edges[:600]
     }
 
 
@@ -2208,7 +2219,8 @@ Khi người dùng truy vấn thông tin về học phí, tuyển sinh hoặc ch
             "broken_links": broken_links,
             "auth_restricted_links": auth_restricted_links,
             "orphan_pages": orphan_pages,
-            "dead_end_pages": dead_end_pages
+            "dead_end_pages": dead_end_pages,
+            "edges": crawl_res.get("edges", [])
         },
         "content_silos": crawl_res.get("content_silos", []),
         "backlink_authority": crawl_res.get("backlink_authority", {}),

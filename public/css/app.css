@@ -2049,6 +2049,191 @@ body {
 }
 
 /* ==============================================================================
+   FORCE-DIRECTED LINK GRAPH (Obsidian / Screaming Frog Canvas Visualizer)
+   ============================================================================== */
+.force-graph-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.graph-controls-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-graph-action {
+  background: var(--bg-input);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  border-radius: var(--radius-sm);
+  padding: 5px 10px;
+  font-size: 0.75rem;
+  font-family: var(--font-sans);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-graph-action:hover {
+  background: var(--bg-card-hover);
+  color: var(--text-white);
+  border-color: var(--border-hover);
+}
+
+.btn-graph-action.active {
+  background: var(--bg-active-pill);
+  border-color: var(--accent-blue);
+  color: var(--text-white);
+}
+
+.graph-legend-strip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px;
+  margin: 10px 0 12px;
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: var(--radius-sm);
+  font-size: 0.73rem;
+  color: var(--text-secondary);
+}
+
+.g-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.g-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.dot-home { background: #06b6d4; box-shadow: 0 0 6px rgba(6, 182, 212, 0.6); }
+.dot-pillar { background: #a855f7; box-shadow: 0 0 6px rgba(168, 85, 247, 0.6); }
+.dot-healthy { background: #10b981; }
+.dot-thin { background: #f59e0b; }
+.dot-orphan { background: #f43f5e; box-shadow: 0 0 6px rgba(244, 63, 94, 0.6); }
+
+.force-canvas-wrap {
+  position: relative;
+  width: 100%;
+  height: 520px;
+  background: #09090b;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  cursor: grab;
+}
+
+.force-canvas-wrap:active {
+  cursor: grabbing;
+}
+
+#forceGraphCanvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.graph-tooltip-hud {
+  position: absolute;
+  pointer-events: none;
+  background: rgba(15, 15, 18, 0.94);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--border-hover);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  font-size: 0.78rem;
+  color: var(--text-primary);
+  max-width: 320px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+  z-index: 20;
+  transition: opacity 0.15s ease;
+}
+
+.graph-tooltip-title {
+  font-weight: 700;
+  color: var(--text-white);
+  margin-bottom: 4px;
+  line-height: 1.3;
+}
+
+.graph-tooltip-url {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--accent-cyan);
+  word-break: break-all;
+  margin-bottom: 6px;
+}
+
+.graph-tooltip-stats {
+  display: flex;
+  gap: 12px;
+  font-size: 0.73rem;
+  color: var(--text-secondary);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  padding-top: 6px;
+}
+
+.graph-placeholder-notice {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  background: rgba(9, 9, 11, 0.8);
+}
+
+/* ==============================================================================
+   TOPIC SILO & CONVERSION PIPELINE FLOWCHART (Mermaid / SVG Style)
+   ============================================================================== */
+.silo-flow-card {
+  position: relative;
+}
+
+.silo-pipeline-container {
+  width: 100%;
+  overflow-x: auto;
+  padding: 12px 4px 6px;
+}
+
+.silo-flow-svg {
+  width: 100%;
+  min-width: 760px;
+  height: auto;
+  display: block;
+}
+
+.flow-node-box {
+  transition: filter 0.2s ease, transform 0.2s ease;
+  cursor: pointer;
+}
+
+.flow-node-box:hover {
+  filter: drop-shadow(0 0 10px rgba(59, 130, 246, 0.5));
+}
+
+.flow-link-path {
+  stroke: rgba(255, 255, 255, 0.18);
+  stroke-width: 1.5;
+  stroke-dasharray: 4, 3;
+  animation: flowPulse 25s linear infinite;
+}
+
+@keyframes flowPulse {
+  to {
+    stroke-dashoffset: -100;
+  }
+}
+
+/* ==============================================================================
    HIGH MOBILE DENSITY AUDIT (< 600px) - STRICT COMPLIANCE
    ============================================================================== */
 @media (max-width: 600px) {
