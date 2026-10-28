@@ -29,7 +29,7 @@ from collections import Counter, defaultdict
 from html.parser import HTMLParser
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
-PORT = 8888
+PORT = int(os.environ.get("PORT", 8888))
 PUBLIC_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "public")
 
 # Permissive SSL context
