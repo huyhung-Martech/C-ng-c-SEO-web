@@ -912,7 +912,8 @@ function filterAndDrawArticles() {
         </span>
       </td>
       <td>
-        ${p.issues && p.issues.length > 0 ? `<span class="badge badge-rose" style="font-size:0.72rem;">${escapeHtml(p.issues[0])}</span>` : '<span class="badge badge-emerald" style="font-size:0.72rem;">✓ Tốt</span>'}
+        ${p.issues && p.issues.length > 0 ? `<div style="margin-bottom:4px;"><span class="badge badge-rose" style="font-size:0.72rem;">${escapeHtml(p.issues[0])}</span></div>` : '<div style="margin-bottom:4px;"><span class="badge badge-emerald" style="font-size:0.72rem;">✓ Tốt</span></div>'}
+        ${p.pruning_label ? `<div><span class="badge ${p.pruning_badge || 'badge-cyan'}" style="font-size:0.7rem;" title="${escapeHtml(p.pruning_reason || '')}">${escapeHtml(p.pruning_label)}</span></div>` : ''}
       </td>
     `;
     tbody.appendChild(tr);
@@ -1378,6 +1379,12 @@ function renderAiCitationAudit(aiData) {
             <a href="${p.url}" target="_blank" rel="noopener" class="citation-title font-medium">${escapeHtml(p.title || p.url)}</a>
             <span class="badge badge-emerald font-mono">${p.ai_readiness_score}/100</span>
           </div>
+          <div style="display:flex; gap:4px; margin-top:5px; flex-wrap:wrap;">
+            <span class="badge ${p.readiness?.chatgpt ? 'badge-emerald' : 'badge-rose'} badge-xs">ChatGPT: ${p.readiness?.chatgpt ? '✓' : '✗'}</span>
+            <span class="badge ${p.readiness?.perplexity ? 'badge-emerald' : 'badge-rose'} badge-xs">Perplexity: ${p.readiness?.perplexity ? '✓' : '✗'}</span>
+            <span class="badge ${p.readiness?.claude ? 'badge-emerald' : 'badge-rose'} badge-xs">Claude: ${p.readiness?.claude ? '✓' : '✗'}</span>
+            <span class="badge ${p.readiness?.ai_overviews ? 'badge-emerald' : 'badge-rose'} badge-xs">Google AEO: ${p.readiness?.ai_overviews ? '✓' : '✗'}</span>
+          </div>
           <div class="citation-criteria" style="margin-top:6px;">
             ${p.criteria.map(c => `<span class="badge badge-cyan badge-xs" style="margin-right:4px;">${escapeHtml(c)}</span>`).join("")}
           </div>
@@ -1402,6 +1409,12 @@ function renderAiCitationAudit(aiData) {
           <div class="citation-header">
             <a href="${p.url}" target="_blank" rel="noopener" class="citation-title font-medium">${escapeHtml(p.title || p.url)}</a>
             <span class="badge badge-amber font-mono">${p.ai_readiness_score}/100</span>
+          </div>
+          <div style="display:flex; gap:4px; margin-top:5px; flex-wrap:wrap;">
+            <span class="badge ${p.readiness?.chatgpt ? 'badge-emerald' : 'badge-rose'} badge-xs">ChatGPT: ${p.readiness?.chatgpt ? '✓' : '✗'}</span>
+            <span class="badge ${p.readiness?.perplexity ? 'badge-emerald' : 'badge-rose'} badge-xs">Perplexity: ${p.readiness?.perplexity ? '✓' : '✗'}</span>
+            <span class="badge ${p.readiness?.claude ? 'badge-emerald' : 'badge-rose'} badge-xs">Claude: ${p.readiness?.claude ? '✓' : '✗'}</span>
+            <span class="badge ${p.readiness?.ai_overviews ? 'badge-emerald' : 'badge-rose'} badge-xs">Google AEO: ${p.readiness?.ai_overviews ? '✓' : '✗'}</span>
           </div>
           <div class="citation-criteria" style="margin-top:6px;">
             ${p.criteria.map(c => `<span class="badge badge-rose badge-xs" style="margin-right:4px;">${escapeHtml(c)}</span>`).join("")}
@@ -1812,9 +1825,14 @@ function renderGscData(gsc) {
     strikingTbody.innerHTML = "";
     (gsc.striking_distance || []).slice(0, 10).forEach(item => {
       const tr = document.createElement("tr");
+      const mov = item.movement || "— 0";
+      const isUp = mov.includes("▲");
+      const isDown = mov.includes("▼");
+      const movBadge = isUp ? 'badge-emerald' : (isDown ? 'badge-rose' : 'badge-cyan');
       tr.innerHTML = `
         <td style="font-weight:600;color:var(--text-white);">${escapeHtml(item.query)}</td>
         <td><span class="badge badge-amber">Top ${item.position}</span></td>
+        <td><span class="badge ${movBadge}" style="font-size:0.75rem;">${escapeHtml(mov)}</span></td>
         <td>${item.impressions.toLocaleString()}</td>
         <td>${item.clicks.toLocaleString()}</td>
         <td>${item.ctr}%</td>

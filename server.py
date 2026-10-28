@@ -340,10 +340,61 @@ def get_deep_google_intent_clusters(brand_or_keyword, lang="vi"):
     return clusters
 
 
-def parse_gsc_csv(csv_text):
+DATA_DIR = os.path.join(os.path.dirname(__file__), "data")
+os.makedirs(DATA_DIR, exist_ok=True)
+RANK_HISTORY_FILE = os.path.join(DATA_DIR, "rank_history.json")
+
+
+def load_rank_history():
+    if os.path.exists(RANK_HISTORY_FILE):
+        try:
+            with open(RANK_HISTORY_FILE, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except Exception:
+            return {}
+    return {}
+
+
+def save_rank_snapshot(domain, query_items):
+    import datetime
+    history = load_rank_history()
+    today_str = datetime.date.today().isoformat()
+    dom_key = domain or "global"
+    if dom_key not in history:
+        history[dom_key] = {}
+
+    for item in query_items:
+        q = item.get("query", "").strip().lower()
+        if not q:
+            continue
+        if q not in history[dom_key]:
+            history[dom_key][q] = []
+
+        records = history[dom_key][q]
+        new_record = {
+            "date": today_str,
+            "position": item["position"],
+            "clicks": item["clicks"],
+            "impressions": item["impressions"]
+        }
+        if records and records[-1].get("date") == today_str:
+            records[-1] = new_record
+        else:
+            records.append(new_record)
+            if len(records) > 30:
+                history[dom_key][q] = records[-30:]
+
+    try:
+        with open(RANK_HISTORY_FILE, "w", encoding="utf-8") as f:
+            json.dump(history, f, ensure_ascii=False, indent=2)
+    except Exception:
+        pass
+
+
+def parse_gsc_csv(csv_text, domain="global"):
     """
     Parses Google Search Console (GSC) Performance Export (Queries.csv / Pages.csv)
-    Computes 100% REAL Striking Distance, CTR Anomalies, and Top Click queries.
+    Computes 100% REAL Striking Distance, CTR Anomalies, and SerpBear Rank Movement.
     """
     import csv, io
     f = io.StringIO(csv_text.strip())
@@ -369,9 +420,11 @@ def parse_gsc_csv(csv_text):
     if "query" not in col_map:
         return {"success": False, "error": "Không tìm thấy cột 'Query' hoặc 'Top queries' trong file CSV của Google Search Console."}
 
+    history = load_rank_history().get(domain or "global", {})
     rows = []
     striking_distance = []
     ctr_anomalies = []
+    rank_drops = []
 
     for r in reader:
         if not r or len(r) <= max(col_map.values()):
@@ -393,14 +446,34 @@ def parse_gsc_csv(csv_text):
 
         pos = float(r[col_map["position"]]) if "position" in col_map and r[col_map["position"]] else 99.0
 
+        # SerpBear Rank Movement Engine
+        prev_records = history.get(q.lower(), [])
+        if len(prev_records) >= 1:
+            prev_pos = prev_records[-1]["position"]
+            diff = round(prev_pos - pos, 1)
+            if diff > 0:
+                movement = f"▲ +{diff}"
+            elif diff < 0:
+                movement = f"▼ {diff}"
+            else:
+                movement = "— 0"
+        else:
+            diff = 0
+            movement = "★ MỚI"
+
         item = {
             "query": q,
             "clicks": clicks,
             "impressions": impressions,
             "ctr": round(ctr_val, 2),
-            "position": round(pos, 1)
+            "position": round(pos, 1),
+            "movement": movement,
+            "is_rank_drop": diff <= -3.0
         }
         rows.append(item)
+
+        if diff <= -3.0:
+            rank_drops.append(item)
 
         # Real Striking Distance (Position 8.0 - 20.0, Impressions >= 10)
         if 8.0 <= pos <= 20.0 and impressions >= 10:
@@ -414,6 +487,9 @@ def parse_gsc_csv(csv_text):
     ctr_anomalies.sort(key=lambda x: -x["impressions"])
     rows.sort(key=lambda x: -x["clicks"])
 
+    # Persist snapshot (SerpBear daily tracking)
+    save_rank_snapshot(domain or "global", rows)
+
     return {
         "success": True,
         "is_connected": True,
@@ -422,6 +498,7 @@ def parse_gsc_csv(csv_text):
         "total_impressions": sum(r["impressions"] for r in rows),
         "striking_distance": striking_distance[:20],
         "ctr_anomalies": ctr_anomalies[:20],
+        "rank_drops": rank_drops[:10],
         "top_queries": rows[:25]
     }
 
@@ -504,40 +581,50 @@ def fetch_url(url, user_agent=None, method="GET", timeout=10, referer=None, extr
         }
 
 
-def verify_link_health(url, referer=None, timeout=6):
+_LINK_HEALTH_CACHE = {}
+
+def verify_link_health(url, referer=None, timeout=4):
     """
-    Two-Phase Enterprise Link Health Verification:
+    Two-Phase Enterprise Link Health Verification (Lychee-inspired Fast Engine):
+    - Memory Dedup Cache: Prevents re-fetching the same URL across multiple pages.
+    - Fast Scheme Filter: Skips mailto, tel, javascript, hash anchors, and data URIs.
     - Phase 1: Fast Probe (HEAD request with Chromium headers and matching referer).
-    - Phase 2: If Phase 1 returns ANY non-200 code (especially 401, 403, 405, 500),
-      NEVER immediately flag it as broken. Many modern CDNs (Cloudflare, Akamai), WAFs,
-      and dynamic frameworks (Next.js, WordPress) reject HEAD requests from automated scripts,
-      while regular user browsers navigate via GET and receive 200 OK.
-      Immediately fall back to a full GET request before determining link health.
-    - SEO Classification:
-      * 200-399 -> HEALTHY (False positive 401 completely eliminated)
-      * 404, 410 -> TRUE BROKEN LINK (Page does not exist)
-      * 401, 403 -> ACCESS RESTRICTED (Auth/Session required, NOT a broken link)
-      * 0 / Connection Error -> UNREACHABLE
+    - Phase 2: If Phase 1 returns ANY non-200 code, fall back to GET before deciding.
     """
-    # Phase 1: Fast HEAD attempt
-    res = fetch_url(url, method="HEAD", timeout=timeout, referer=referer)
+    clean_u = (url or "").strip()
+    if not clean_u:
+        return {"status": 0, "is_broken": False, "is_auth_restricted": False, "category": "EMPTY", "error": None}
+
+    if clean_u in _LINK_HEALTH_CACHE:
+        return _LINK_HEALTH_CACHE[clean_u]
+
+    # Fast skip for non-crawlable schemes (Lychee pattern)
+    if any(clean_u.lower().startswith(p) for p in ("mailto:", "tel:", "javascript:", "#", "data:", "whatsapp:", "sms:")):
+        res_val = {"status": 200, "is_broken": False, "is_auth_restricted": False, "category": "SKIPPED_SCHEME", "error": None}
+        _LINK_HEALTH_CACHE[clean_u] = res_val
+        return res_val
+
+    # Phase 1: Fast HEAD attempt (3.5s timeout)
+    res = fetch_url(clean_u, method="HEAD", timeout=min(timeout, 3.5), referer=referer)
     status = res.get("status", 0)
 
     if 200 <= status < 400:
-        return {
+        res_val = {
             "status": status,
             "is_broken": False,
             "is_auth_restricted": False,
             "category": "HEALTHY",
             "error": None
         }
+        _LINK_HEALTH_CACHE[clean_u] = res_val
+        return res_val
 
     # Phase 2: Fallback to full GET request
-    get_res = fetch_url(url, method="GET", timeout=timeout, referer=referer)
+    get_res = fetch_url(clean_u, method="GET", timeout=timeout, referer=referer)
     get_status = get_res.get("status", 0)
 
     if 200 <= get_status < 400:
-        return {
+        res_val = {
             "status": get_status,
             "is_broken": False,
             "is_auth_restricted": False,
@@ -545,7 +632,7 @@ def verify_link_health(url, referer=None, timeout=6):
             "error": None
         }
     elif get_status in (404, 410):
-        return {
+        res_val = {
             "status": get_status,
             "is_broken": True,
             "is_auth_restricted": False,
@@ -553,7 +640,7 @@ def verify_link_health(url, referer=None, timeout=6):
             "error": f"HTTP {get_status} (Trang không tồn tại)"
         }
     elif get_status in (401, 403):
-        return {
+        res_val = {
             "status": get_status,
             "is_broken": False,
             "is_auth_restricted": True,
@@ -561,7 +648,7 @@ def verify_link_health(url, referer=None, timeout=6):
             "error": f"HTTP {get_status} (Yêu cầu đăng nhập / Phân quyền bảo mật)"
         }
     elif get_status == 0:
-        return {
+        res_val = {
             "status": 0,
             "is_broken": True,
             "is_auth_restricted": False,
@@ -569,13 +656,16 @@ def verify_link_health(url, referer=None, timeout=6):
             "error": get_res.get("error") or "Không thể kết nối (Timeout / DNS Failure)"
         }
     else:
-        return {
+        res_val = {
             "status": get_status,
             "is_broken": False,
             "is_auth_restricted": False,
             "category": f"SERVER_STATUS_{get_status}",
             "error": f"HTTP {get_status}"
         }
+
+    _LINK_HEALTH_CACHE[clean_u] = res_val
+    return res_val
 
 
 def extract_keywords_and_ngrams(text_words, top_n=8):
@@ -941,6 +1031,31 @@ def recursive_network_crawl(root_url, sitemap_html="", max_pages=15, stream_call
         p["inlinks_sources"] = inlinks[:5]
         p["anchors_used"] = list(set(anchor_texts_map.get(url, [])))[:5]
         p["external_domains_count"] = len(external_links_map.get(url, []))
+
+        # Content Pruning & Crawl Budget Analysis (Umami Dead-weight Detection)
+        words = p.get("word_count", 0)
+        latency = p.get("latency_ms", 0)
+        if words < 300 and p["inlinks_count"] == 0 and url != base_clean.rstrip("/"):
+            p["pruning_action"] = "PRUNE_410"
+            p["pruning_badge"] = "badge-rose"
+            p["pruning_label"] = "✂️ Xóa / Redirect 301"
+            p["pruning_reason"] = "Trang mồ côi (0 inlink) và nội dung mỏng (<300 từ) gây lãng phí Crawl Budget Google."
+        elif words < 300:
+            p["pruning_action"] = "MERGE_PILLAR"
+            p["pruning_badge"] = "badge-amber"
+            p["pruning_label"] = "📦 Nên gộp bài"
+            p["pruning_reason"] = "Nội dung mỏng (<300 từ), nên gộp vào bài viết trụ cột (Pillar Page)."
+        elif latency > 2500:
+            p["pruning_action"] = "OPTIMIZE_SPEED"
+            p["pruning_badge"] = "badge-amber"
+            p["pruning_label"] = "⚡ Tải chậm (>2.5s)"
+            p["pruning_reason"] = f"Thời gian phản hồi chậm ({latency}ms), tăng tỷ lệ thoát người dùng."
+        else:
+            p["pruning_action"] = "HEALTHY"
+            p["pruning_badge"] = "badge-emerald"
+            p["pruning_label"] = "✓ Tốt"
+            p["pruning_reason"] = "Đạt chuẩn crawl & liên kết."
+
         subpages_list.append(p)
 
         if p["inlinks_count"] == 0 and url != base_clean.rstrip("/"):
@@ -1346,54 +1461,88 @@ def analyze_striking_distance_and_ctr_anomalies(subpages):
 
 
 def analyze_ai_citation_recipe(subpages, bot_parity):
+    """
+    Auriti-Labs GEO (Generative Engine Optimization) Model:
+    - Direct Answer / Inverted Pyramid: definition in first 60 words / first sentence.
+    - Factual & Statistical Density: numbers, percentages, currency, dates.
+    - 5W1H Intent Headings.
+    - Multi-Engine Readiness: ChatGPT, Perplexity, Claude, Google AI Overviews.
+    """
     citable_pages = []
     needs_recipe_pages = []
 
     gpt_status = bot_parity.get("gptbot", {}).get("status", 200)
+    perplexity_status = bot_parity.get("perplexitybot", {}).get("status", 200)
     is_gpt_blocked = gpt_status in (401, 403, 500)
+    is_perplexity_blocked = perplexity_status in (401, 403, 500)
 
     for p in subpages:
         words = p.get("word_count", 0)
         h_struct = p.get("headings_structure", [])
         h_texts = [h.get("text", "").lower() for h in h_struct]
-        has_question_headings = any(any(q in t for q in ["là gì", "ở đâu", "học phí", "bao nhiêu", "thế nào", "tại sao", "how", "what", "why"]) for t in h_texts)
+        has_question_headings = any(any(q in t for q in ["là gì", "ở đâu", "học phí", "bao nhiêu", "thế nào", "tại sao", "how", "what", "why", "who", "khi nào", "ai"]) for t in h_texts)
         has_schema = bool(p.get("schema_types", []))
+        desc = p.get("meta_desc", "").lower()
+        title = p.get("title", "").lower()
 
-        score = 45
+        # Inverted Pyramid Direct Answer Check (Princeton KDD GEO pattern)
+        has_direct_answer = any(d in desc or d in title for d in ["là ", "chính là", "gồm ", "bao gồm", "cung cấp", "được thành lập", "chuyên đào tạo", "hướng dẫn", "bảng giá", "quy trình"])
+
+        # Factual & Statistical Evidence
+        has_stats = bool(re.search(r'\b\d+([.,]\d+)?%?\b', desc + " " + title))
+
+        score = 40
         criteria = []
         if words >= 500:
-            score += 25
-            criteria.append("Độ dài bài viết đạt chuẩn tham chiếu (> 500 từ)")
+            score += 20
+            criteria.append("Độ dài bài viết chuẩn (> 500 từ)")
         else:
-            criteria.append(f"Nội dung cần mở rộng ({words} từ / chuẩn > 500 từ)")
+            criteria.append(f"Cần mở rộng ({words}/500 từ)")
 
         if has_question_headings:
             score += 15
-            criteria.append("Có thẻ Heading dạng câu hỏi (5W1H Intent)")
+            criteria.append("Heading 5W1H (Hỏi - Đáp trực diện)")
         else:
-            criteria.append("Thiếu đề mục dạng câu hỏi giải đáp trực tiếp")
+            criteria.append("Thiếu Heading dạng câu hỏi giải đáp")
+
+        if has_direct_answer:
+            score += 15
+            criteria.append("Định nghĩa trực diện (Inverted Pyramid)")
+        else:
+            criteria.append("Thiếu câu định nghĩa trực tiếp ở đầu bài")
 
         if has_schema:
-            score += 15
-            criteria.append(f"Khai báo Schema: {', '.join(p.get('schema_types', [])[:2])}")
+            score += 10
+            criteria.append(f"Schema: {', '.join(p.get('schema_types', [])[:2])}")
         else:
-            criteria.append("Chưa gắn Schema Article hoặc FAQPage")
+            criteria.append("Chưa gắn Schema Article/FAQPage")
 
         if not is_gpt_blocked:
-            criteria.append("Không bị chặn bởi tường lửa bot AI (GPTBot)")
+            score += 10
+            criteria.append("Bot AI truy cập bình thường (200 OK)")
         else:
-            score -= 30
-            criteria.append("🚨 BỊ CHẶN BỞI WAF (GPTBot HTTP 403)")
+            score -= 25
+            criteria.append("🚨 BỊ CHẶN WAF (GPTBot HTTP 403)")
 
         score = max(10, min(100, score))
+
+        # Multi-engine readiness matrix
+        readiness = {
+            "chatgpt": not is_gpt_blocked and words >= 400,
+            "perplexity": not is_perplexity_blocked and has_question_headings,
+            "claude": words >= 600 and has_schema,
+            "ai_overviews": has_direct_answer and has_schema
+        }
+
         item = {
             "url": p["url"],
             "title": p.get("title", ""),
             "ai_readiness_score": score,
-            "status": "Citable (Đạt chuẩn AI)" if score >= 75 else "Needs Recipe (Cần bổ sung công thức)",
+            "status": "Citable (Đạt chuẩn AI)" if score >= 75 else "Needs Recipe (Cần tối ưu)",
             "badge": "badge-emerald" if score >= 75 else "badge-amber",
             "criteria": criteria,
-            "action": "Duy trì vị thế và cập nhật thêm số liệu thống kê" if score >= 75 else "Bổ sung câu trả lời trực tiếp (Direct Answer) trong 100 từ đầu và nhúng FAQ Schema"
+            "readiness": readiness,
+            "action": "Duy trì vị thế, cập nhật thêm dữ liệu thực thể" if score >= 75 else "Bổ sung định nghĩa trực diện (Direct Answer 60 từ đầu) và nhúng FAQ Schema"
         }
         if score >= 75:
             citable_pages.append(item)
@@ -1405,6 +1554,7 @@ def analyze_ai_citation_recipe(subpages, bot_parity):
 
     return {
         "is_gpt_blocked": is_gpt_blocked,
+        "is_perplexity_blocked": is_perplexity_blocked,
         "total_citable": len(citable_pages),
         "total_needs_recipe": len(needs_recipe_pages),
         "citable_pages": citable_pages[:6],
@@ -2114,6 +2264,8 @@ class AuditHTTPHandler(http.server.SimpleHTTPRequestHandler):
             self.send_json_response({"query": q, "suggestions": suggestions})
         elif parsed_path.path == "/api/gsc/status":
             self.send_json_response(CURRENT_GSC_DATA if CURRENT_GSC_DATA else {"is_connected": False})
+        elif parsed_path.path == "/api/rank-history":
+            self.send_json_response({"success": True, "history": load_rank_history()})
         else:
             super().do_GET()
 
@@ -2144,13 +2296,15 @@ class AuditHTTPHandler(http.server.SimpleHTTPRequestHandler):
             content_len = int(self.headers.get("Content-Length", 0))
             post_bytes = self.rfile.read(content_len)
             try:
+                domain = "global"
                 try:
                     data = json.loads(post_bytes.decode("utf-8", errors="ignore"))
                     csv_text = data.get("csv", "")
+                    domain = data.get("domain", "global")
                 except Exception:
                     csv_text = post_bytes.decode("utf-8", errors="ignore")
 
-                parsed = parse_gsc_csv(csv_text)
+                parsed = parse_gsc_csv(csv_text, domain=domain)
                 if parsed.get("success"):
                     CURRENT_GSC_DATA = parsed
                     self.send_json_response(parsed, 200)
