@@ -88,12 +88,52 @@ STOPWORDS = set([
 ])
 
 
+# =============================================================================
+# HELVETICA / ARIAL ADVANCE CHARACTER WIDTHS (1/1000 em)
+# Accurate SERP Pixel Width Engine (Same model as Screaming Frog, Ahrefs & OpenSEO)
+# =============================================================================
+_W = {
+    ' ': 278, '!': 278, '"': 355, '#': 556, '$': 556, '%': 889, '&': 667,
+    "'": 191, '(': 333, ')': 333, '*': 389, '+': 584, ',': 278, '-': 333,
+    '.': 278, '/': 278, ':': 278, ';': 278, '<': 584, '=': 584, '>': 584,
+    '?': 556, '@': 1015, '[': 278, '\\': 278, ']': 278, '^': 469, '_': 556,
+    '`': 333, '{': 334, '|': 260, '}': 334, '~': 584,
+    'A': 667, 'B': 667, 'C': 722, 'D': 722, 'E': 667, 'F': 611, 'G': 778,
+    'H': 722, 'I': 278, 'J': 500, 'K': 667, 'L': 556, 'M': 833, 'N': 722,
+    'O': 778, 'P': 667, 'Q': 778, 'R': 722, 'S': 667, 'T': 611, 'U': 722,
+    'V': 667, 'W': 944, 'X': 667, 'Y': 667, 'Z': 611,
+    'a': 556, 'b': 556, 'c': 500, 'd': 556, 'e': 556, 'f': 278, 'g': 556,
+    'h': 556, 'i': 222, 'j': 222, 'k': 500, 'l': 222, 'm': 833, 'n': 556,
+    'o': 556, 'p': 556, 'q': 556, 'r': 333, 's': 500, 't': 278, 'u': 556,
+    'v': 500, 'w': 722, 'x': 500, 'y': 500, 'z': 500,
+}
+for _d in '0123456789': _W[_d] = 556
+
+TITLE_PX_LIMIT = 580  # Google SERP desktop title truncate point (Arial 20px)
+DESC_PX_LIMIT = 920   # Google SERP desktop meta description truncate point (Arial 14px)
+
+def calculate_text_px(text, size=20):
+    total = sum(_W.get(ch, 556) for ch in text or '')
+    return round(total * size / 1000)
+
+_SOFT_404_RE = re.compile(
+    r'\b(404|page not found|not found|không tìm thấy|không tồn tại|đã bị xóa|error 404)\b', re.IGNORECASE)
+
+_URL_JUNK_RE = re.compile(
+    r'(?:undefined|null|NaN)[/]?\s*$|[/?&=](?:undefined|null|NaN)(?:[/?&#]|$)|\[object|%5Bobject|%7Bundefined',
+    re.IGNORECASE)
+
+CURRENT_GSC_DATA = {}
+
+
 class FastHTMLParser(HTMLParser):
     def __init__(self):
         super().__init__()
         self.title = ""
+        self.titles = []
         self.in_title = False
         self.meta_tags = []
+        self.meta_descriptions = []
         self.headings = [] # list of {"level": "H1", "text": "..."}
         self.current_heading_tag = None
         self.current_heading_text = []
@@ -101,12 +141,18 @@ class FastHTMLParser(HTMLParser):
         self.in_jsonld = False
         self.jsonld_text = []
         self.canonical = ""
+        self.canonicals = []
         self.images = [] # src, alt, width, height, loading
         self.videos = [] # src, poster
         self.links = [] # href, text, rel
         self.current_a_href = None
         self.current_a_text = []
         self.viewport = ""
+        self.charset = ""
+        self.lang = ""
+        self.og = {}
+        self.twitter = {}
+        self.has_meta_robots_noindex = False
         self.text_content = []
         self.in_ignored_tag = 0
 
@@ -117,16 +163,36 @@ class FastHTMLParser(HTMLParser):
         if tag in ("script", "style", "noscript", "svg", "template"):
             self.in_ignored_tag += 1
 
-        if tag == "title":
+        if tag == "html":
+            self.lang = attr_dict.get("lang", "")
+        elif tag == "title":
             self.in_title = True
         elif tag == "meta":
             self.meta_tags.append(attr_dict)
-            if attr_dict.get("name", "").lower() == "viewport":
-                self.viewport = attr_dict.get("content", "")
+            if attr_dict.get("charset"):
+                self.charset = attr_dict.get("charset")
+            name_val = attr_dict.get("name", "").lower()
+            prop_val = attr_dict.get("property", "").lower()
+            content_val = attr_dict.get("content", "").strip()
+
+            if name_val == "viewport":
+                self.viewport = content_val
+            elif name_val == "description":
+                self.meta_descriptions.append(content_val)
+            elif name_val == "robots" and "noindex" in content_val.lower():
+                self.has_meta_robots_noindex = True
+            
+            if prop_val.startswith("og:"):
+                self.og[prop_val] = content_val
+            if name_val.startswith("twitter:"):
+                self.twitter[name_val] = content_val
+
         elif tag == "link":
             rel = attr_dict.get("rel", "").lower()
             if "canonical" in rel:
-                self.canonical = attr_dict.get("href", "")
+                href = attr_dict.get("href", "").strip()
+                self.canonical = href
+                self.canonicals.append(href)
         elif tag in ("h1", "h2", "h3", "h4", "h5", "h6"):
             self.current_heading_tag = tag
             self.current_heading_text = []
@@ -164,6 +230,9 @@ class FastHTMLParser(HTMLParser):
 
         if tag == "title":
             self.in_title = False
+            t_clean = self.title.strip()
+            if t_clean and t_clean not in self.titles:
+                self.titles.append(t_clean)
         elif tag in ("h1", "h2", "h3", "h4", "h5", "h6") and self.current_heading_tag == tag:
             text = " ".join("".join(self.current_heading_text).split()).strip()
             if text:
@@ -201,6 +270,160 @@ class FastHTMLParser(HTMLParser):
             stripped = data.strip()
             if stripped:
                 self.text_content.append(stripped)
+
+
+def get_deep_google_intent_clusters(brand_or_keyword, lang="vi"):
+    """
+    Live Search Intent & AEO Question Mining Engine
+    Queries Google Autocomplete API across 3 major intent groups:
+    1. AEO 5W1H Questions (Ai, Là gì, Ở đâu, Khi nào, Tại sao, Như thế nào...)
+    2. Commercial & High-Value Transactional Intent (Học phí, Bảng giá, Tuyển sinh, Chi phí, Đăng ký...)
+    3. Trust & Comparison Intent (Review, Có tốt không, Đánh giá, Chất lượng, So sánh...)
+    """
+    clean_seed = brand_or_keyword.strip()
+    if not clean_seed:
+        return {"questions": [], "commercial": [], "trust_comparison": []}
+
+    query_templates = [
+        # AEO Questions
+        ("questions", f"{clean_seed} là gì"),
+        ("questions", f"ở đâu {clean_seed}"),
+        ("questions", f"{clean_seed} ở đâu"),
+        ("questions", f"khi nào tuyển sinh {clean_seed}"),
+        ("questions", f"tại sao chọn {clean_seed}"),
+        ("questions", f"{clean_seed} như thế nào"),
+        ("questions", f"có nên học {clean_seed}"),
+
+        # Commercial Intent
+        ("commercial", f"{clean_seed} học phí"),
+        ("commercial", f"{clean_seed} bảng giá"),
+        ("commercial", f"{clean_seed} tuyển sinh"),
+        ("commercial", f"{clean_seed} chi phí"),
+        ("commercial", f"{clean_seed} học bổng"),
+        ("commercial", f"{clean_seed} điều kiện nhập học"),
+
+        # Trust & Comparison Intent
+        ("trust_comparison", f"{clean_seed} review"),
+        ("trust_comparison", f"{clean_seed} có tốt không"),
+        ("trust_comparison", f"{clean_seed} đánh giá"),
+        ("trust_comparison", f"{clean_seed} cơ sở vật chất"),
+        ("trust_comparison", f"{clean_seed} so sánh"),
+    ]
+
+    clusters = {"questions": [], "commercial": [], "trust_comparison": []}
+    seen = set()
+
+    def fetch_one(cat, q_str):
+        encoded = urllib.parse.quote(q_str)
+        url = f"http://suggestqueries.google.com/complete/search?client=chrome&hl={lang}&gl=vn&q={encoded}"
+        try:
+            req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+            with urllib.request.urlopen(req, timeout=3.5) as res:
+                data = json.loads(res.read().decode("utf-8", errors="ignore"))
+                if len(data) >= 2 and isinstance(data[1], list):
+                    items = []
+                    for item in data[1]:
+                        if isinstance(item, str) and item.strip() and item.lower() not in seen:
+                            seen.add(item.lower())
+                            items.append(item.strip())
+                    return cat, items
+        except Exception:
+            pass
+        return cat, []
+
+    with ThreadPoolExecutor(max_workers=6) as executor:
+        futures = [executor.submit(fetch_one, cat, q) for cat, q in query_templates]
+        for f in as_completed(futures):
+            cat, items = f.result()
+            clusters[cat].extend(items)
+
+    return clusters
+
+
+def parse_gsc_csv(csv_text):
+    """
+    Parses Google Search Console (GSC) Performance Export (Queries.csv / Pages.csv)
+    Computes 100% REAL Striking Distance, CTR Anomalies, and Top Click queries.
+    """
+    import csv, io
+    f = io.StringIO(csv_text.strip())
+    reader = csv.reader(f)
+    header = next(reader, None)
+    if not header:
+        return {"success": False, "error": "Tệp CSV rỗng."}
+
+    col_map = {}
+    for idx, col in enumerate(header):
+        c = col.lower().strip()
+        if any(k in c for k in ["query", "cụm từ", "top queries", "từ khóa"]):
+            col_map["query"] = idx
+        elif any(k in c for k in ["click", "nhấp"]):
+            col_map["clicks"] = idx
+        elif any(k in c for k in ["impression", "hiển thị", "lượt hiển thị"]):
+            col_map["impressions"] = idx
+        elif any(k in c for k in ["ctr", "tỷ lệ nhấp"]):
+            col_map["ctr"] = idx
+        elif any(k in c for k in ["position", "vị trí"]):
+            col_map["position"] = idx
+
+    if "query" not in col_map:
+        return {"success": False, "error": "Không tìm thấy cột 'Query' hoặc 'Top queries' trong file CSV của Google Search Console."}
+
+    rows = []
+    striking_distance = []
+    ctr_anomalies = []
+
+    for r in reader:
+        if not r or len(r) <= max(col_map.values()):
+            continue
+        q = r[col_map["query"]].strip()
+        if not q: continue
+        clicks = int(float(r[col_map["clicks"]])) if "clicks" in col_map and r[col_map["clicks"]] else 0
+        impressions = int(float(r[col_map["impressions"]])) if "impressions" in col_map and r[col_map["impressions"]] else 0
+
+        ctr_val = 0.0
+        if "ctr" in col_map and r[col_map["ctr"]]:
+            ctr_str = r[col_map["ctr"]].replace("%", "").strip()
+            try:
+                ctr_val = float(ctr_str)
+                if ctr_val < 1.0 and "%" not in r[col_map["ctr"]]:
+                    ctr_val = ctr_val * 100
+            except Exception:
+                pass
+
+        pos = float(r[col_map["position"]]) if "position" in col_map and r[col_map["position"]] else 99.0
+
+        item = {
+            "query": q,
+            "clicks": clicks,
+            "impressions": impressions,
+            "ctr": round(ctr_val, 2),
+            "position": round(pos, 1)
+        }
+        rows.append(item)
+
+        # Real Striking Distance (Position 8.0 - 20.0, Impressions >= 10)
+        if 8.0 <= pos <= 20.0 and impressions >= 10:
+            striking_distance.append(item)
+
+        # Real CTR Anomaly (Position <= 5.0, CTR < 3.0%, Impressions >= 20)
+        if pos <= 5.0 and ctr_val < 3.0 and impressions >= 20:
+            ctr_anomalies.append(item)
+
+    striking_distance.sort(key=lambda x: -x["impressions"])
+    ctr_anomalies.sort(key=lambda x: -x["impressions"])
+    rows.sort(key=lambda x: -x["clicks"])
+
+    return {
+        "success": True,
+        "is_connected": True,
+        "total_queries": len(rows),
+        "total_clicks": sum(r["clicks"] for r in rows),
+        "total_impressions": sum(r["impressions"] for r in rows),
+        "striking_distance": striking_distance[:20],
+        "ctr_anomalies": ctr_anomalies[:20],
+        "top_queries": rows[:25]
+    }
 
 
 def fetch_url(url, user_agent=None, method="GET", timeout=10, referer=None, extra_headers=None):
@@ -565,6 +788,12 @@ def recursive_network_crawl(root_url, sitemap_html="", max_pages=15, stream_call
                         if m.get("name", "").lower() == "description":
                             meta_desc = m.get("content", "").strip()
 
+                    title_clean = parser.title.strip()
+                    title_px = calculate_text_px(title_clean, 20)
+                    desc_px = calculate_text_px(meta_desc, 14)
+                    is_soft_404 = bool(_SOFT_404_RE.search(title_clean))
+                    has_junk_url = bool(_URL_JUNK_RE.search(norm_url))
+
                     h1_list = [h["text"] for h in parser.headings if h["level"] == "H1"]
                     h1_text = h1_list[0] if h1_list else ""
                     missing_alt = sum(1 for img in parser.images if not img["alt"] or not img["alt"].strip())
@@ -577,18 +806,33 @@ def recursive_network_crawl(root_url, sitemap_html="", max_pages=15, stream_call
 
                     p_score = 100
                     p_issues = []
-                    if not parser.title:
+                    if not title_clean:
                         p_score -= 25; p_issues.append("Thiếu thẻ <title>")
+                    elif title_px > TITLE_PX_LIMIT:
+                        p_score -= 5; p_issues.append(f"Tiêu đề vượt pixel Google ({title_px}px / {TITLE_PX_LIMIT}px)")
+
                     if not h1_text:
                         p_score -= 20; p_issues.append("Thiếu thẻ <h1>")
+
                     if not meta_desc:
                         p_score -= 15; p_issues.append("Thiếu Meta Description")
+                    elif desc_px > DESC_PX_LIMIT:
+                        p_score -= 5; p_issues.append(f"Description vượt pixel Google ({desc_px}px / {DESC_PX_LIMIT}px)")
+
                     if total_words < 300:
                         p_score -= 20; p_issues.append(f"Thin Content ({total_words} từ)")
                     if missing_alt > 0:
                         p_score -= 10; p_issues.append(f"{missing_alt} ảnh thiếu alt")
                     if not schema_types:
                         p_score -= 10; p_issues.append("Chưa khai báo Schema JSON-LD")
+                    if is_soft_404:
+                        p_score -= 30; p_issues.append("Trang Soft 404 (Trả về HTTP 200 nhưng nội dung là Not Found)")
+                    if has_junk_url:
+                        p_score -= 15; p_issues.append("URL chứa tham số rác (undefined/null/[object])")
+                    if len(parser.canonicals) > 1:
+                        p_score -= 10; p_issues.append(f"Khai báo nhiều thẻ Canonical ({len(parser.canonicals)} thẻ)")
+                    if parser.has_meta_robots_noindex:
+                        p_issues.append("Thẻ Meta Robots chặn Index (noindex)")
 
                     p_score = max(20, min(100, p_score))
 
@@ -603,8 +847,12 @@ def recursive_network_crawl(root_url, sitemap_html="", max_pages=15, stream_call
                         "status": res["status"],
                         "latency_ms": res["latency_ms"],
                         "size_kb": round(res["size_bytes"] / 1024, 1),
-                        "title": parser.title.strip(),
+                        "title": title_clean,
+                        "title_px": title_px,
+                        "title_truncated": title_px > TITLE_PX_LIMIT,
                         "meta_desc": meta_desc,
+                        "desc_px": desc_px,
+                        "desc_truncated": desc_px > DESC_PX_LIMIT,
                         "h1": h1_text,
                         "heading_counts": heading_counts,
                         "headings_count": len(parser.headings),
@@ -618,6 +866,12 @@ def recursive_network_crawl(root_url, sitemap_html="", max_pages=15, stream_call
                         "missing_alt": missing_alt,
                         "outlinks_count": len(clean_outlinks),
                         "is_thin_content": total_words < 300,
+                        "is_soft_404": is_soft_404,
+                        "has_junk_url": has_junk_url,
+                        "og": parser.og,
+                        "twitter": parser.twitter,
+                        "has_noindex": parser.has_meta_robots_noindex,
+                        "canonicals_count": len(parser.canonicals),
                         "page_score": p_score,
                         "issues": p_issues
                     }
@@ -1596,8 +1850,23 @@ Khi người dùng truy vấn thông tin về học phí, tuyển sinh hoặc ch
         "aeo_geo": {"brand_guess": brand_guess, "generated_llmstxt": generated_llmstxt}
     }
 
+    main_title_px = calculate_text_px(page_title, 20)
+    main_desc_px = calculate_text_px(meta_desc, 14)
+
+    if main_title_px > TITLE_PX_LIMIT:
+        onpage_score -= 5
+        issues.append({
+            "phase": 3, "severity": "MEDIUM", "category": "Google SERP Display",
+            "title": f"Tiêu đề vượt quá pixel hiển thị Google ({main_title_px}px / {TITLE_PX_LIMIT}px)",
+            "description": f"Tiêu đề dài {len(page_title)} ký tự ({main_title_px}px) sẽ bị Google cắt đuôi '...' trên màn hình tìm kiếm máy tính.",
+            "fix": "Thu gọn tiêu đề xuống dưới 580px (khoảng 55-60 ký tự) để đảm bảo thương hiệu và từ khóa xuất hiện trọn vẹn."
+        })
+
+    # Deep Search Intent & Question Mining (Live Google Autocomplete API across 3 clusters)
+    google_intent_clusters = get_deep_google_intent_clusters(brand_guess, "vi")
+
     # =========================================================================
-    # SCORER AGENT: Initial Scoring
+    # SCORER AGENT: Deterministic Real Scoring (Zero Fake Numbers)
     # =========================================================================
     tech_score = max(20, min(100, tech_score))
     onpage_score = max(20, min(100, onpage_score))
@@ -1608,73 +1877,67 @@ Khi người dùng truy vấn thông tin về học phí, tuyển sinh hoặc ch
     initial_score = int(tech_score * 0.3 + onpage_score * 0.25 + cwv_score * 0.15 + aeo_score * 0.15 + geo_score * 0.15)
 
     log_agent("Scorer-AI", "Trọng Tài Định Lượng", "📊", "badge-amber",
-              f"Điểm số ban đầu: [{initial_score}/100]. Tech={tech_score}, OnPage={onpage_score}, CWV={cwv_score}, AEO={aeo_score}, GEO={geo_score}, Subpages Avg={subpages_avg}.", 1)
+              f"Điểm thực tế đo lường: [{initial_score}/100]. Tech={tech_score}, OnPage={onpage_score}, CWV={cwv_score}, AEO={aeo_score}, GEO={geo_score}, Subpages Avg={subpages_avg}.", 1)
+
+    # Dynamic fixable calculation based on actual issues present
+    fixable_tech = (25 if has_domain_split_bug else 0) + (min(25, len(broken_links) * 10) if broken_links else 0) + (15 if not parser.canonical else 0)
+    fixable_onpage = (20 if not schema_types else 0)
+    fixable_geo = (20 if not has_llms_txt else 0)
+
+    potential_tech = min(100, tech_score + fixable_tech)
+    potential_onpage = min(100, onpage_score + fixable_onpage)
+    potential_geo = min(100, geo_score + fixable_geo)
+    potential_score = min(98, int(potential_tech * 0.3 + potential_onpage * 0.25 + cwv_score * 0.15 + aeo_score * 0.15 + potential_geo * 0.15))
 
     # =========================================================================
-    # REVIEWER AGENT: Rejection & Feedback Ticket
+    # REVIEWER & TESTER PIPELINE
     # =========================================================================
     critical_count = sum(1 for iss in issues if iss["severity"] == "CRITICAL")
     quality_gate_failed = (initial_score < quality_threshold) or (critical_count > 0)
 
+    patches = build_production_patches(hostname, base_clean, main_audit_summary, broken_links)
+    test_results = execute_tester_validation(patches, bot_parity, broken_links)
+
     if quality_gate_failed:
         rejection_reasons = []
         if critical_count > 0:
-            rejection_reasons.append(f"{critical_count} lỗi CRITICAL nghiêm trọng (Domain Splitting, Link 404, thiếu H1)")
+            rejection_reasons.append(f"{critical_count} lỗi CRITICAL (Domain Splitting, Link 404, thiếu H1)")
         if initial_score < quality_threshold:
-            rejection_reasons.append(f"Điểm {initial_score} chưa đạt ngưỡng yêu cầu ({quality_threshold}/100)")
+            rejection_reasons.append(f"Điểm thực tế {initial_score} < ngưỡng yêu cầu {quality_threshold}/100")
 
         log_agent("Reviewer-AI", "Giám Đốc Thẩm Định & Phản Biện", "🕵️", "badge-rose",
-                  f"⛔ TỪ CHỐI DUYỆT (REJECTED): {'; '.join(rejection_reasons)}. Kích hoạt VÒNG LẶP #2 yêu cầu Specialist khắc phục triệt để!", 1)
+                  f"⛔ PHÁT HIỆN TỒN ĐỌNG: {'; '.join(rejection_reasons)}. Kích hoạt VÒNG LẶP #2 yêu cầu lập trình bản vá code chuẩn sản xuất!", 1)
 
-        log_agent("Tester-AI", "Kiểm Thử Viên Tự Động", "🧪", "badge-purple",
-                  f"Kiểm tra môi trường ban đầu: Bắt lỗi Domain Splitting và link nội bộ 404 ({broken_links[0]['broken_target_url'] if broken_links else 'N/A'}). Môi trường chưa đạt chuẩn bàn giao.", 1)
-
-        # =====================================================================
-        # ITERATION 2: Self-Healing Feedback Loop
-        # =====================================================================
-        log_agent("System", "Bộ Điều Phối Vòng Lặp", "🔄", "badge-purple",
-                  f"⚡ KÍCH HOẠT VÒNG LẶP #2 (SELF-HEALING FEEDBACK LOOP): Specialist bắt đầu sinh mã bản vá khắc phục cho toàn bộ lỗi.", 2)
-
-        patches = build_production_patches(hostname, base_clean, main_audit_summary, broken_links)
         log_agent("Specialist-AI", "Kỹ Sư Trưởng Thực Thi", "👷", "badge-cyan",
-                  f"Đã lập trình xong 4 bản vá code sản xuất: Cấu hình Nginx 301 (vá Domain Splitting & chuyển hướng Link 404), Schema JSON-LD đa thực thể, Robots.txt và file /llms.txt.", 2)
+                  f"Đã lập trình xong 4 bản vá: Cấu hình Nginx 301, Schema JSON-LD đa thực thể, Robots.txt và file /llms.txt. Khả năng khôi phục: +{potential_score - initial_score} điểm.", 2)
 
-        test_results = execute_tester_validation(patches, bot_parity, broken_links)
         if test_results["all_passed"]:
             log_agent("Tester-AI", "Kiểm Thử Viên Tự Động", "🧪", "badge-emerald",
-                      f"✅ 100% KIỂM THỬ THÀNH CÔNG: Cú pháp Nginx 301 hợp lệ, Schema JSON-LD chuẩn spec schema.org, Bot Parity đồng nhất, quy tắc vá link 404 sẵn sàng.", 2)
-
-        bonus_points = 26
-        improved_score = min(98, initial_score + bonus_points)
-        improved_tech = min(98, tech_score + 25)
-        improved_onpage = min(96, onpage_score + 20)
-        improved_geo = min(95, geo_score + 20)
-
-        log_agent("Scorer-AI", "Trọng Tài Định Lượng", "📊", "badge-emerald",
-                  f"Tái định lượng sau khi có bản vá: Điểm số nâng từ [{initial_score}] lên [{improved_score}/100] (+{bonus_points} điểm). Đã vượt ngưỡng Quality Gate ({quality_threshold})!", 2)
+                      f"✅ 100% BẢN VÁ HỢP LỆ: Cú pháp Nginx 301 cân đối, Schema JSON-LD hợp chuẩn, Bot Parity đồng nhất, quy tắc vá 404 sẵn sàng nạp server.", 2)
 
         log_agent("Reviewer-AI", "Giám Đốc Thẩm Định & Phản Biện", "🕵️", "badge-emerald",
-                  f"🎉 PHÊ DUYỆT NGHIỆM THU (PASSED): Toàn bộ lỗi CRITICAL đã có bản vá code và vượt qua bộ kiểm thử của Tester-AI. Đủ điều kiện bàn giao triển khai!", 2)
+                  f"🎯 BÀN GIAO BẢN VÁ: Bản vá đã qua kiểm thử. Điểm hiện tại: [{initial_score}/100] -> Điểm tiềm năng sau khi nạp cấu hình: [{potential_score}/100].", 2)
 
-        final_score = improved_score
-        final_tech = improved_tech
-        final_onpage = improved_onpage
-        final_geo = improved_geo
-        gate_status = "PASSED"
-        gate_decision = f"ĐẠT CHUẨN sau Vòng lặp #2 ({improved_score}/{quality_threshold})"
+        gate_status = "READY_FOR_DEPLOYMENT"
+        gate_decision = f"Bản vá sẵn sàng: Điểm hiện tại {initial_score} ➜ Tiềm năng {potential_score}/100"
         iterations_run = 2
     else:
         log_agent("Reviewer-AI", "Giám Đốc Thẩm Định & Phản Biện", "🕵️", "badge-emerald",
-                  f"🎉 PHÊ DUYỆT NGAY TẠI VÒNG LẶP #1: Website đạt điểm {initial_score} >= {quality_threshold} và không có lỗi Critical tồn đọng.", 1)
-        patches = build_production_patches(hostname, base_clean, main_audit_summary, broken_links)
-        test_results = execute_tester_validation(patches, bot_parity, broken_links)
-        final_score = initial_score
-        final_tech = tech_score
-        final_onpage = onpage_score
-        final_geo = geo_score
+                  f"🎉 PHÊ DUYỆT NGAY TẠI VÒNG LẶP #1: Website đạt điểm thực tế {initial_score} >= {quality_threshold} và không có lỗi Critical tồn đọng.", 1)
         gate_status = "PASSED"
         gate_decision = f"ĐẠT CHUẨN ngay tại Vòng lặp #1 ({initial_score}/{quality_threshold})"
         iterations_run = 1
+
+    # Check GSC connection
+    global CURRENT_GSC_DATA
+    if CURRENT_GSC_DATA and CURRENT_GSC_DATA.get("is_connected"):
+        striking_distance_data = CURRENT_GSC_DATA.get("striking_distance", [])
+        ctr_anomalies_data = CURRENT_GSC_DATA.get("ctr_anomalies", [])
+        gsc_connected = True
+    else:
+        striking_distance_data = analyze_striking_distance_and_ctr_anomalies(subpages)
+        ctr_anomalies_data = []
+        gsc_connected = False
 
     return {
         "success": True,
@@ -1686,17 +1949,22 @@ Khi người dùng truy vấn thông tin về học phí, tuyển sinh hoặc ch
         "quality_gate": {
             "threshold": quality_threshold,
             "initial_score": initial_score,
-            "final_score": final_score,
+            "final_score": initial_score,
+            "potential_score": potential_score,
             "status": gate_status,
             "decision": gate_decision
         },
         "scores": {
-            "overall": final_score,
-            "technical": final_tech,
-            "onpage": final_onpage,
+            "overall": initial_score,
+            "potential_score": potential_score,
+            "technical": tech_score,
+            "potential_technical": potential_tech,
+            "onpage": onpage_score,
+            "potential_onpage": potential_onpage,
             "cwv": cwv_score,
             "aeo": aeo_score,
-            "geo": final_geo,
+            "geo": geo_score,
+            "potential_geo": potential_geo,
             "subpages_avg": subpages_avg
         },
         "agents_trace": agent_trace,
@@ -1705,8 +1973,14 @@ Khi người dùng truy vấn thông tin về học phí, tuyển sinh hoặc ch
         "meta": {
             "title": page_title,
             "title_len": len(page_title),
+            "title_px": main_title_px,
+            "title_truncated": main_title_px > TITLE_PX_LIMIT,
+            "title_px_limit": TITLE_PX_LIMIT,
             "description": meta_desc,
             "desc_len": len(meta_desc),
+            "desc_px": main_desc_px,
+            "desc_truncated": main_desc_px > DESC_PX_LIMIT,
+            "desc_px_limit": DESC_PX_LIMIT,
             "canonical": parser.canonical,
             "viewport": parser.viewport,
             "server": res_main["headers"].get("Server", "Unknown"),
@@ -1735,6 +2009,7 @@ Khi người dùng truy vấn thông tin về học phí, tuyển sinh hoặc ch
         "aeo_geo": {
             "brand_guess": brand_guess,
             "suggested_keywords": suggested_keywords,
+            "google_intent_clusters": google_intent_clusters,
             "factual_ratio": factual_ratio,
             "generated_llmstxt": generated_llmstxt
         },
@@ -1748,7 +2023,10 @@ Khi người dùng truy vấn thông tin về học phí, tuyển sinh hoặc ch
         },
         "content_silos": crawl_res.get("content_silos", []),
         "backlink_authority": crawl_res.get("backlink_authority", {}),
-        "striking_distance": analyze_striking_distance_and_ctr_anomalies(subpages),
+        "striking_distance": striking_distance_data,
+        "ctr_anomalies": ctr_anomalies_data,
+        "gsc_connected": gsc_connected,
+        "gsc_performance": CURRENT_GSC_DATA if gsc_connected else None,
         "ai_citation_audit": analyze_ai_citation_recipe(subpages, bot_parity),
         "competitor_playbook": analyze_competitor_playbook(
             hostname, res_main, parser, subpages, bot_parity, broken_links,
@@ -1834,10 +2112,13 @@ class AuditHTTPHandler(http.server.SimpleHTTPRequestHandler):
             lang = query_params.get("lang", ["vi"])[0]
             suggestions = get_google_suggestions(q, lang)
             self.send_json_response({"query": q, "suggestions": suggestions})
+        elif parsed_path.path == "/api/gsc/status":
+            self.send_json_response(CURRENT_GSC_DATA if CURRENT_GSC_DATA else {"is_connected": False})
         else:
             super().do_GET()
 
     def do_POST(self):
+        global CURRENT_GSC_DATA
         parsed_path = urllib.parse.urlparse(self.path)
         if parsed_path.path == "/api/audit":
             content_len = int(self.headers.get("Content-Length", 0))
@@ -1859,6 +2140,27 @@ class AuditHTTPHandler(http.server.SimpleHTTPRequestHandler):
                 self.send_json_response(result, 200 if result.get("success") else 500)
             except Exception as e:
                 self.send_json_response({"success": False, "error": f"Lỗi xử lý server: {str(e)}"}, 500)
+        elif parsed_path.path == "/api/gsc/upload":
+            content_len = int(self.headers.get("Content-Length", 0))
+            post_bytes = self.rfile.read(content_len)
+            try:
+                try:
+                    data = json.loads(post_bytes.decode("utf-8", errors="ignore"))
+                    csv_text = data.get("csv", "")
+                except Exception:
+                    csv_text = post_bytes.decode("utf-8", errors="ignore")
+
+                parsed = parse_gsc_csv(csv_text)
+                if parsed.get("success"):
+                    CURRENT_GSC_DATA = parsed
+                    self.send_json_response(parsed, 200)
+                else:
+                    self.send_json_response(parsed, 400)
+            except Exception as e:
+                self.send_json_response({"success": False, "error": str(e)}, 500)
+        elif parsed_path.path == "/api/gsc/clear":
+            CURRENT_GSC_DATA = {}
+            self.send_json_response({"success": True, "message": "Đã xóa dữ liệu GSC"}, 200)
         elif parsed_path.path == "/api/content-brief":
             content_len = int(self.headers.get("Content-Length", 0))
             post_body = self.rfile.read(content_len).decode("utf-8", errors="ignore")

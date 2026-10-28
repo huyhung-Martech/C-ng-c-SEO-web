@@ -145,10 +145,52 @@ function initEventListeners() {
     });
   }
 
+  // GSC File Upload & Actions
+  const gscUploadBtn = document.getElementById("gscUploadBtn");
+  const gscFileInput = document.getElementById("gscFileInput");
+  const gscDropzone = document.getElementById("gscDropzone");
+  const gscDemoBtn = document.getElementById("gscDemoBtn");
+  const gscClearBtn = document.getElementById("gscClearBtn");
+
+  if (gscUploadBtn && gscFileInput) {
+    gscUploadBtn.addEventListener("click", () => gscFileInput.click());
+    gscFileInput.addEventListener("change", (e) => {
+      const file = e.target.files[0];
+      if (file) handleGscCsvUpload(file);
+    });
+  }
+
+  if (gscDropzone && gscFileInput) {
+    gscDropzone.addEventListener("click", () => gscFileInput.click());
+    gscDropzone.addEventListener("dragover", (e) => {
+      e.preventDefault();
+      gscDropzone.classList.add("drag-over");
+    });
+    gscDropzone.addEventListener("dragleave", () => gscDropzone.classList.remove("drag-over"));
+    gscDropzone.addEventListener("drop", (e) => {
+      e.preventDefault();
+      gscDropzone.classList.remove("drag-over");
+      if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+        handleGscCsvUpload(e.dataTransfer.files[0]);
+      }
+    });
+  }
+
+  if (gscDemoBtn) {
+    gscDemoBtn.addEventListener("click", () => loadGscDemoData());
+  }
+
+  if (gscClearBtn) {
+    gscClearBtn.addEventListener("click", () => clearGscData());
+  }
+
   // Export buttons
-  document.getElementById("exportMdBtn").addEventListener("click", exportMarkdownReport);
-  document.getElementById("exportJsonBtn").addEventListener("click", exportJsonData);
-  document.getElementById("printBtn").addEventListener("click", () => window.print());
+  const mdBtn = document.getElementById("exportMdBtn");
+  if (mdBtn) mdBtn.addEventListener("click", exportMarkdownReport);
+  const jsonBtn = document.getElementById("exportJsonBtn");
+  if (jsonBtn) jsonBtn.addEventListener("click", exportJsonData);
+  const prtBtn = document.getElementById("printBtn");
+  if (prtBtn) prtBtn.addEventListener("click", () => window.print());
 }
 
 function switchTab(targetTabId) {
@@ -491,6 +533,30 @@ function renderResults(data) {
   renderSubBar("aeoScoreVal", "aeoBar", scores.aeo || 65);
   renderSubBar("geoScoreVal", "geoBar", scores.geo || 70);
   renderSubBar("subpagesAvgScoreVal", "subpagesAvgBar", scores.subpages_avg || 75);
+
+  // Potential Score Display
+  const potentialScoreWrap = document.getElementById("potentialScoreWrap");
+  const potentialScoreVal = document.getElementById("potentialScoreVal");
+  const potScore = scores.potential_score || qg.potential_score;
+  if (potentialScoreWrap && potentialScoreVal && potScore) {
+    potentialScoreVal.textContent = potScore;
+    potentialScoreWrap.style.display = "inline-flex";
+  } else if (potentialScoreWrap) {
+    potentialScoreWrap.style.display = "none";
+  }
+
+  // Render Google SERP Pixel Width Engine
+  renderSerpPixelMeter(data.meta || {}, data.target_url);
+
+  // Render Live Google Suggest 5W1H Intent Clusters
+  if (data.aeo_geo?.google_intent_clusters) {
+    renderIntentClusters(data.aeo_geo.google_intent_clusters);
+  }
+
+  // Render GSC Performance if connected
+  if (data.gsc_connected && data.gsc_performance) {
+    renderGscData(data.gsc_performance);
+  }
 
   // 6. Meta Strip
   const meta = data.meta || {};
@@ -1507,4 +1573,272 @@ function downloadFile(filename, content, type) {
   a.click();
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
+}
+
+// ==============================================================================
+// GOOGLE SERP PIXEL WIDTH RENDERER (Arial 580px Title / 920px Description)
+// ==============================================================================
+function renderSerpPixelMeter(meta, targetUrl) {
+  const urlEl = document.getElementById("serpSnippetUrl");
+  const titleEl = document.getElementById("serpSnippetTitle");
+  const descEl = document.getElementById("serpSnippetDesc");
+
+  const fullUrl = targetUrl || meta.url || "https://example.com";
+  const title = meta.title || "Chưa có tiêu đề trang";
+  const desc = meta.description || "Chưa có thẻ meta description.";
+
+  if (urlEl) urlEl.textContent = fullUrl;
+  if (titleEl) titleEl.textContent = title;
+  if (descEl) descEl.textContent = desc;
+
+  // Title calculation
+  const titlePx = meta.title_px || 0;
+  const titleChars = meta.title_len || title.length;
+  const titlePxVal = document.getElementById("serpTitlePxVal");
+  const titleCharVal = document.getElementById("serpTitleCharVal");
+  const titleBadge = document.getElementById("serpTitleBadge");
+  const titleBar = document.getElementById("serpTitleBar");
+
+  if (titlePxVal) titlePxVal.textContent = titlePx;
+  if (titleCharVal) titleCharVal.textContent = titleChars;
+
+  const titlePercent = Math.min(100, Math.round((titlePx / 580) * 100));
+  if (titleBar) {
+    titleBar.style.width = `${titlePercent}%`;
+    if (titlePx <= 580) {
+      titleBar.className = "pixel-meter-fill pixel-fill-green";
+      if (titleBadge) {
+        titleBadge.className = "badge badge-emerald";
+        titleBadge.textContent = `${titlePx}px (Đạt chuẩn hiển thị)`;
+      }
+    } else {
+      titleBar.className = "pixel-meter-fill pixel-fill-rose";
+      if (titleBadge) {
+        titleBadge.className = "badge badge-rose";
+        titleBadge.textContent = `${titlePx}px (Vượt quá 580px - Bị cắt đuôi ...)`;
+      }
+    }
+  }
+
+  // Description calculation
+  const descPx = meta.desc_px || 0;
+  const descChars = meta.desc_len || desc.length;
+  const descPxVal = document.getElementById("serpDescPxVal");
+  const descCharVal = document.getElementById("serpDescCharVal");
+  const descBadge = document.getElementById("serpDescBadge");
+  const descBar = document.getElementById("serpDescBar");
+
+  if (descPxVal) descPxVal.textContent = descPx;
+  if (descCharVal) descCharVal.textContent = descChars;
+
+  const descPercent = Math.min(100, Math.round((descPx / 920) * 100));
+  if (descBar) {
+    descBar.style.width = `${descPercent}%`;
+    if (descPx <= 920) {
+      descBar.className = "pixel-meter-fill pixel-fill-green";
+      if (descBadge) {
+        descBadge.className = "badge badge-emerald";
+        descBadge.textContent = `${descPx}px (Đạt chuẩn)`;
+      }
+    } else {
+      descBar.className = "pixel-meter-fill pixel-fill-amber";
+      if (descBadge) {
+        descBadge.className = "badge badge-amber";
+        descBadge.textContent = `${descPx}px (Vượt quá 920px)`;
+      }
+    }
+  }
+
+  const overallSerpBadge = document.getElementById("serpPixelStatusBadge");
+  if (overallSerpBadge) {
+    if (titlePx <= 580 && descPx <= 920) {
+      overallSerpBadge.className = "badge badge-emerald";
+      overallSerpBadge.textContent = "✓ Chuẩn SERP Google";
+    } else {
+      overallSerpBadge.className = "badge badge-amber";
+      overallSerpBadge.textContent = "⚠ Cần Tối Ưu SERP Pixel";
+    }
+  }
+}
+
+// ==============================================================================
+// 5W1H INTENT CLUSTERS RENDERER
+// ==============================================================================
+function renderIntentClusters(clusters) {
+  if (!clusters) return;
+
+  const qList = document.getElementById("clusterQuestionsList");
+  const qCount = document.getElementById("clusterQuestionsCount");
+  const cList = document.getElementById("clusterCommercialList");
+  const cCount = document.getElementById("clusterCommercialCount");
+  const tList = document.getElementById("clusterTrustList");
+  const tCount = document.getElementById("clusterTrustCount");
+  const totalBadge = document.getElementById("intentTotalBadge");
+
+  const questions = clusters.questions || [];
+  const commercial = clusters.commercial || [];
+  const trust = clusters.trust_comparison || [];
+  const total = questions.length + commercial.length + trust.length;
+
+  if (totalBadge) totalBadge.textContent = `${total} từ khóa ý định (Google Live)`;
+
+  function populateCol(listEl, countEl, items) {
+    if (!listEl) return;
+    listEl.innerHTML = "";
+    if (countEl) countEl.textContent = items.length;
+    if (items.length === 0) {
+      listEl.innerHTML = `<span class="text-muted" style="font-size:0.78rem;">Không có dữ liệu suggest.</span>`;
+      return;
+    }
+    items.forEach(q => {
+      const chip = document.createElement("div");
+      chip.className = "intent-query-chip";
+      chip.innerHTML = `<span>${escapeHtml(q)}</span> <span style="color:var(--text-dim);font-size:0.7rem;">🔍</span>`;
+      chip.addEventListener("click", () => {
+        window.open(`https://www.google.com/search?q=${encodeURIComponent(q)}`, '_blank');
+      });
+      listEl.appendChild(chip);
+    });
+  }
+
+  populateCol(qList, qCount, questions);
+  populateCol(cList, cCount, commercial);
+  populateCol(tList, tCount, trust);
+}
+
+// ==============================================================================
+// GOOGLE SEARCH CONSOLE (GSC) CSV HANDLER & RENDERER
+// ==============================================================================
+async function handleGscCsvUpload(file) {
+  const reader = new FileReader();
+  const statusBadge = document.getElementById("gscStatusBadge");
+  if (statusBadge) {
+    statusBadge.className = "badge badge-cyan";
+    statusBadge.textContent = "Đang xử lý CSV...";
+  }
+
+  reader.onload = async (e) => {
+    const csvContent = e.target.result;
+    try {
+      const res = await fetch("/api/gsc/upload", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ csv: csvContent })
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        throw new Error(data.error || "Lỗi xử lý file CSV của Google Search Console.");
+      }
+      renderGscData(data);
+      alert(`✓ Nạp thành công dữ liệu GSC!\nĐã bóc tách ${data.total_queries} từ khóa, ${data.striking_distance.length} cơ hội Striking Distance và ${data.ctr_anomalies.length} lỗi CTR Anomaly.`);
+    } catch (err) {
+      if (statusBadge) {
+        statusBadge.className = "badge badge-rose";
+        statusBadge.textContent = "Lỗi nạp file";
+      }
+      alert(`❌ Lỗi: ${err.message}`);
+    }
+  };
+  reader.readAsText(file);
+}
+
+function loadGscDemoData() {
+  const demoCsv = `Top queries,Clicks,Impressions,CTR,Position
+wellspring tuyển sinh,145,2800,5.18%,2.4
+học phí trường wellspring,120,4100,2.93%,3.1
+học bổng wellspring 2026,38,1950,1.95%,4.2
+trường quốc tế song ngữ hà nội,45,8200,0.55%,9.4
+chương trình cambridge tiểu học,32,6400,0.50%,11.2
+trường song ngữ chất lượng cao quận long biên,28,4500,0.62%,12.5
+chi phí du học tại chỗ cấp 3,18,3100,0.58%,13.8
+điều kiện xét tuyển lớp 10 wellspring,22,2900,0.76%,8.5
+bảng giá xe buýt đưa đón học sinh wellspring,12,1850,0.65%,10.1
+review trường song ngữ wellspring có tốt không,64,3100,2.06%,3.8
+`;
+  handleGscCsvUpload(new Blob([demoCsv], { type: "text/csv" }));
+}
+
+async function clearGscData() {
+  try {
+    await fetch("/api/gsc/clear", { method: "POST" });
+    const wrap = document.getElementById("gscMetricsWrap");
+    if (wrap) wrap.style.display = "none";
+    const clearBtn = document.getElementById("gscClearBtn");
+    if (clearBtn) clearBtn.style.display = "none";
+    const statusBadge = document.getElementById("gscStatusBadge");
+    if (statusBadge) {
+      statusBadge.className = "badge badge-amber";
+      statusBadge.textContent = "Chưa kết nối GSC";
+    }
+    const dropzone = document.getElementById("gscDropzone");
+    if (dropzone) dropzone.style.display = "block";
+  } catch (_) {}
+}
+
+function renderGscData(gsc) {
+  if (!gsc || !gsc.is_connected) return;
+
+  const statusBadge = document.getElementById("gscStatusBadge");
+  if (statusBadge) {
+    statusBadge.className = "badge badge-emerald";
+    statusBadge.textContent = "🟢 Đã kết nối GSC (Dữ liệu thực tế)";
+  }
+
+  const dropzone = document.getElementById("gscDropzone");
+  if (dropzone) dropzone.style.display = "none";
+
+  const clearBtn = document.getElementById("gscClearBtn");
+  if (clearBtn) clearBtn.style.display = "inline-flex";
+
+  const wrap = document.getElementById("gscMetricsWrap");
+  if (wrap) wrap.style.display = "block";
+
+  const qEl = document.getElementById("gscTotalQueries");
+  if (qEl) qEl.textContent = gsc.total_queries.toLocaleString();
+  const cEl = document.getElementById("gscTotalClicks");
+  if (cEl) cEl.textContent = gsc.total_clicks.toLocaleString();
+  const iEl = document.getElementById("gscTotalImpressions");
+  if (iEl) iEl.textContent = gsc.total_impressions.toLocaleString();
+
+  const avgCtr = gsc.total_impressions > 0 ? (gsc.total_clicks / gsc.total_impressions * 100).toFixed(2) : "0.00";
+  const ctrEl = document.getElementById("gscAvgCtr");
+  if (ctrEl) ctrEl.textContent = `${avgCtr}%`;
+
+  // Real Striking Distance table
+  const strikingTbody = document.getElementById("gscStrikingTableBody");
+  const strikingBadge = document.getElementById("gscStrikingBadge");
+  if (strikingBadge) strikingBadge.textContent = `${gsc.striking_distance?.length || 0} từ khóa`;
+  if (strikingTbody) {
+    strikingTbody.innerHTML = "";
+    (gsc.striking_distance || []).slice(0, 10).forEach(item => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td style="font-weight:600;color:var(--text-white);">${escapeHtml(item.query)}</td>
+        <td><span class="badge badge-amber">Top ${item.position}</span></td>
+        <td>${item.impressions.toLocaleString()}</td>
+        <td>${item.clicks.toLocaleString()}</td>
+        <td>${item.ctr}%</td>
+      `;
+      strikingTbody.appendChild(tr);
+    });
+  }
+
+  // Real CTR Anomalies table
+  const anomalyTbody = document.getElementById("gscAnomalyTableBody");
+  const anomalyBadge = document.getElementById("gscAnomalyBadge");
+  if (anomalyBadge) anomalyBadge.textContent = `${gsc.ctr_anomalies?.length || 0} từ khóa`;
+  if (anomalyTbody) {
+    anomalyTbody.innerHTML = "";
+    (gsc.ctr_anomalies || []).slice(0, 10).forEach(item => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td style="font-weight:600;color:var(--text-white);">${escapeHtml(item.query)}</td>
+        <td><span class="badge badge-emerald">Top ${item.position}</span></td>
+        <td>${item.impressions.toLocaleString()}</td>
+        <td><span class="badge badge-rose">${item.ctr}% (Quá thấp)</span></td>
+        <td style="color:var(--accent-cyan);font-size:0.76rem;">Sửa Title &amp; Snippet để tăng CTR</td>
+      `;
+      anomalyTbody.appendChild(tr);
+    });
+  }
 }

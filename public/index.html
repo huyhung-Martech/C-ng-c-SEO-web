@@ -352,6 +352,9 @@
                     <span class="tag-label">ĐIỂM CHẤT LƯỢNG TỔNG QUAN</span>
                     <h3 id="overallScoreVerdict" class="score-verdict">Đang đánh giá...</h3>
                     <p id="overallScoreDesc" class="score-meta-desc">Đánh giá thực tế dựa trên mạng lưới liên kết, từ khóa bài viết và bản vá kiểm thử.</p>
+                    <div id="potentialScoreWrap" class="potential-score-badge" style="display: none;">
+                      <span>🚀 Tiềm năng sau nạp bản vá:</span> <strong id="potentialScoreVal">--</strong>/100
+                    </div>
                   </div>
                 </div>
 
@@ -428,6 +431,51 @@
                 <div class="meta-chip">
                   <span class="chip-title">THỜI GIAN THỰC THI</span>
                   <span id="metaDuration" class="chip-value">--</span>
+                </div>
+              </section>
+
+              <!-- Google SERP Pixel Width Engine Card (Arial 580px Title / 920px Description) -->
+              <section class="serp-pixel-card" id="serpPixelCard">
+                <div class="card-header-flex">
+                  <div>
+                    <h3 class="card-title text-cyan">🔍 Mô Phỏng Google SERP &amp; Đo Pixel Width (Arial Engine)</h3>
+                    <p class="text-muted" style="margin-top: 4px; font-size: 0.84rem;">
+                      Đo lường độ dài ký tự và độ rộng pixel thực tế trên kết quả tìm kiếm máy tính của Google (Title tối đa 580px, Description tối đa 920px):
+                    </p>
+                  </div>
+                  <span class="badge badge-emerald" id="serpPixelStatusBadge">Đạt Chuẩn SERP</span>
+                </div>
+
+                <!-- Visual SERP Box -->
+                <div class="serp-snippet-preview">
+                  <div class="serp-google-url" id="serpSnippetUrl">https://example.com</div>
+                  <div class="serp-google-title" id="serpSnippetTitle">Tiêu đề trang web sẽ hiển thị trên Google Search...</div>
+                  <div class="serp-google-desc" id="serpSnippetDesc">Mô tả Meta Description tóm tắt nội dung trang sẽ hiển thị bên dưới tiêu đề trên Google.</div>
+                </div>
+
+                <!-- Dual Pixel Width Meters -->
+                <div class="pixel-meter-row">
+                  <!-- Title Meter -->
+                  <div class="pixel-meter-item">
+                    <div class="pixel-meter-header">
+                      <span><strong>Thẻ Tiêu Đề (Title)</strong>: <span id="serpTitlePxVal">0</span>px / 580px (<span id="serpTitleCharVal">0</span> ký tự)</span>
+                      <span class="badge badge-emerald" id="serpTitleBadge">0px (Chuẩn)</span>
+                    </div>
+                    <div class="pixel-meter-track">
+                      <div class="pixel-meter-fill pixel-fill-green" id="serpTitleBar" style="width: 0%;"></div>
+                    </div>
+                  </div>
+
+                  <!-- Description Meter -->
+                  <div class="pixel-meter-item">
+                    <div class="pixel-meter-header">
+                      <span><strong>Thẻ Mô Tả (Description)</strong>: <span id="serpDescPxVal">0</span>px / 920px (<span id="serpDescCharVal">0</span> ký tự)</span>
+                      <span class="badge badge-emerald" id="serpDescBadge">0px (Chuẩn)</span>
+                    </div>
+                    <div class="pixel-meter-track">
+                      <div class="pixel-meter-fill pixel-fill-green" id="serpDescBar" style="width: 0%;"></div>
+                    </div>
+                  </div>
                 </div>
               </section>
 
@@ -601,6 +649,161 @@
             <h3 class="card-title text-rose">⚠️ Cảnh Báo Ăn Thịt Từ Khóa (Keyword Cannibalization)</h3>
             <p class="text-muted" style="margin-bottom: 12px;">Các cặp bài viết dưới đây có bộ từ khóa trọng tâm trùng lặp trên 60%, tự làm loãng thứ hạng của nhau trên Google:</p>
             <div class="cannibal-list" id="cannibalList"></div>
+          </div>
+
+          <!-- Google Suggest 5W1H Intent Clusters -->
+          <div class="glass-card" style="margin-bottom: 24px;">
+            <div class="card-header-flex">
+              <div>
+                <h3 class="card-title text-emerald">🔍 Khai Thác Ý Định Tìm Kiếm Trực Tiếp (Live Google Suggest 5W1H Clusters)</h3>
+                <p class="text-muted" style="margin-top: 4px; font-size: 0.86rem;">
+                  Hệ thống cào trực tiếp từ Google Autocomplete API theo 3 nhóm ý định chính: Câu hỏi 5W1H (AEO Top 0), Ý định thương mại (Commercial) và Niềm tin/So sánh (Trust &amp; Review).
+                </p>
+              </div>
+              <span class="badge badge-emerald" id="intentTotalBadge">Đang cào dữ liệu...</span>
+            </div>
+
+            <div class="intent-clusters-grid">
+              <!-- Cluster 1: Questions -->
+              <div class="intent-column">
+                <div class="intent-column-header">
+                  <span class="intent-column-title">❓ Câu Hỏi 5W1H (AEO &amp; Featured Snippets)</span>
+                  <span class="badge badge-cyan" id="clusterQuestionsCount">0</span>
+                </div>
+                <div class="intent-list" id="clusterQuestionsList">
+                  <div class="text-muted" style="font-size: 0.78rem;">Đang tải cụm câu hỏi...</div>
+                </div>
+              </div>
+
+              <!-- Cluster 2: Commercial Intent -->
+              <div class="intent-column">
+                <div class="intent-column-header">
+                  <span class="intent-column-title">💰 Ý Định Thương Mại &amp; Tuyển Sinh</span>
+                  <span class="badge badge-emerald" id="clusterCommercialCount">0</span>
+                </div>
+                <div class="intent-list" id="clusterCommercialList">
+                  <div class="text-muted" style="font-size: 0.78rem;">Đang tải ý định thương mại...</div>
+                </div>
+              </div>
+
+              <!-- Cluster 3: Trust & Comparison -->
+              <div class="intent-column">
+                <div class="intent-column-header">
+                  <span class="intent-column-title">🛡️ Đánh Giá &amp; So Sánh (Trust/Review)</span>
+                  <span class="badge badge-purple" id="clusterTrustCount">0</span>
+                </div>
+                <div class="intent-list" id="clusterTrustList">
+                  <div class="text-muted" style="font-size: 0.78rem;">Đang tải ý định đánh giá...</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Google Search Console Live Performance Panel -->
+          <div class="gsc-connect-card" id="gscConnectCard">
+            <div class="gsc-header-row">
+              <div>
+                <h3 class="card-title text-cyan">📊 Google Search Console (GSC) Performance &amp; Real Striking Distance</h3>
+                <p class="text-muted" style="margin-top: 4px; font-size: 0.85rem;">
+                  Nạp file export <code>Queries.csv</code> hoặc <code>Pages.csv</code> từ Google Search Console để phân tích <strong>100% dữ liệu thứ hạng và lượt click thực tế</strong> từ Google.
+                </p>
+              </div>
+              <div style="display: flex; gap: 8px; align-items: center;">
+                <span class="badge badge-amber" id="gscStatusBadge">Chưa kết nối GSC</span>
+                <input type="file" id="gscFileInput" accept=".csv" style="display: none;" />
+                <button type="button" class="btn btn-sm btn-primary" id="gscUploadBtn">
+                  <span>📁 Tải lên file CSV</span>
+                </button>
+                <button type="button" class="btn btn-sm btn-secondary" id="gscDemoBtn" title="Nạp dữ liệu mẫu GSC để trải nghiệm">
+                  <span>⚡ Nạp dữ liệu mẫu</span>
+                </button>
+                <button type="button" class="btn btn-sm btn-secondary" id="gscClearBtn" style="display: none;" title="Xóa dữ liệu GSC">
+                  <span>✕ Xóa</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Drag & Drop Zone -->
+            <div class="gsc-dropzone" id="gscDropzone">
+              <div class="gsc-drop-icon">📤</div>
+              <div style="font-size: 0.88rem; font-weight: 600; color: var(--text-white);">Kéo &amp; thả file CSV từ Google Search Console vào đây</div>
+              <div style="font-size: 0.76rem; color: var(--text-muted); margin-top: 4px;">Hỗ trợ định dạng xuất báo cáo Performance (Queries.csv hoặc Pages.csv)</div>
+            </div>
+
+            <!-- GSC Metrics (hidden when empty) -->
+            <div id="gscMetricsWrap" style="display: none;">
+              <div class="gsc-stats-pill-grid">
+                <div class="gsc-stat-pill">
+                  <span class="gsc-stat-pill-num text-cyan" id="gscTotalQueries">0</span>
+                  <span class="gsc-stat-pill-label">Tổng Từ Khóa GSC</span>
+                </div>
+                <div class="gsc-stat-pill">
+                  <span class="gsc-stat-pill-num text-emerald" id="gscTotalClicks">0</span>
+                  <span class="gsc-stat-pill-label">Tổng Lượt Nhấp (Clicks)</span>
+                </div>
+                <div class="gsc-stat-pill">
+                  <span class="gsc-stat-pill-num text-purple" id="gscTotalImpressions">0</span>
+                  <span class="gsc-stat-pill-label">Lượt Hiển Thị (Impressions)</span>
+                </div>
+                <div class="gsc-stat-pill">
+                  <span class="gsc-stat-pill-num text-amber" id="gscAvgCtr">0%</span>
+                  <span class="gsc-stat-pill-label">CTR Trung Bình</span>
+                </div>
+              </div>
+
+              <!-- Real Striking Distance & CTR Anomalies Tables -->
+              <div class="two-col-grid" style="margin-top: 18px;">
+                <!-- Real Striking Distance (Pos 8-20, high impressions) -->
+                <div class="glass-card" style="margin-bottom: 0;">
+                  <div class="card-header-flex">
+                    <h4 class="card-title text-cyan" style="font-size: 0.95rem;">🎯 Real Striking Distance (Vị trí 8.0 - 20.0)</h4>
+                    <span class="badge badge-cyan" id="gscStrikingBadge">0 từ khóa</span>
+                  </div>
+                  <p class="text-muted" style="font-size: 0.78rem; margin-bottom: 10px;">
+                    Từ khóa đang ở Trang 2 Google nhưng có lượng tìm kiếm lớn. Đẩy on-page &amp; inlinks để vào Top 3:
+                  </p>
+                  <div class="table-responsive">
+                    <table class="data-table" style="font-size: 0.82rem;">
+                      <thead>
+                        <tr>
+                          <th>Từ khóa GSC</th>
+                          <th>Vị trí</th>
+                          <th>Hiển thị</th>
+                          <th>Clicks</th>
+                          <th>CTR</th>
+                        </tr>
+                      </thead>
+                      <tbody id="gscStrikingTableBody"></tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <!-- Real CTR Anomalies (Top 5, CTR < 3%) -->
+                <div class="glass-card" style="margin-bottom: 0;">
+                  <div class="card-header-flex">
+                    <h4 class="card-title text-rose" style="font-size: 0.95rem;">⚡ Bất Thường CTR (Top 5 nhưng CTR &lt; 3%)</h4>
+                    <span class="badge badge-rose" id="gscAnomalyBadge">0 từ khóa</span>
+                  </div>
+                  <p class="text-muted" style="font-size: 0.78rem; margin-bottom: 10px;">
+                    Đang đứng Top đầu Google nhưng rất ít người click vì Snippet/Title kém hấp dẫn. Sửa title tăng gấp 3 CTR:
+                  </p>
+                  <div class="table-responsive">
+                    <table class="data-table" style="font-size: 0.82rem;">
+                      <thead>
+                        <tr>
+                          <th>Từ khóa Top đầu</th>
+                          <th>Vị trí</th>
+                          <th>Hiển thị</th>
+                          <th>CTR Hiện Tại</th>
+                          <th>Hành Động</th>
+                        </tr>
+                      </thead>
+                      <tbody id="gscAnomalyTableBody"></tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
 
           <!-- Subpages Table with Keywords and N-Grams -->

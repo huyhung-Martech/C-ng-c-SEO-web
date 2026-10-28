@@ -1579,3 +1579,245 @@ body {
   }
 }
 
+/* ==============================================================================
+   SERP PIXEL WIDTH ENGINE & GOOGLE SNIPPET METERS
+   ============================================================================== */
+.serp-pixel-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  margin-top: 18px;
+  margin-bottom: 20px;
+}
+
+.serp-snippet-preview {
+  background: #1e1f20;
+  border: 1px solid #303134;
+  border-radius: 8px;
+  padding: 16px 18px;
+  margin-top: 12px;
+  margin-bottom: 16px;
+  font-family: Arial, sans-serif;
+}
+
+.serp-google-url {
+  font-size: 12px;
+  color: #bdc1c6;
+  margin-bottom: 4px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.serp-google-title {
+  font-size: 20px;
+  line-height: 1.3;
+  color: #8ab4f8;
+  font-weight: 400;
+  margin-bottom: 4px;
+  cursor: pointer;
+  word-wrap: break-word;
+}
+.serp-google-title:hover {
+  text-decoration: underline;
+}
+
+.serp-google-desc {
+  font-size: 14px;
+  line-height: 1.4;
+  color: #bdc1c6;
+  word-wrap: break-word;
+}
+
+.pixel-meter-row {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.pixel-meter-item {
+  background: var(--bg-input);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+}
+
+.pixel-meter-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-size: 0.82rem;
+}
+
+.pixel-meter-track {
+  width: 100%;
+  height: 8px;
+  background: #27272a;
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+}
+
+.pixel-meter-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.4s ease;
+}
+
+.pixel-fill-green { background: #10b981; }
+.pixel-fill-amber { background: #f59e0b; }
+.pixel-fill-rose { background: #f43f5e; }
+
+/* ==============================================================================
+   GOOGLE SEARCH CONSOLE (GSC) CSV INGESTION & DATA VISUALIZATION
+   ============================================================================== */
+.gsc-connect-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  margin-bottom: 24px;
+}
+
+.gsc-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.gsc-dropzone {
+  border: 2px dashed #3f3f46;
+  background: rgba(24, 24, 27, 0.6);
+  border-radius: var(--radius-md);
+  padding: 24px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.2s, background-color 0.2s;
+  margin-top: 12px;
+  margin-bottom: 16px;
+}
+
+.gsc-dropzone:hover, .gsc-dropzone.drag-over {
+  border-color: var(--accent-blue);
+  background: rgba(59, 130, 246, 0.05);
+}
+
+.gsc-drop-icon {
+  font-size: 28px;
+  margin-bottom: 6px;
+}
+
+.gsc-stats-pill-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.gsc-stat-pill {
+  background: var(--bg-input);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+}
+
+.gsc-stat-pill-num {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-white);
+  display: block;
+}
+
+.gsc-stat-pill-label {
+  font-size: 0.74rem;
+  color: var(--text-muted);
+}
+
+/* ==============================================================================
+   5W1H INTENT CLUSTERS (AEO Question Mining)
+   ============================================================================== */
+.intent-clusters-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-top: 14px;
+  margin-bottom: 24px;
+}
+
+.intent-column {
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.intent-column-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.intent-column-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-white);
+}
+
+.intent-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+}
+
+.intent-query-chip {
+  background: var(--bg-input);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xs);
+  padding: 6px 10px;
+  font-size: 0.78rem;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: border-color 0.15s, background-color 0.15s;
+}
+
+.intent-query-chip:hover {
+  border-color: var(--border-hover);
+  background: var(--bg-card-hover);
+}
+
+.potential-score-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  color: #34d399;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 999px;
+  margin-top: 6px;
+}
+
+@media (max-width: 900px) {
+  .intent-clusters-grid {
+    grid-template-columns: 1fr;
+  }
+  .gsc-stats-pill-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
