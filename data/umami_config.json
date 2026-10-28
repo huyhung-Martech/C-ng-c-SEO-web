@@ -1,0 +1,9 @@
+{
+  "target_domain": "wellspring.edu.vn",
+  "website_url": "https://wellspring.edu.vn/",
+  "website_id": "3359d766-fcc8-45aa-a5c5-cc23efd51a1f",
+  "script_src": "https://cloud.umami.is/script.js",
+  "snippet": "<script defer src=\"https://cloud.umami.is/script.js\" data-website-id=\"3359d766-fcc8-45aa-a5c5-cc23efd51a1f\"></script>",
+  "status": "PENDING_WEBSITE_ADMIN_ACCESS",
+  "instructions": "Dán vào trong thẻ <head> của https://wellspring.edu.vn/ khi có quyền quản trị mã nguồn hoặc thông qua Google Tag Manager (GTM)."
+}
