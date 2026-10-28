@@ -135,12 +135,13 @@
             </div>
             
             <select id="maxPagesSelect" class="scan-select-dropdown">
-              <option value="12">12 pages (Quick)</option>
-              <option value="30" selected>30 pages (In-depth)</option>
-              <option value="50">50 pages (Cluster Deep)</option>
-              <option value="100">100 pages (Enterprise)</option>
-              <option value="250">250 pages (Extensive)</option>
-              <option value="0">All Pages (Sitemap Exhaustive)</option>
+              <option value="25">⚡ 25 trang (Nhanh · ~15s)</option>
+              <option value="50">⚡ 50 trang (Cluster Quick · ~25s)</option>
+              <option value="100" selected>🔍 100 trang (Tiêu chuẩn Ahrefs · ~45s)</option>
+              <option value="300">🌐 300 trang (Chuyên sâu · ~2 phút)</option>
+              <option value="500">🚀 500 trang (Toàn site / Exhaustive · ~4 phút)</option>
+              <option value="1000">🔥 1.000 trang (Ultra Enterprise / Cả đêm)</option>
+              <option value="0">♾️ Quét toàn bộ Sitemap (Không giới hạn)</option>
             </select>
 
             <select id="qualityThresholdSelect" class="scan-select-dropdown" style="display: none;">
@@ -431,6 +432,91 @@
                 <div class="meta-chip">
                   <span class="chip-title">THỜI GIAN THỰC THI</span>
                   <span id="metaDuration" class="chip-value">--</span>
+                </div>
+              </section>
+
+              <!-- Enterprise SaaS Visual Health Metrics (Ahrefs / Screaming Frog Style) -->
+              <section class="saas-charts-grid" id="saasVisualSection">
+                <!-- Card 1: HTTP Status Distribution -->
+                <div class="saas-metric-card" id="saasStatusCard">
+                  <div class="card-header-flex">
+                    <div>
+                      <h4 class="saas-card-title">📡 Phân Bổ Mã HTTP (Status Codes)</h4>
+                      <span class="saas-card-sub" id="saasStatusSummary">Tỷ lệ phản hồi 200 OK</span>
+                    </div>
+                    <span class="badge badge-emerald" id="saasStatusBadge">100% OK</span>
+                  </div>
+                  <div class="stacked-bar-container">
+                    <div class="stacked-bar-track" id="saasStatusBarTrack">
+                      <div class="bar-seg seg-200" id="seg200" style="width: 100%;" title="200 OK"></div>
+                      <div class="bar-seg seg-301" id="seg301" style="width: 0%;" title="301/302 Redirect"></div>
+                      <div class="bar-seg seg-404" id="seg404" style="width: 0%;" title="404 Broken"></div>
+                      <div class="bar-seg seg-other" id="segOther" style="width: 0%;" title="Other"></div>
+                    </div>
+                  </div>
+                  <div class="saas-legend-row">
+                    <span class="legend-item"><span class="dot dot-200"></span> 200 OK: <strong id="valHttp200">0</strong></span>
+                    <span class="legend-item"><span class="dot dot-301"></span> 3xx Redirect: <strong id="valHttp301">0</strong></span>
+                    <span class="legend-item"><span class="dot dot-404"></span> 4xx Gãy: <strong id="valHttp404">0</strong></span>
+                  </div>
+                </div>
+
+                <!-- Card 2: Content Word Count Distribution -->
+                <div class="saas-metric-card" id="saasWordsCard">
+                  <div class="card-header-flex">
+                    <div>
+                      <h4 class="saas-card-title">📝 Phân Tầng Độ Dài Nội Dung</h4>
+                      <span class="saas-card-sub">Chống Thin Content & Thừa Crawl Budget</span>
+                    </div>
+                    <span class="badge badge-cyan" id="saasWordsBadge">Đạt độ sâu</span>
+                  </div>
+                  <div class="tier-bars-list">
+                    <div class="tier-bar-row">
+                      <div class="tier-label"><span>Mỏng (&lt;300t)</span><strong id="valWordThin">0</strong></div>
+                      <div class="tier-track"><div class="tier-fill fill-thin" id="tierThinBar" style="width: 0%;"></div></div>
+                    </div>
+                    <div class="tier-bar-row">
+                      <div class="tier-label"><span>Tiêu chuẩn (300-800t)</span><strong id="valWordStd">0</strong></div>
+                      <div class="tier-track"><div class="tier-fill fill-std" id="tierStdBar" style="width: 0%;"></div></div>
+                    </div>
+                    <div class="tier-bar-row">
+                      <div class="tier-label"><span>Chuyên sâu (800-1500t)</span><strong id="valWordDeep">0</strong></div>
+                      <div class="tier-track"><div class="tier-fill fill-deep" id="tierDeepBar" style="width: 0%;"></div></div>
+                    </div>
+                    <div class="tier-bar-row">
+                      <div class="tier-label"><span>Pillar (&gt;1500t)</span><strong id="valWordPillar">0</strong></div>
+                      <div class="tier-track"><div class="tier-fill fill-pillar" id="tierPillarBar" style="width: 0%;"></div></div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Card 3: Indexability & Architecture Health -->
+                <div class="saas-metric-card" id="saasIndexCard">
+                  <div class="card-header-flex">
+                    <div>
+                      <h4 class="saas-card-title">🛡️ Chỉ Mục & Sức Khỏe Kiến Trúc</h4>
+                      <span class="saas-card-sub">Indexability & Architecture Health</span>
+                    </div>
+                    <span class="badge badge-emerald" id="saasIndexBadge">Chuẩn SEO</span>
+                  </div>
+                  <div class="index-kpi-grid">
+                    <div class="index-kpi-box">
+                      <span class="kpi-num text-emerald" id="valIndexable">0</span>
+                      <span class="kpi-lbl">Có thể Index</span>
+                    </div>
+                    <div class="index-kpi-box">
+                      <span class="kpi-num text-amber" id="valNoindex">0</span>
+                      <span class="kpi-lbl">Noindex</span>
+                    </div>
+                    <div class="index-kpi-box">
+                      <span class="kpi-num text-cyan" id="valCanonicalValid">0</span>
+                      <span class="kpi-lbl">Canonical Hợp lệ</span>
+                    </div>
+                    <div class="index-kpi-box">
+                      <span class="kpi-num text-rose" id="valOrphanPages">0</span>
+                      <span class="kpi-lbl">Trang Mồ Côi</span>
+                    </div>
+                  </div>
                 </div>
               </section>
 
@@ -832,6 +918,16 @@
                   <option value="score-asc">Điểm On-Page thấp nhất</option>
                 </select>
               </div>
+            </div>
+
+            <!-- Faceted Quick Filter Chips Bar (Ahrefs Style Instant 0ms Filter) -->
+            <div class="faceted-filter-bar" id="facetedFilterChips">
+              <button type="button" class="filter-chip active" data-filter="all">Tất cả (<span id="chipAllCount">0</span>)</button>
+              <button type="button" class="filter-chip chip-error" data-filter="error">🚨 Có lỗi / 4xx (<span id="chipErrorCount">0</span>)</button>
+              <button type="button" class="filter-chip chip-thin" data-filter="thin">⚠️ Thin Content &lt;300t (<span id="chipThinCount">0</span>)</button>
+              <button type="button" class="filter-chip chip-prune" data-filter="prune">✂️ Cần cắt tỉa / Gộp bài (<span id="chipPruneCount">0</span>)</button>
+              <button type="button" class="filter-chip chip-noh1" data-filter="noh1">❓ Thiếu H1 (<span id="chipNoH1Count">0</span>)</button>
+              <button type="button" class="filter-chip chip-high" data-filter="high">🏆 Điểm On-page ≥80 (<span id="chipHighCount">0</span>)</button>
             </div>
 
             <div class="table-responsive">

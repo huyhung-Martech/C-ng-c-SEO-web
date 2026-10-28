@@ -1821,3 +1821,325 @@ body {
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
+/* ==============================================================================
+   AHREFS & SEMRUSH CALIBER VISUAL METRIC CARDS
+   ============================================================================== */
+.saas-charts-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin: 20px 0 24px;
+}
+
+.saas-metric-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-md);
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 12px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.saas-metric-card:hover {
+  border-color: var(--border-hover);
+  transform: translateY(-2px);
+}
+
+.saas-card-title {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--text-white);
+  letter-spacing: -0.01em;
+  margin-bottom: 2px;
+}
+
+.saas-card-sub {
+  font-size: 0.74rem;
+  color: var(--text-muted);
+}
+
+/* Stacked Progress Bar */
+.stacked-bar-container {
+  width: 100%;
+  margin-top: 4px;
+}
+
+.stacked-bar-track {
+  width: 100%;
+  height: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 999px;
+  overflow: hidden;
+  display: flex;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+.bar-seg {
+  height: 100%;
+  transition: width 0.4s ease-out;
+}
+
+.seg-200 { background: #10b981; }
+.seg-301 { background: #f59e0b; }
+.seg-404 { background: #f43f5e; }
+.seg-other { background: #6b7280; }
+
+.saas-legend-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
+  padding-top: 8px;
+}
+
+.legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.dot-200 { background: #10b981; }
+.dot-301 { background: #f59e0b; }
+.dot-404 { background: #f43f5e; }
+
+/* Tier Bars List (Word counts) */
+.tier-bars-list {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.tier-bar-row {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.tier-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.73rem;
+  color: var(--text-secondary);
+}
+
+.tier-label strong {
+  font-family: var(--font-mono);
+  color: var(--text-primary);
+}
+
+.tier-track {
+  width: 100%;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.tier-fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.4s ease-out;
+}
+
+.fill-thin { background: #f43f5e; }
+.fill-std { background: #3b82f6; }
+.fill-deep { background: #06b6d4; }
+.fill-pillar { background: #10b981; }
+
+/* Index KPI Grid */
+.index-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+.index-kpi-box {
+  background: var(--bg-input);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 8px 10px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.index-kpi-box .kpi-num {
+  font-family: var(--font-mono);
+  font-size: 1.15rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.index-kpi-box .kpi-lbl {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+/* ==============================================================================
+   FACETED QUICK FILTER CHIPS (Ahrefs Instant Filter)
+   ============================================================================== */
+.faceted-filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 12px 0 16px;
+  padding-bottom: 4px;
+}
+
+.filter-chip {
+  background: var(--bg-input);
+  border: 1px solid var(--border-subtle);
+  border-radius: 999px;
+  padding: 5px 12px;
+  font-size: 0.77rem;
+  font-family: var(--font-sans);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.filter-chip:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--border-hover);
+  color: var(--text-primary);
+}
+
+.filter-chip.active {
+  background: var(--bg-active-pill);
+  border-color: var(--accent-blue);
+  color: var(--text-white);
+  font-weight: 600;
+  box-shadow: 0 0 8px rgba(59, 130, 246, 0.25);
+}
+
+.filter-chip.chip-error.active {
+  border-color: #f43f5e;
+  box-shadow: 0 0 8px rgba(244, 63, 94, 0.25);
+}
+
+.filter-chip.chip-thin.active {
+  border-color: #f59e0b;
+  box-shadow: 0 0 8px rgba(245, 158, 11, 0.25);
+}
+
+.filter-chip.chip-prune.active {
+  border-color: #06b6d4;
+  box-shadow: 0 0 8px rgba(6, 182, 212, 0.25);
+}
+
+.filter-chip.chip-high.active {
+  border-color: #10b981;
+  box-shadow: 0 0 8px rgba(16, 185, 129, 0.25);
+}
+
+/* ==============================================================================
+   HIGH MOBILE DENSITY AUDIT (< 600px) - STRICT COMPLIANCE
+   ============================================================================== */
+@media (max-width: 600px) {
+  /* 1. Section vertical padding MUST be 24px - 35px */
+  section,
+  .phase-container,
+  .openseo-main-area,
+  .glass-card,
+  .tab-pane {
+    padding-top: 24px !important;
+    padding-bottom: 24px !important;
+  }
+
+  /* Spacing above footers / cards limited to <= 30px */
+  .meta-strip,
+  .saas-charts-grid,
+  .agent-mission-board,
+  .serp-pixel-card,
+  .glass-card {
+    margin-top: 14px !important;
+    margin-bottom: 18px !important;
+  }
+
+  /* Individual item card padding tightened to 12px - 20px */
+  .saas-metric-card,
+  .sub-score-item,
+  .agent-card,
+  .accordion-row,
+  .meta-chip {
+    padding: 12px 14px !important;
+  }
+
+  /* Grid Layouts: 2-column grid instead of single-column stacks */
+  .saas-charts-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .meta-strip {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 8px !important;
+  }
+
+  .sub-scores-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 8px !important;
+  }
+
+  .index-kpi-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 6px !important;
+  }
+
+  /* Typography Sizing & Line-Heights */
+  body, p, span, td, th {
+    line-height: 1.4 !important;
+  }
+
+  h1, .hero-title {
+    font-size: 1.65rem !important;
+    line-height: 1.25 !important;
+  }
+
+  h2, .pane-title {
+    font-size: 1.35rem !important;
+    line-height: 1.25 !important;
+  }
+
+  h3, .card-title {
+    font-size: 1.2rem !important;
+    line-height: 1.25 !important;
+  }
+
+  .pane-subtitle,
+  .card-sub,
+  .sub-desc {
+    font-size: 0.82rem !important;
+    line-height: 1.38 !important;
+  }
+
+  /* Compact quick sample chips */
+  .scan-quick-samples {
+    flex-wrap: wrap;
+    gap: 4px !important;
+  }
+
+  .sample-chip {
+    font-size: 0.72rem !important;
+    padding: 3px 8px !important;
+  }
+}
+

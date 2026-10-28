@@ -729,8 +729,8 @@ def recursive_network_crawl(root_url, sitemap_html="", max_pages=15, stream_call
     visited = set()
     queue = [base_clean]
     
-    # Target limit: 0 or negative means full catalog crawl (up to 250 pages)
-    target_limit = 250 if max_pages <= 0 else max_pages
+    # Target limit: 0 or negative means exhaustive catalog crawl (up to 1,000 pages)
+    target_limit = 1000 if max_pages <= 0 else max_pages
 
     # Also add sitemap URLs to initial queue
     if sitemap_html:
@@ -748,10 +748,10 @@ def recursive_network_crawl(root_url, sitemap_html="", max_pages=15, stream_call
                         if clean_loc not in queue:
                             queue.append(clean_loc)
 
-        # Concurrently fetch top child sitemaps to collect candidate article URLs
+        # Concurrently fetch top child sitemaps to collect candidate article URLs (Ahrefs-style deep extraction)
         if child_sitemaps:
-            sub_to_fetch = [cs for cs in child_sitemaps if any(k in cs.lower() for k in ("page", "post", "tin", "news", "event", "article", "category", "dinh-duong"))][:12]
-            with ThreadPoolExecutor(max_workers=6) as executor:
+            sub_to_fetch = [cs for cs in child_sitemaps if any(k in cs.lower() for k in ("page", "post", "tin", "news", "event", "article", "category", "dinh-duong", "sitemap", "product", "blog"))][:30]
+            with ThreadPoolExecutor(max_workers=8) as executor:
                 f_sitemaps = {executor.submit(fetch_url, sm, None, "GET", 6): sm for sm in sub_to_fetch}
                 for fut in as_completed(f_sitemaps):
                     try:
@@ -2089,6 +2089,44 @@ Khi người dùng truy vấn thông tin về học phí, tuyển sinh hoặc ch
         ctr_anomalies_data = []
         gsc_connected = False
 
+    # Ahrefs-style Visual SaaS Metrics (HTTP status, Content Tiers, Indexability)
+    status_200 = sum(1 for p in subpages if 200 <= p.get("status", 0) < 300)
+    status_301 = sum(1 for p in subpages if 300 <= p.get("status", 0) < 400)
+    status_404 = len(broken_links)
+    status_other = max(0, len(subpages) - status_200)
+
+    words_thin = sum(1 for p in subpages if p.get("word_count", 0) < 300)
+    words_standard = sum(1 for p in subpages if 300 <= p.get("word_count", 0) < 800)
+    words_indepth = sum(1 for p in subpages if 800 <= p.get("word_count", 0) < 1500)
+    words_pillar = sum(1 for p in subpages if p.get("word_count", 0) >= 1500)
+
+    indexable_count = sum(1 for p in subpages if not p.get("has_noindex"))
+    canonical_ok = sum(1 for p in subpages if p.get("canonicals_count", 0) == 1)
+
+    saas_visual_metrics = {
+        "status_distribution": {
+            "s200": status_200,
+            "s301": status_301,
+            "s404": status_404,
+            "s_other": status_other,
+            "pct_200": round((status_200 / max(1, len(subpages))) * 100, 1)
+        },
+        "word_count_distribution": {
+            "thin": words_thin,
+            "standard": words_standard,
+            "indepth": words_indepth,
+            "pillar": words_pillar
+        },
+        "indexability_metrics": {
+            "total_pages": len(subpages),
+            "indexable": indexable_count,
+            "noindex": len(subpages) - indexable_count,
+            "canonical_valid": canonical_ok,
+            "orphan_pages": len(orphan_pages),
+            "dead_ends": len(dead_end_pages)
+        }
+    }
+
     return {
         "success": True,
         "target_url": base_clean,
@@ -2120,6 +2158,7 @@ Khi người dùng truy vấn thông tin về học phí, tuyển sinh hoặc ch
         "agents_trace": agent_trace,
         "patches": patches,
         "test_results": test_results,
+        "saas_visual_metrics": saas_visual_metrics,
         "meta": {
             "title": page_title,
             "title_len": len(page_title),

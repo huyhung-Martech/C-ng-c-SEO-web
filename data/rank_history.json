@@ -1,0 +1,20 @@
+{
+  "test.local": {
+    "trường song ngữ quốc tế": [
+      {
+        "date": "2026-10-28",
+        "position": 2.1,
+        "clicks": 60,
+        "impressions": 5500
+      }
+    ],
+    "học phí wellspring 2026": [
+      {
+        "date": "2026-10-28",
+        "position": 12.0,
+        "clicks": 10,
+        "impressions": 1200
+      }
+    ]
+  }
+}

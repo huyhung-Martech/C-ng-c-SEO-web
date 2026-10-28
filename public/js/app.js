@@ -573,6 +573,9 @@ function renderResults(data) {
   const elDur = document.getElementById("metaDuration");
   if (elDur) elDur.textContent = `${data.duration_seconds || 0}s`;
 
+  // 6.1 Enterprise SaaS Visual Health Metrics
+  renderSaasVisualMetrics(data.saas_visual_metrics || {}, data.subpages || []);
+
   // 7. Multi-Page & Content Matrix Tab
   renderSubpagesMatrix(data);
 
@@ -746,8 +749,105 @@ function renderTestCases(tests) {
   });
 }
 
+// ==============================================================================
+// ENTERPRISE SAAS VISUAL HEALTH METRICS (Ahrefs / Screaming Frog Style)
+// ==============================================================================
+function renderSaasVisualMetrics(metrics, subpages = []) {
+  const status = metrics.status_distribution || {};
+  const words = metrics.word_count_distribution || {};
+  const idx = metrics.indexability_metrics || {};
+
+  // Card 1: HTTP Status Codes
+  const s200 = status.s200 || 0;
+  const s301 = status.s301 || 0;
+  const s404 = status.s404 || 0;
+  const sOther = status.s_other || 0;
+  const totalStatus = Math.max(1, s200 + s301 + s404 + sOther);
+
+  const pct200 = Math.round((s200 / totalStatus) * 100);
+  const pct301 = Math.round((s301 / totalStatus) * 100);
+  const pct404 = Math.round((s404 / totalStatus) * 100);
+  const pctOther = Math.max(0, 100 - pct200 - pct301 - pct404);
+
+  const seg200 = document.getElementById("seg200"); if (seg200) seg200.style.width = `${pct200}%`;
+  const seg301 = document.getElementById("seg301"); if (seg301) seg301.style.width = `${pct301}%`;
+  const seg404 = document.getElementById("seg404"); if (seg404) seg404.style.width = `${pct404}%`;
+  const segOther = document.getElementById("segOther"); if (segOther) segOther.style.width = `${pctOther}%`;
+
+  const val200 = document.getElementById("valHttp200"); if (val200) val200.textContent = s200;
+  const val301 = document.getElementById("valHttp301"); if (val301) val301.textContent = s301;
+  const val404 = document.getElementById("valHttp404"); if (val404) val404.textContent = s404;
+
+  const badgeStatus = document.getElementById("saasStatusBadge");
+  const subStatus = document.getElementById("saasStatusSummary");
+  if (badgeStatus) {
+    if (s404 === 0 && pct200 >= 95) {
+      badgeStatus.className = "badge badge-emerald";
+      badgeStatus.textContent = `${pct200}% OK`;
+      if (subStatus) subStatus.textContent = "Không phát hiện lỗi phản hồi";
+    } else if (s404 > 0) {
+      badgeStatus.className = "badge badge-rose";
+      badgeStatus.textContent = `${s404} link gãy`;
+      if (subStatus) subStatus.textContent = `Phát hiện ${s404} URL trả về lỗi 404`;
+    } else {
+      badgeStatus.className = "badge badge-amber";
+      badgeStatus.textContent = `${pct200}% OK`;
+      if (subStatus) subStatus.textContent = "Cần theo dõi các mã chuyển hướng 3xx";
+    }
+  }
+
+  // Card 2: Content Word Counts
+  const wThin = words.thin || 0;
+  const wStd = words.standard || 0;
+  const wDeep = words.indepth || 0;
+  const wPillar = words.pillar || 0;
+  const totalWords = Math.max(1, wThin + wStd + wDeep + wPillar);
+
+  const elThin = document.getElementById("valWordThin"); if (elThin) elThin.textContent = `${wThin} bài`;
+  const elStd = document.getElementById("valWordStd"); if (elStd) elStd.textContent = `${wStd} bài`;
+  const elDeep = document.getElementById("valWordDeep"); if (elDeep) elDeep.textContent = `${wDeep} bài`;
+  const elPillar = document.getElementById("valWordPillar"); if (elPillar) elPillar.textContent = `${wPillar} bài`;
+
+  const bThin = document.getElementById("tierThinBar"); if (bThin) bThin.style.width = `${Math.round((wThin / totalWords) * 100)}%`;
+  const bStd = document.getElementById("tierStdBar"); if (bStd) bStd.style.width = `${Math.round((wStd / totalWords) * 100)}%`;
+  const bDeep = document.getElementById("tierDeepBar"); if (bDeep) bDeep.style.width = `${Math.round((wDeep / totalWords) * 100)}%`;
+  const bPillar = document.getElementById("tierPillarBar"); if (bPillar) bPillar.style.width = `${Math.round((wPillar / totalWords) * 100)}%`;
+
+  const badgeWords = document.getElementById("saasWordsBadge");
+  if (badgeWords) {
+    if (wThin > 0) {
+      badgeWords.className = "badge badge-amber";
+      badgeWords.textContent = `${wThin} bài mỏng`;
+    } else {
+      badgeWords.className = "badge badge-emerald";
+      badgeWords.textContent = "Đạt độ sâu tốt";
+    }
+  }
+
+  // Card 3: Indexability & Architecture
+  const vIdx = document.getElementById("valIndexable"); if (vIdx) vIdx.textContent = idx.indexable || 0;
+  const vNoIdx = document.getElementById("valNoindex"); if (vNoIdx) vNoIdx.textContent = idx.noindex || 0;
+  const vCanon = document.getElementById("valCanonicalValid"); if (vCanon) vCanon.textContent = idx.canonical_valid || 0;
+  const vOrphan = document.getElementById("valOrphanPages"); if (vOrphan) vOrphan.textContent = idx.orphan_pages || 0;
+
+  const badgeIdx = document.getElementById("saasIndexBadge");
+  if (badgeIdx) {
+    if ((idx.orphan_pages || 0) === 0 && (idx.noindex || 0) === 0) {
+      badgeIdx.className = "badge badge-emerald";
+      badgeIdx.textContent = "Kiến trúc hoàn hảo";
+    } else if ((idx.orphan_pages || 0) > 0) {
+      badgeIdx.className = "badge badge-amber";
+      badgeIdx.textContent = `${idx.orphan_pages} bài mồ côi`;
+    } else {
+      badgeIdx.className = "badge badge-cyan";
+      badgeIdx.textContent = `${idx.indexable || 0} Indexable`;
+    }
+  }
+}
+
 let currentSubpagesData = [];
 let articlesFilterInitialized = false;
+let activeFacetedFilter = "all";
 
 function renderSubpagesMatrix(data) {
   currentSubpagesData = data.subpages || [];
@@ -759,6 +859,21 @@ function renderSubpagesMatrix(data) {
   document.getElementById("crossCannibalizationCount").textContent = cross.cannibalization ? cross.cannibalization.length : 0;
   document.getElementById("crossThinCount").textContent = cross.thin_content_pages ? cross.thin_content_pages.length : 0;
   document.getElementById("crossDupTitlesCount").textContent = cross.duplicate_titles ? cross.duplicate_titles.length : 0;
+
+  // Faceted Quick Filter Chips Count Badges
+  const countAll = currentSubpagesData.length;
+  const countError = currentSubpagesData.filter(p => (p.issues && p.issues.length > 0) || (p.status_code && p.status_code >= 400)).length;
+  const countThin = currentSubpagesData.filter(p => (p.word_count || 0) < 300).length;
+  const countPrune = currentSubpagesData.filter(p => p.pruning_action && p.pruning_action !== 'keep').length;
+  const countNoH1 = currentSubpagesData.filter(p => !p.h1 || p.h1.trim() === '' || p.h1.includes('Không có H1')).length;
+  const countHigh = currentSubpagesData.filter(p => (p.page_score || 0) >= 80).length;
+
+  const elChipAll = document.getElementById("chipAllCount"); if (elChipAll) elChipAll.textContent = countAll;
+  const elChipErr = document.getElementById("chipErrorCount"); if (elChipErr) elChipErr.textContent = countError;
+  const elChipThin = document.getElementById("chipThinCount"); if (elChipThin) elChipThin.textContent = countThin;
+  const elChipPrune = document.getElementById("chipPruneCount"); if (elChipPrune) elChipPrune.textContent = countPrune;
+  const elChipNoH1 = document.getElementById("chipNoH1Count"); if (elChipNoH1) elChipNoH1.textContent = countNoH1;
+  const elChipHigh = document.getElementById("chipHighCount"); if (elChipHigh) elChipHigh.textContent = countHigh;
 
   // Cannibalization Block
   const canBlock = document.getElementById("cannibalizationBlock");
@@ -806,6 +921,16 @@ function renderSubpagesMatrix(data) {
     if (searchInp) searchInp.addEventListener("input", filterAndDrawArticles);
     if (clusterSelect) clusterSelect.addEventListener("change", filterAndDrawArticles);
     if (sortSel) sortSel.addEventListener("change", filterAndDrawArticles);
+
+    // Faceted Chips click handler
+    document.querySelectorAll("#facetedFilterChips .filter-chip").forEach(chip => {
+      chip.addEventListener("click", () => {
+        document.querySelectorAll("#facetedFilterChips .filter-chip").forEach(c => c.classList.remove("active"));
+        chip.classList.add("active");
+        activeFacetedFilter = chip.getAttribute("data-filter") || "all";
+        filterAndDrawArticles();
+      });
+    });
   }
 
   filterAndDrawArticles();
@@ -824,6 +949,19 @@ function filterAndDrawArticles() {
   const sortBy = sortSel?.value || "inlinks-desc";
 
   let filtered = [...currentSubpagesData];
+
+  // Faceted Quick Filter Chip selection
+  if (activeFacetedFilter === "error") {
+    filtered = filtered.filter(p => (p.issues && p.issues.length > 0) || (p.status_code && p.status_code >= 400));
+  } else if (activeFacetedFilter === "thin") {
+    filtered = filtered.filter(p => (p.word_count || 0) < 300);
+  } else if (activeFacetedFilter === "prune") {
+    filtered = filtered.filter(p => p.pruning_action && p.pruning_action !== 'keep');
+  } else if (activeFacetedFilter === "noh1") {
+    filtered = filtered.filter(p => !p.h1 || p.h1.trim() === '' || p.h1.includes('Không có H1'));
+  } else if (activeFacetedFilter === "high") {
+    filtered = filtered.filter(p => (p.page_score || 0) >= 80);
+  }
 
   // Search filter
   if (query) {
