@@ -3,411 +3,319 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>OpenSEO · Autonomous AI Agent &amp; Recursive Link Crawler</title>
-  <meta name="description" content="Nền tảng kiểm định và truy quét lỗi SEO, AEO và GEO chuyên sâu với phong cách giao diện tối giản OpenSEO, hệ thống AI Agents đa vai trò và cào mạng lưới đệ quy." />
+  <title>Huy Hưng SEO Executive · Site Audit &amp; Technical Analyzer</title>
+  <meta name="description" content="Nền tảng kiểm định và truy quét SEO, AEO và GEO chuyên sâu với phong cách giao diện chuẩn Semrush Site Audit, hệ thống AI Agents đa vai trò và cào mạng lưới đệ quy." />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/app.css?v=5.0">
+  <link rel="stylesheet" href="css/app.css?v=6.0">
 </head>
 <body>
-  <div class="openseo-layout">
-    <!-- LEFT SIDEBAR (OpenSEO Minimalist Dark Sidebar) -->
-    <aside class="openseo-sidebar">
-      <div class="sidebar-brand-row">
-        <div class="brand-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 2v20M2 12h20M4.93 4.93l14.14 14.14M4.93 19.07l14.14-14.14"/>
+  <!-- SEMRUSH OFFICIAL GLOBAL HEADER (54px) -->
+  <header class="semrush-global-header">
+    <div class="semrush-header-left">
+      <a href="javascript:void(0)" class="semrush-brand-link" title="Huy Hưng SEO Executive">
+        <div class="semrush-flame-icon">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+            <path d="M12 2C8 6 6 9.5 6 13.5C6 17.5 9 21 13 21C17.5 21 20 17 20 13C20 9 17 5 12 2Z" fill="#FF642D"/>
+            <path d="M11 7C9.5 9.5 8.5 11.5 8.5 14C8.5 16.5 10 18.5 12.5 18.5C15 18.5 16.5 16.5 16.5 14C16.5 11 14.5 8.5 11 7Z" fill="#FFA500"/>
           </svg>
         </div>
-        <span class="brand-text">OpenSEO</span>
-        <span class="brand-tag">PRO</span>
+        <div style="display: flex; align-items: baseline; gap: 6px;">
+          <span class="semrush-brand-name" style="font-weight: 800; font-size: 1.15rem; color: #191b23; letter-spacing: -0.02em;">Huy Hưng</span>
+          <span style="font-size: 0.78rem; font-weight: 700; color: #ff642d; letter-spacing: -0.01em;">SEO Executive</span>
+        </div>
+      </a>
+      <span class="semrush-module-tag">Site Audit</span>
+    </div>
+
+    <!-- Center Unified Domain Search Bar -->
+    <div class="semrush-header-center">
+      <div class="semrush-search-form">
+        <select id="maxPagesSelect" class="semrush-scope-select" title="Phạm vi quét trang">
+          <option value="25">⚡ 25 trang (~15s)</option>
+          <option value="50">⚡ 50 trang (~25s)</option>
+          <option value="100" selected>🔍 100 trang (Tiêu chuẩn ~45s)</option>
+          <option value="300">🌐 300 trang (Chuyên sâu ~2m)</option>
+          <option value="500">🚀 500 trang (Toàn site ~4m)</option>
+          <option value="1000">🔥 1.000 trang (Ultra Enterprise)</option>
+          <option value="0">♾️ Quét toàn bộ Sitemap</option>
+        </select>
+
+        <div class="semrush-search-input-wrap">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--semrush-text-muted);"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          <input type="url" id="targetUrlInput" class="semrush-search-input" placeholder="Enter website or keyword (e.g., https://www.wellspring.edu.vn)..." value="https://www.wellspring.edu.vn" />
+        </div>
+
+        <select id="qualityThresholdSelect" style="display: none;"><option value="80" selected>80</option></select>
+        <button type="button" id="modeDeepBtn" class="mode-btn active" style="display: none;" data-mode="deep"></button>
+        <button type="button" id="modeSingleBtn" class="mode-btn" style="display: none;" data-mode="single"></button>
+
+        <button id="scanBtn" class="semrush-analyze-btn">
+          <span class="btn-text">Analyze</span>
+          <span class="btn-loader" style="display: none;">
+            <svg class="spinner" viewBox="0 0 50 50" style="width: 14px; height: 14px;"><circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle></svg>
+            <span>Auditing...</span>
+          </span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Right User Account & Plan Status -->
+    <div class="semrush-header-right">
+      <div class="semrush-plan-pill" title="Semrush Pro Subscription Active">
+        <span class="semrush-plan-dot"></span>
+        <span>PRO ACTIVE</span>
+      </div>
+      <div class="semrush-user-avatar" title="Huy Hưng · SEO Executive (hung.phunghuy@wellspring.edu.vn)">H</div>
+    </div>
+  </header>
+
+  <!-- SEMRUSH 2-COLUMN APP FRAME -->
+  <div class="semrush-app-frame openseo-layout">
+    <!-- LEFT SIDEBAR -->
+    <aside class="semrush-sidebar openseo-sidebar">
+      <!-- Active Project Card -->
+      <div class="semrush-project-card" id="sidebarProjectBox" title="Click để đổi địa chỉ website cần quét">
+        <div class="semrush-project-title-row">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: #60a5fa;"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+          <span class="sidebar-project-url" id="sidebarUrlPreview" style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:160px; font-weight:700; color:#fff;">wellspring.edu.vn</span>
+        </div>
+        <div class="semrush-project-sub">
+          <span>11 URLs crawled</span>
+          <span style="color: #ff9900; font-weight: 700;">Health: 68%</span>
+        </div>
       </div>
 
-      <!-- Project Selector Box -->
-      <div class="sidebar-project-box" id="sidebarProjectBox" title="Click để đổi địa chỉ website cần quét">
-        <span class="sidebar-project-url" id="sidebarUrlPreview">https://www.wellspring.edu.vn</span>
-        <span class="sidebar-project-icon">⚙</span>
+      <!-- Quick Samples -->
+      <div style="display: flex; gap: 4px; margin-bottom: 12px; flex-wrap: wrap;">
+        <button type="button" class="sample-chip sample-tag" data-url="https://www.wellspring.edu.vn" style="font-size: 0.7rem; padding: 2px 7px; background: rgba(255,255,255,0.05); border: 1px solid var(--semrush-border); border-radius: 4px; color: #fff; cursor: pointer;">wellspring</button>
+        <button type="button" class="sample-chip sample-tag" data-url="https://vinschool.edu.vn" style="font-size: 0.7rem; padding: 2px 7px; background: rgba(255,255,255,0.05); border: 1px solid var(--semrush-border); border-radius: 4px; color: #fff; cursor: pointer;">vinschool</button>
+        <button type="button" class="sample-chip sample-tag" data-url="https://github.com" style="font-size: 0.7rem; padding: 2px 7px; background: rgba(255,255,255,0.05); border: 1px solid var(--semrush-border); border-radius: 4px; color: #fff; cursor: pointer;">github</button>
       </div>
 
-      <!-- Grouped Navigation Menus -->
-      <div class="sidebar-nav-scroll">
-        <div class="sidebar-nav-group-label">OVERVIEW</div>
-        <div class="sidebar-nav-item active" data-tab="tabOverview">
-          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
-          <span>Dashboard</span>
-        </div>
+      <!-- Menu Hierarchy (Semrush Official Grouping) -->
+      <div class="semrush-nav-group-label">PROJECT WORKSPACE</div>
+      <div class="semrush-nav-item sidebar-nav-item active" data-tab="tabOverview">
+        <svg class="semrush-nav-icon nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+        <span>Site Audit (Overview)</span>
+      </div>
 
-        <div class="sidebar-nav-group-label">SEARCH</div>
-        <div class="sidebar-nav-item" data-tab="tabMultiPages">
-          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-          <span>Keyword Research</span>
-        </div>
-        <div class="sidebar-nav-item" data-tab="tabContentLogic">
-          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
-          <span>Domain Overview</span>
-        </div>
-        <div class="sidebar-nav-item" data-tab="tabNetworkGraph">
-          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-          <span>Backlinks</span>
-        </div>
+      <div class="semrush-nav-group-label">SEO TOOLKIT</div>
+      <div class="semrush-nav-item sidebar-nav-item" data-tab="tabRoadmap">
+        <svg class="semrush-nav-icon nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+        <span>All Issues (Lỗi &amp; Cảnh báo)</span>
+      </div>
+      <div class="semrush-nav-item sidebar-nav-item" data-tab="tabMultiPages">
+        <svg class="semrush-nav-icon nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        <span>Crawled Pages &amp; Keywords</span>
+      </div>
+      <div class="semrush-nav-item sidebar-nav-item" data-tab="tabNetworkGraph">
+        <svg class="semrush-nav-icon nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="3"></circle><circle cx="18" cy="18" r="3"></circle><line x1="8.5" y1="8.5" x2="15.5" y2="15.5"></line></svg>
+        <span>Internal Link Graph</span>
+      </div>
+      <div class="semrush-nav-item sidebar-nav-item" data-tab="tabContentLogic">
+        <svg class="semrush-nav-icon nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+        <span>Topic Clusters &amp; Silos</span>
+      </div>
+      <div class="semrush-nav-item sidebar-nav-item" data-tab="tabPhase3">
+        <svg class="semrush-nav-icon nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+        <span>SERP &amp; Pixel Width</span>
+      </div>
 
-        <div class="sidebar-nav-group-label">VISIBILITY</div>
-        <div class="sidebar-nav-item" data-tab="tabPhase5">
-          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
-          <span>Prompt Research</span>
-        </div>
-        <div class="sidebar-nav-item" data-tab="tabPhase1">
-          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-          <span>Prompt Explorer</span>
-        </div>
-        <div class="sidebar-nav-item" data-tab="tabCompetitorPlaybook">
-          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
-          <span>Prompt Tracking</span>
-        </div>
+      <div class="semrush-nav-group-label">COMPETITIVE RESEARCH</div>
+      <div class="semrush-nav-item sidebar-nav-item" data-tab="tabCompetitorPlaybook">
+        <svg class="semrush-nav-icon nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+        <span>Competitor Gap (Playbook)</span>
+      </div>
 
-        <div class="sidebar-nav-group-label">SITE</div>
-        <div class="sidebar-nav-item" data-tab="tabPhase3">
-          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
-          <span>GSC Insights</span>
-        </div>
-        <div class="sidebar-nav-item" data-tab="tabMultiPages">
-          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
-          <span>Rank Tracking</span>
-        </div>
-        <div class="sidebar-nav-item" data-tab="tabContentLogic">
-          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
-          <span>Saved Keywords</span>
-        </div>
-        <div class="sidebar-nav-item" data-tab="tabPhase2">
-          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
-          <span>Site Audit</span>
-        </div>
+      <div class="semrush-nav-group-label">AI &amp; MODERN SEARCH</div>
+      <div class="semrush-nav-item sidebar-nav-item" data-tab="tabPhase5">
+        <svg class="semrush-nav-icon nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+        <span>AI Visibility &amp; llms.txt</span>
+      </div>
+      <div class="semrush-nav-item sidebar-nav-item" data-tab="tabPhase2">
+        <svg class="semrush-nav-icon nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+        <span>AI Bot Parity &amp; Robots</span>
+      </div>
+      <div class="semrush-nav-item sidebar-nav-item" data-tab="tabAgents">
+        <svg class="semrush-nav-icon nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+        <span>Self-Healing 4 AI Agents</span>
+      </div>
 
-        <div class="sidebar-nav-group-label">TOOLS</div>
-        <div class="sidebar-nav-item" data-tab="tabRoadmap">
-          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-          <span>Reports</span>
-        </div>
-        <div class="sidebar-nav-item" data-tab="tabAgents">
-          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
-          <span>Context</span>
-        </div>
-        <div class="sidebar-nav-item" data-tab="tabAgents">
-          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
-          <span>Agent setup</span>
-        </div>
+      <div class="semrush-nav-group-label">DEVELOPER &amp; PATCHES</div>
+      <div class="semrush-nav-item sidebar-nav-item" data-tab="tabRoadmap">
+        <svg class="semrush-nav-icon nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+        <span>Bản Vá Code (Nginx/Schema)</span>
       </div>
     </aside>
 
     <!-- RIGHT MAIN WORKSPACE -->
-    <main class="openseo-main-area">
-      <!-- Top Notification Bar -->
-      <div class="openseo-top-banner">
-        <span>We hope you're enjoying OpenSEO! <a href="javascript:void(0)" onclick="alert('OpenSEO PRO: Full features active!')">Upgrade anytime</a> or <a href="javascript:void(0)" onclick="alert('Questions? Reach out to support: team@openseo.local')">reach out with questions</a>.</span>
-        <span style="font-size: 0.8rem; color: #60a5fa; cursor: pointer;" onclick="this.parentElement.style.display='none'">✕</span>
-      </div>
+    <main class="semrush-main-area openseo-main-area">
+      <div class="semrush-workspace-container openseo-workspace">
 
-      <!-- Workspace Inner Container -->
-      <div class="openseo-workspace">
-
-        <!-- Site Header Block (YOUR WEBSITE / domain / Project settings) -->
-        <div class="site-header-block">
+        <!-- Semrush Project Header Bar -->
+        <div class="semrush-project-header-bar ahrefs-project-banner" id="ahrefsProjectBanner">
           <div>
-            <div class="site-label">YOUR WEBSITE</div>
-            <h1 class="site-domain-h1" id="openseoDomainTitle">wellspring.edu.vn</h1>
-            <p class="site-desc">Search visibility, links and site health in one place.</p>
-          </div>
-          <div class="site-actions-row">
-            <button type="button" class="btn-secondary-dark" id="projectSettingsBtn" onclick="document.getElementById('targetUrlInput').focus()">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
-              <span>Project settings</span>
-            </button>
-          </div>
-        </div>
-
-        <!-- Target URL Scan Control Bar -->
-        <div class="openseo-scan-bar">
-          <div class="scan-input-group">
-            <div class="url-input-wrap">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--text-muted);"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-              <input type="url" id="targetUrlInput" class="url-input-field" placeholder="Enter website URL (e.g., https://www.wellspring.edu.vn)..." value="https://www.wellspring.edu.vn" />
+            <div class="semrush-breadcrumb">
+              <span>Projects</span>
+              <span>›</span>
+              <strong class="ahrefs-domain-text" id="ahrefsProjectDomain">wellspring.edu.vn</strong>
+              <span>›</span>
+              <span>Site Audit</span>
             </div>
-            
-            <select id="maxPagesSelect" class="scan-select-dropdown">
-              <option value="25">⚡ 25 trang (Nhanh · ~15s)</option>
-              <option value="50">⚡ 50 trang (Cluster Quick · ~25s)</option>
-              <option value="100" selected>🔍 100 trang (Tiêu chuẩn Ahrefs · ~45s)</option>
-              <option value="300">🌐 300 trang (Chuyên sâu · ~2 phút)</option>
-              <option value="500">🚀 500 trang (Toàn site / Exhaustive · ~4 phút)</option>
-              <option value="1000">🔥 1.000 trang (Ultra Enterprise / Cả đêm)</option>
-              <option value="0">♾️ Quét toàn bộ Sitemap (Không giới hạn)</option>
-            </select>
-
-            <select id="qualityThresholdSelect" class="scan-select-dropdown" style="display: none;">
-              <option value="80" selected>Threshold: 80</option>
-            </select>
-
-            <button type="button" id="modeDeepBtn" class="mode-btn active" style="display: none;" data-mode="deep"></button>
-            <button type="button" id="modeSingleBtn" class="mode-btn" style="display: none;" data-mode="single"></button>
-
-            <button id="scanBtn" class="btn-scan-primary">
-              <span class="btn-text">Run Audit</span>
-              <span class="btn-loader" style="display: none;">
-                <svg class="spinner" viewBox="0 0 50 50" style="width: 16px; height: 16px;"><circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle></svg>
-                <span>Auditing...</span>
-              </span>
-            </button>
+            <div class="semrush-audit-quick-stats" style="margin-top: 6px;">
+              <span class="semrush-status-badge semrush-badge-success ahrefs-tag ahrefs-tag-success" id="ahrefsCrawlStatusBadge">🟢 ĐÃ QUÉT 100% SITE</span>
+              <span id="ahrefsServerTag" style="color: var(--semrush-text-secondary);">Nginx · Next.js</span>
+              <span class="meta-sep">·</span>
+              <span>Chế độ: <strong id="ahrefsAuditMode">Deep Recursive</strong></span>
+              <span class="meta-sep">·</span>
+              <span>Phạm vi: <strong id="ahrefsCoverageSummary">11 / 11 URLs</strong></span>
+              <span class="meta-sep">·</span>
+              <span>TTFB: <strong id="ahrefsTtfbSummary">~702ms</strong></span>
+              <span class="meta-sep">·</span>
+              <span id="ahrefsExhaustiveNote" style="color: #00bc70;">✓ 0 URL mồ côi</span>
+            </div>
           </div>
 
-          <div class="scan-quick-samples">
-            <span style="color: var(--text-dim); font-size: 0.76rem;">Samples:</span>
-            <button type="button" class="sample-tag sample-chip" data-url="https://www.wellspring.edu.vn">wellspring.edu.vn</button>
-            <button type="button" class="sample-tag sample-chip" data-url="https://vinschool.edu.vn">vinschool.edu.vn</button>
-            <button type="button" class="sample-tag sample-chip" data-url="https://github.com">github.com</button>
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <button type="button" class="btn btn-sm btn-secondary" onclick="document.getElementById('targetUrlInput').focus()">⚙️ Cấu hình</button>
+            <button type="button" class="btn btn-sm btn-secondary" id="exportPdfQuickBtn" onclick="document.getElementById('printBtn').click()">📥 Xuất báo cáo</button>
+            <button type="button" class="btn btn-sm btn-primary" onclick="document.getElementById('scanBtn').click()" style="background: var(--semrush-orange); border:none;">🔄 Chạy lại Audit</button>
           </div>
         </div>
 
-        <!-- Integration Callout Banner (OpenSEO ChatGPT / Claude Integration) -->
-        <div class="openseo-integration-banner" id="integrationBanner">
-          <div class="integration-left">
-            <div class="integration-logos">
-              <div class="bot-square-logo" title="ChatGPT">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.2"><path d="M12 2a4 4 0 0 0-4 4v1H6a4 4 0 0 0-4 4c0 1.5.8 2.8 2 3.5-.1.5-.1 1 0 1.5a4 4 0 0 0 4 4h1v1a4 4 0 0 0 4 4 4 4 0 0 0 4-4v-1h2a4 4 0 0 0 4-4c0-1.5-.8-2.8-2-3.5.1-.5.1-1 0-1.5a4 4 0 0 0-4-4h-1V6a4 4 0 0 0-4-4z"/></svg>
-              </div>
-              <div class="bot-square-logo" title="Claude">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="2.2"><polygon points="12 2 15 8 22 9 17 14 18 21 12 18 6 21 7 14 2 9 9 8 12 2"></polygon></svg>
-              </div>
-            </div>
-            <div>
-              <div class="integration-title">Use OpenSEO in ChatGPT or Claude</div>
-              <div class="integration-subtitle">Research keywords and audit your site from the chatbot you already use.</div>
-            </div>
-          </div>
-          <div class="integration-actions">
-            <button type="button" class="btn-integration" onclick="window.open('https://chatgpt.com', '_blank')">
-              <span>✳</span>
-              <span>Add to ChatGPT</span>
-            </button>
-            <button type="button" class="btn-integration" onclick="window.open('https://claude.ai', '_blank')">
-              <span>✦</span>
-              <span>Add to Claude</span>
-            </button>
-            <span style="color: var(--text-dim); cursor: pointer; padding: 4px; font-size: 1.1rem; line-height: 1;" onclick="document.getElementById('integrationBanner').style.display='none'">×</span>
-          </div>
+        <!-- Semrush Sub-tabs Nav Bar -->
+        <div class="semrush-subtabs-bar openseo-subtabs-nav" id="openseoSubtabs">
+          <button type="button" class="semrush-subtab-btn subtab-btn active" data-tab="tabOverview">Overview</button>
+          <button type="button" class="semrush-subtab-btn subtab-btn" data-tab="tabRoadmap">All Issues</button>
+          <button type="button" class="semrush-subtab-btn subtab-btn" data-tab="tabMultiPages">Crawled Pages</button>
+          <button type="button" class="semrush-subtab-btn subtab-btn" data-tab="tabNetworkGraph">Internal Links</button>
+          <button type="button" class="semrush-subtab-btn subtab-btn" data-tab="tabContentLogic">Topic Silos</button>
+          <button type="button" class="semrush-subtab-btn subtab-btn" data-tab="tabCompetitorPlaybook">Competitor Gap</button>
+          <button type="button" class="semrush-subtab-btn subtab-btn" data-tab="tabPhase5">AI Visibility</button>
+          <button type="button" class="semrush-subtab-btn subtab-btn" data-tab="tabRoadmap">Code Patches</button>
+          <button type="button" class="semrush-subtab-btn subtab-btn" data-tab="tabAgents">AI Agents</button>
         </div>
-
-        <!-- "Get started" Checklist Accordion (Replica of OpenSEO Screenshot) -->
-        <div class="openseo-get-started-box">
-          <div class="get-started-header">
-            <div class="get-started-title">Get started</div>
-            <div class="get-started-sub">Research competitors and keywords, audit your site, and connect your tools.</div>
-          </div>
-
-          <div class="accordion-list">
-            <!-- Row 1: Explore a competitor -->
-            <div class="accordion-row" data-target-tab="tabCompetitorPlaybook">
-              <div class="accordion-row-left">
-                <div class="accordion-icon-wrap">🌐</div>
-                <div>
-                  <span class="accordion-text-title">Explore a competitor</span>
-                  <span class="accordion-text-desc">Find topics and links worth learning from.</span>
-                </div>
-              </div>
-              <div class="accordion-chevron">⌄</div>
-            </div>
-
-            <!-- Row 2: Get keyword ideas -->
-            <div class="accordion-row" data-target-tab="tabMultiPages">
-              <div class="accordion-row-left">
-                <div class="accordion-icon-wrap">💡</div>
-                <div>
-                  <span class="accordion-text-title">Get keyword ideas</span>
-                  <span class="accordion-text-desc">Start from one keyword and see what people search for.</span>
-                </div>
-              </div>
-              <div class="accordion-chevron">⌄</div>
-            </div>
-
-            <!-- Row 3: Connect your AI agent -->
-            <div class="accordion-row" data-target-tab="tabAgents">
-              <div class="accordion-row-left">
-                <div class="accordion-icon-wrap">🤖</div>
-                <div>
-                  <span class="accordion-text-title">Connect your AI agent</span>
-                  <span class="accordion-text-desc">Use OpenSEO inside Claude or your favorite agent.</span>
-                </div>
-              </div>
-              <div class="accordion-chevron">⌄</div>
-            </div>
-
-            <!-- Row 4: Invite a teammate -->
-            <div class="accordion-row" onclick="alert('Teammate invitation: You can share this dashboard link with your team.')">
-              <div class="accordion-row-left">
-                <div class="accordion-icon-wrap">👥</div>
-                <div>
-                  <span class="accordion-text-title">Invite a teammate</span>
-                  <span class="accordion-text-desc">Share the work, or keep things solo for now.</span>
-                </div>
-              </div>
-              <div class="accordion-chevron">⌄</div>
-            </div>
-
-            <!-- Row 5: Working on multiple websites? -->
-            <div class="accordion-row" onclick="document.getElementById('targetUrlInput').focus()">
-              <div class="accordion-row-left">
-                <div class="accordion-icon-wrap">📁</div>
-                <div>
-                  <span class="accordion-text-title">Working on multiple websites?</span>
-                  <span class="accordion-text-desc">Create another project, or let your AI agent set up a list of sites.</span>
-                </div>
-              </div>
-              <div class="accordion-chevron">⌄</div>
-            </div>
-
-            <!-- Row 6: Completed Indicator -->
-            <div class="accordion-completed-row">
-              <div style="display: flex; align-items: center; gap: 8px;">
-                <span style="font-weight: 700;">✓</span>
-                <span>1 completed</span>
-              </div>
-              <div class="accordion-chevron">›</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Horizontal Sub-Tabs Nav Bar (Overview, Keywords, Backlinks...) -->
-        <div class="openseo-subtabs-nav" id="openseoSubtabs">
-          <button type="button" class="subtab-btn active" data-tab="tabOverview">Overview</button>
-          <button type="button" class="subtab-btn" data-tab="tabMultiPages">Keywords</button>
-          <button type="button" class="subtab-btn" data-tab="tabNetworkGraph">Backlinks</button>
-          <button type="button" class="subtab-btn" data-tab="tabContentLogic">Content Silos</button>
-          <button type="button" class="subtab-btn" data-tab="tabCompetitorPlaybook">Competitor Gap</button>
-          <button type="button" class="subtab-btn" data-tab="tabPhase5">AI Visibility</button>
-          <button type="button" class="subtab-btn" data-tab="tabRoadmap">Code Patches</button>
-          <button type="button" class="subtab-btn" data-tab="tabAgents">AI Agents</button>
-        </div>
-
-        <!-- Live Scanner Progress Banner & Real Streaming Terminal -->
-        <div id="scanProgress" class="scan-progress-banner" style="display: none;">
-          <div class="progress-info">
-            <span id="progressStepText">Connecting to live crawler stream...</span>
-            <span id="progressPercent">0%</span>
-          </div>
-          <div class="progress-track"><div id="progressBar" class="progress-fill" style="width: 0%;"></div></div>
-          
-          <!-- Real-time Live Crawler Terminal -->
-          <div class="live-stream-box" id="liveStreamBox">
-            <div class="stream-header">
-              <div class="stream-title-group">
-                <span class="stream-pulse"></span>
-                <span class="stream-title font-mono">LIVE_NETWORK_CRAWLER_FEED</span>
-              </div>
-              <span class="badge badge-cyan" id="streamBadgeStatus">Đang nhận dữ liệu trực tiếp...</span>
-            </div>
-            <div class="stream-feed font-mono" id="liveStreamFeed"></div>
-          </div>
-        </div>
-
-        <!-- Error Alert Box -->
-        <div id="errorAlert" class="error-banner" style="display: none;"></div>
-
-        <!-- Results Section Container -->
-        <section id="resultsContainer" style="display: none;">
-
-          <!-- Secondary Tab Navigation (Kept for compatibility) -->
-          <nav class="phase-tabs-nav" style="display: none;">
-            <button class="tab-btn active" data-tab="tabOverview"><span>Overview</span></button>
-            <button class="tab-btn" data-tab="tabAgents"><span>AI Agents</span></button>
-            <button class="tab-btn" data-tab="tabMultiPages"><span>Keywords</span></button>
-            <button class="tab-btn" data-tab="tabNetworkGraph"><span>Backlinks</span></button>
-            <button class="tab-btn" data-tab="tabContentLogic"><span>Content Silos</span></button>
-            <button class="tab-btn" data-tab="tabCompetitorPlaybook"><span>Competitor Playbook</span></button>
-            <button class="tab-btn" data-tab="tabRoadmap"><span>Roadmap &amp; Patches</span></button>
-            <button class="tab-btn" data-tab="tabPhase1"><span>Phase 1</span></button>
-            <button class="tab-btn" data-tab="tabPhase2"><span>Phase 2</span></button>
-            <button class="tab-btn" data-tab="tabPhase3"><span>Phase 3</span></button>
-            <button class="tab-btn" data-tab="tabPhase5"><span>Phase 5</span></button>
-          </nav>
-
-          <!-- TAB CONTENT PANES -->
-          <div class="tab-panes-wrapper">
+<div class="tab-panes-wrapper">
 
             <!-- TAB: OVERVIEW DASHBOARD -->
             <div id="tabOverview" class="tab-pane active">
 
-              <!-- Overview Score Cards Grid -->
-              <section class="scores-grid">
-                <div class="score-card score-main-card">
-                  <div class="gauge-container">
-                    <svg class="gauge-svg" viewBox="0 0 120 120">
-                      <circle class="gauge-bg" cx="60" cy="60" r="50"></circle>
-                      <circle id="overallCircle" class="gauge-bar" cx="60" cy="60" r="50"></circle>
+<!-- SEMRUSH SITE HEALTH HERO CARD -->
+              <div class="semrush-site-health-card ahrefs-kpi-summary">
+                <!-- Left: Donut Gauge -->
+                <div class="semrush-health-left ahrefs-kpi-card ahrefs-kpi-health">
+                  <div class="semrush-donut-wrap kpi-health-circle" id="ahrefsHealthCircle">
+                    <svg class="semrush-donut-svg gauge-svg" viewBox="0 0 100 100">
+                      <circle class="semrush-donut-bg gauge-bg" cx="50" cy="50" r="42"></circle>
+                      <circle id="overallCircle" class="semrush-donut-fill gauge-bar" cx="50" cy="50" r="42"></circle>
                     </svg>
-                    <div class="gauge-text">
-                      <span id="overallScoreVal" class="gauge-number">--</span>
-                      <span class="gauge-label">/ 100</span>
+                    <div class="semrush-donut-text gauge-text">
+                      <span id="overallScoreVal" class="semrush-donut-val health-num gauge-number">68</span>
+                      <span id="ahrefsHealthVal" style="display:none;">68</span>
+                      <span class="semrush-donut-lbl gauge-label">/ 100</span>
                     </div>
                   </div>
-                  <div class="main-score-info">
-                    <span class="tag-label">ĐIỂM CHẤT LƯỢNG TỔNG QUAN</span>
-                    <h3 id="overallScoreVerdict" class="score-verdict">Đang đánh giá...</h3>
-                    <p id="overallScoreDesc" class="score-meta-desc">Đánh giá thực tế dựa trên mạng lưới liên kết, từ khóa bài viết và bản vá kiểm thử.</p>
-                    <div id="potentialScoreWrap" class="potential-score-badge" style="display: none;">
-                      <span>🚀 Tiềm năng sau nạp bản vá:</span> <strong id="potentialScoreVal">--</strong>/100
+                  <div>
+                    <div class="semrush-health-desc-title kpi-lbl">Site Health</div>
+                    <div class="semrush-health-grade kpi-grade" id="overallScoreVerdict">Cần khắc phục</div>
+                    <div id="ahrefsHealthGrade" style="display:none;">Cần khắc phục</div>
+                    <div class="semrush-health-meta score-meta-desc" id="overallScoreDesc">Dựa trên 1 lỗi nghiêm trọng &amp; 4 cảnh báo trên 11 URLs</div>
+                    <div id="potentialScoreWrap" class="potential-score-badge" style="font-size: 0.74rem; color: #00bc70; margin-top: 3px; display: none;">
+                      <span>🚀 Tiềm năng sau vá:</span> <strong id="potentialScoreVal">--</strong>/100
                     </div>
                   </div>
                 </div>
 
-                <div class="sub-scores-wrapper">
-                  <div class="sub-score-item">
-                    <div class="sub-score-header">
-                      <span class="sub-name">Technical SEO</span>
-                      <span id="techScoreVal" class="sub-val">--</span>
-                    </div>
-                    <div class="sub-bar-track"><div id="techBar" class="sub-bar-fill" style="width: 0%;"></div></div>
-                    <p class="sub-desc">Domain 301, Link 404, Robots, Bot Parity</p>
+                <!-- Center: 3 Pillars (Errors, Warnings, Notices) -->
+                <div class="semrush-pillars-center ahrefs-kpi-card ahrefs-kpi-issues">
+                  <div class="semrush-pillar-box pillar-err issue-badge badge-err" id="ahrefsErrPill" title="Lỗi kỹ thuật nghiêm trọng cần khắc phục ngay" onclick="switchTab('tabRoadmap')">
+                    <div class="semrush-pillar-num"><strong id="badgeErrCount">1</strong></div>
+                    <div class="semrush-pillar-lbl">Lỗi (Errors)</div>
                   </div>
-
-                  <div class="sub-score-item">
-                    <div class="sub-score-header">
-                      <span class="sub-name">On-Page &amp; Schema</span>
-                      <span id="onpageScoreVal" class="sub-val">--</span>
-                    </div>
-                    <div class="sub-bar-track"><div id="onpageBar" class="sub-bar-fill" style="width: 0%;"></div></div>
-                    <p class="sub-desc">H1-H6, Meta Title/Desc, JSON-LD Graph</p>
+                  <div class="semrush-pillar-box pillar-warn issue-badge badge-warn" id="ahrefsWarnPill" title="Cảnh báo On-page và liên kết" onclick="switchTab('tabRoadmap')">
+                    <div class="semrush-pillar-num"><strong id="badgeWarnCount">4</strong></div>
+                    <div class="semrush-pillar-lbl">Cảnh báo</div>
                   </div>
-
-                  <div class="sub-score-item">
-                    <div class="sub-score-header">
-                      <span class="sub-name">AEO (Top 0 Snippet)</span>
-                      <span id="aeoScoreVal" class="sub-val">--</span>
-                    </div>
-                    <div class="sub-bar-track"><div id="aeoBar" class="sub-bar-fill" style="width: 0%;"></div></div>
-                    <p class="sub-desc">Answer Box, FAQ, 5W1H Intent</p>
-                  </div>
-
-                  <div class="sub-score-item">
-                    <div class="sub-score-header">
-                      <span class="sub-name">GEO (AI Search Ready)</span>
-                      <span id="geoScoreVal" class="sub-val">--</span>
-                    </div>
-                    <div class="sub-bar-track"><div id="geoBar" class="sub-bar-fill" style="width: 0%;"></div></div>
-                    <p class="sub-desc">Factual Density, file llms.txt, AI Bots</p>
-                  </div>
-
-                  <div class="sub-score-item">
-                    <div class="sub-score-header">
-                      <span class="sub-name">Multi-Article Health</span>
-                      <span id="subpagesAvgScoreVal" class="sub-val">--</span>
-                    </div>
-                    <div class="sub-bar-track"><div id="subpagesAvgBar" class="sub-bar-fill" style="width: 0%;"></div></div>
-                    <p class="sub-desc">Điểm trung bình các bài viết &amp; trang con</p>
+                  <div class="semrush-pillar-box pillar-notice issue-badge badge-info" id="ahrefsNoticePill" title="Khuyến nghị AI visibility và SERP" onclick="switchTab('tabRoadmap')">
+                    <div class="semrush-pillar-num"><strong id="badgeNoticeCount">2</strong></div>
+                    <div class="semrush-pillar-lbl">Chú ý (Notices)</div>
                   </div>
                 </div>
-              </section>
 
-              <!-- Quick Meta Strip -->
+                <!-- Right: Crawled Pages Breakdown -->
+                <div class="semrush-pages-right">
+                  <div class="semrush-pages-row">
+                    <span>Trang đã crawl:</span>
+                    <strong><span id="metaSubpagesCount">11</span> / 11 (100%)</strong>
+                  </div>
+                  <div class="semrush-pages-bar-track">
+                    <div style="width: 72.7%; background: #00bc70;" title="8 Healthy"></div>
+                    <div style="width: 18.2%; background: #ff9900;" title="2 Have issues"></div>
+                    <div style="width: 9.1%; background: #ff334b;" title="1 Broken"></div>
+                  </div>
+                  <div style="display: flex; justify-content: space-between; font-size: 0.72rem; color: var(--semrush-text-muted); margin-top: 2px;">
+                    <span style="color: #00bc70;">● 8 Tốt (73%)</span>
+                    <span style="color: #ff9900;">● 2 Cảnh báo (18%)</span>
+                    <span style="color: #ff334b;">● 1 Lỗi 404 (9%)</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- SEMRUSH THEMATIC SCORES GRID -->
+              <div class="semrush-thematic-grid">
+                <div class="semrush-thematic-card">
+                  <div class="semrush-thematic-title">
+                    <span>Crawlability</span>
+                    <span style="color: #00bc70;">Good</span>
+                  </div>
+                  <div class="semrush-thematic-val" id="techScoreVal">91%</div>
+                  <div class="semrush-thematic-bar"><div id="techBar" class="semrush-thematic-fill" style="width: 91%; background: #00bc70;"></div></div>
+                </div>
+
+                <div class="semrush-thematic-card">
+                  <div class="semrush-thematic-title">
+                    <span>HTTPS &amp; Security</span>
+                    <span style="color: #00bc70;">Optimal</span>
+                  </div>
+                  <div class="semrush-thematic-val">100%</div>
+                  <div class="semrush-thematic-bar"><div class="semrush-thematic-fill" style="width: 100%; background: #00bc70;"></div></div>
+                </div>
+
+                <div class="semrush-thematic-card">
+                  <div class="semrush-thematic-title">
+                    <span>Core Web Vitals</span>
+                    <span style="color: #00bc70;">Pass</span>
+                  </div>
+                  <div class="semrush-thematic-val" id="metaLatency">~702ms</div>
+                  <div class="semrush-thematic-bar"><div class="semrush-thematic-fill" style="width: 88%; background: #00bc70;"></div></div>
+                </div>
+
+                <div class="semrush-thematic-card">
+                  <div class="semrush-thematic-title">
+                    <span>Internal Linking</span>
+                    <span style="color: #ff9900;">82%</span>
+                  </div>
+                  <div class="semrush-thematic-val" id="subpagesAvgScoreVal">82%</div>
+                  <div class="semrush-thematic-bar"><div id="subpagesAvgBar" class="semrush-thematic-fill" style="width: 82%; background: #ff9900;"></div></div>
+                </div>
+
+                <div class="semrush-thematic-card">
+                  <div class="semrush-thematic-title">
+                    <span>Schema &amp; AI (GEO)</span>
+                    <span style="color: #ff9900;">Needs work</span>
+                  </div>
+                  <div class="semrush-thematic-val" id="aeoScoreVal">50%</div>
+                  <div class="semrush-thematic-bar"><div id="aeoBar" class="semrush-thematic-fill" style="width: 50%; background: #ff9900;"></div></div>
+                </div>
+              </div>
+              <div id="onpageScoreVal" style="display:none;">75%</div>
+              <div id="onpageBar" style="display:none;"></div>
+              <div id="geoScoreVal" style="display:none;">65%</div>
+              <div id="geoBar" style="display:none;"></div>
+
+
               <section class="meta-strip">
                 <div class="meta-chip">
                   <span class="chip-title">TÊN MIỀN</span>
@@ -435,7 +343,7 @@
                 </div>
               </section>
 
-              <!-- Enterprise SaaS Visual Health Metrics (Ahrefs / Screaming Frog Style) -->
+              <!-- Enterprise SaaS Visual Health Metrics (Semrush / Enterprise Style) -->
               <section class="saas-charts-grid" id="saasVisualSection">
                 <!-- Card 1: HTTP Status Distribution -->
                 <div class="saas-metric-card" id="saasStatusCard">
@@ -517,6 +425,39 @@
                       <span class="kpi-lbl">Trang Mồ Côi</span>
                     </div>
                   </div>
+                </div>
+              </section>
+
+              <!-- Ahrefs Top Issues Master Table Section -->
+              <section class="ahrefs-issues-section" id="ahrefsIssuesSection">
+                <div class="section-title-bar">
+                  <div>
+                    <h3 class="section-main-title">⚡ Bảng Vấn Đề Kỹ Thuật Tổng Hợp (Semrush Site Audit Top Issues)</h3>
+                    <p class="section-sub-desc">Phân loại chi tiết toàn bộ lỗi, cảnh báo và nguy cơ suy giảm thứ hạng bóc tách từ 100% URL đã crawl:</p>
+                  </div>
+                  <div class="ahrefs-issues-filter-group">
+                    <button type="button" class="ahrefs-filter-btn active" data-issue-filter="all">Tất cả (<span id="filterCountAll">7</span>)</button>
+                    <button type="button" class="ahrefs-filter-btn filter-btn-err" data-issue-filter="CRITICAL">🔴 Lỗi (<span id="filterCountErr">1</span>)</button>
+                    <button type="button" class="ahrefs-filter-btn filter-btn-warn" data-issue-filter="HIGH">🟡 Cảnh báo (<span id="filterCountWarn">4</span>)</button>
+                    <button type="button" class="ahrefs-filter-btn filter-btn-notice" data-issue-filter="MEDIUM">🔵 Chú ý (<span id="filterCountNotice">2</span>)</button>
+                  </div>
+                </div>
+
+                <div class="ahrefs-table-container">
+                  <table class="ahrefs-issues-table" id="ahrefsTopIssuesTable">
+                    <thead>
+                      <tr>
+                        <th style="width: 38%;">Vấn đề kỹ thuật (Issue Name)</th>
+                        <th style="width: 18%;">Hạng mục (Category)</th>
+                        <th style="width: 14%;">Mức độ (Severity)</th>
+                        <th style="width: 15%;">Số URL bị ảnh hưởng</th>
+                        <th style="width: 15%;">Hành động / Bản vá</th>
+                      </tr>
+                    </thead>
+                    <tbody id="ahrefsIssuesTableBody">
+                      <!-- Rendered by renderAhrefsTopIssues -->
+                    </tbody>
+                  </table>
                 </div>
               </section>
 
@@ -920,7 +861,7 @@
               </div>
             </div>
 
-            <!-- Faceted Quick Filter Chips Bar (Ahrefs Style Instant 0ms Filter) -->
+            <!-- Faceted Quick Filter Chips Bar (Semrush Quick Filters) -->
             <div class="faceted-filter-bar" id="facetedFilterChips">
               <button type="button" class="filter-chip active" data-filter="all">Tất cả (<span id="chipAllCount">0</span>)</button>
               <button type="button" class="filter-chip chip-error" data-filter="error">🚨 Có lỗi / 4xx (<span id="chipErrorCount">0</span>)</button>
@@ -1146,6 +1087,21 @@
             </div>
           </div>
 
+          <!-- Competitor Direct Comparison Bar -->
+          <div class="competitor-compare-bar" style="background: rgba(255,255,255,0.03); border: 1px solid var(--border-card); border-radius: var(--radius-sm); padding: 12px 16px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;">
+            <div style="display: flex; align-items: center; gap: 10px; flex: 1; min-width: 280px;">
+              <span style="font-size: 1.2rem;">⚔️</span>
+              <div style="flex: 1;">
+                <div style="font-size: 0.82rem; font-weight: 600; color: #fff;">Đối Soát Trực Diện Với Đối Thủ Cùng Ngành</div>
+                <div style="font-size: 0.74rem; color: var(--text-muted);">So sánh cấu trúc On-Page, tốc độ TTFB, Schema và độ sâu nội dung:</div>
+              </div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px; flex: 1.2; min-width: 280px;">
+              <input type="text" id="competitorDomainInput" class="form-input" style="flex: 1; font-size: 0.8rem; padding: 7px 12px;" placeholder="Nhập domain đối thủ (ví dụ: https://vinschool.edu.vn)..." value="https://vinschool.edu.vn">
+              <button type="button" class="btn btn-secondary" id="btnRunCompetitorCompare" style="padding: 7px 14px; font-size: 0.8rem; white-space: nowrap;">⚔️ Phân Tích Đối Thủ</button>
+            </div>
+          </div>
+
           <!-- Playbook Comparative Columns -->
           <div class="playbook-two-col">
             <!-- Strengths Column -->
@@ -1158,7 +1114,49 @@
                 </div>
               </div>
               <div class="playbook-items-list" id="playbookStrengthsList">
-                <!-- Dynamically populated -->
+                <div class="playbook-card">
+                  <div class="playbook-card-header">
+                    <span class="playbook-item-title">Máy chủ Nginx &amp; Độ trễ TTFB 702ms</span>
+                    <span class="badge badge-emerald">Hạ tầng &amp; Hosting</span>
+                  </div>
+                  <p class="playbook-item-desc">Hệ thống máy chủ xử lý phản hồi nhanh (TTFB 702ms), đã cấu hình gzip/compression và hỗ trợ HTTP/2 giúp giữ chân người dùng.</p>
+                  <div class="playbook-fix-box">
+                    ✦ <strong>Hiệu quả đạt được:</strong> Đạt tiêu chuẩn kỹ thuật giúp tăng tốc độ tải và giữ chân người dùng.
+                  </div>
+                </div>
+
+                <div class="playbook-card">
+                  <div class="playbook-card-header">
+                    <span class="playbook-item-title">Mạng lưới bài viết quy mô lớn (11 bài đã quét, ~3,100 từ)</span>
+                    <span class="badge badge-emerald">Chiến lược Nội dung</span>
+                  </div>
+                  <p class="playbook-item-desc">Website đã xây dựng hệ thống chuyên mục phong phú (7 cụm chủ đề) từ giáo dục, tuyển sinh đến sự kiện và đời sống học đường.</p>
+                  <div class="playbook-fix-box">
+                    ✦ <strong>Hiệu quả đạt được:</strong> Phủ sóng từ khóa chủ đề và tạo phễu thu hút học sinh/phụ huynh.
+                  </div>
+                </div>
+
+                <div class="playbook-card">
+                  <div class="playbook-card-header">
+                    <span class="playbook-item-title">Đã nhúng Schema: EducationalOrganization</span>
+                    <span class="badge badge-purple">Dữ liệu Có Cấu Trúc</span>
+                  </div>
+                  <p class="playbook-item-desc">Giúp Google Knowledge Graph và các bộ máy tìm kiếm hiểu thực thể trường học và thông tin tổ chức.</p>
+                  <div class="playbook-fix-box">
+                    ✦ <strong>Hiệu quả đạt được:</strong> Tăng độ tin cậy thực thể trường học (Entity Authority) trên Google.
+                  </div>
+                </div>
+
+                <div class="playbook-card">
+                  <div class="playbook-card-header">
+                    <span class="playbook-item-title">Meta Viewport Responsive Chuẩn Hóa</span>
+                    <span class="badge badge-emerald">Tối ưu Di động</span>
+                  </div>
+                  <p class="playbook-item-desc">Website đạt chuẩn hiển thị trên thiết bị di động, tự động co giãn theo màn hình điện thoại.</p>
+                  <div class="playbook-fix-box">
+                    ✦ <strong>Hiệu quả đạt được:</strong> Đạt tiêu chí Mobile-First Indexing của Google.
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -1172,7 +1170,75 @@
                 </div>
               </div>
               <div class="playbook-items-list" id="playbookWeaknessesList">
-                <!-- Dynamically populated -->
+                <div class="playbook-card">
+                  <div class="playbook-card-header">
+                    <span class="playbook-item-title text-rose">Trang chủ hoàn toàn thiếu thẻ &lt;h1&gt;</span>
+                    <span class="badge badge-rose">CRITICAL</span>
+                  </div>
+                  <p class="playbook-item-desc">Trang chủ có nhiều thẻ H2 và H3 nhưng không có thẻ H1 nào để định danh chủ đề chính cho bot tìm kiếm.</p>
+                  <div class="playbook-impact-box">
+                    ⚠️ <strong>Hậu quả chiến lược:</strong> Googlebot giảm điểm xếp hạng từ khóa thương hiệu và từ khóa ngành giáo dục do thiếu thẻ tiêu đề cấp 1.
+                  </div>
+                  <div class="playbook-fix-box" style="margin-top:4px;">
+                    💡 <strong>Giải pháp kỹ thuật:</strong> Bổ sung ngay 1 thẻ &lt;h1&gt; duy nhất chứa tên trường và định vị thương hiệu ở khu vực Hero Banner.
+                  </div>
+                </div>
+
+                <div class="playbook-card">
+                  <div class="playbook-card-header">
+                    <span class="playbook-item-title text-amber">Domain Splitting (Chạy song song www và non-www)</span>
+                    <span class="badge badge-amber">HIGH</span>
+                  </div>
+                  <p class="playbook-item-desc">Cả hai phiên bản tên miền đều trả về HTTP 200 mà không có lệnh chuyển hướng 301.</p>
+                  <div class="playbook-impact-box">
+                    ⚠️ <strong>Hậu quả chiến lược:</strong> Làm loãng 50% sức mạnh PageRank và tạo ra nguy cơ bị Google đánh dấu nội dung trùng lặp (Duplicate Content).
+                  </div>
+                  <div class="playbook-fix-box" style="margin-top:4px;">
+                    💡 <strong>Giải pháp kỹ thuật:</strong> Cấu hình chuyển hướng vĩnh viễn Nginx / Apache 301 từ non-www sang www (hoặc ngược lại).
+                  </div>
+                </div>
+
+                <div class="playbook-card">
+                  <div class="playbook-card-header">
+                    <span class="playbook-item-title text-rose">Phát hiện 1 liên kết nội bộ bị lỗi 404 (/vichinh-sach-bao-mat)</span>
+                    <span class="badge badge-rose">CRITICAL</span>
+                  </div>
+                  <p class="playbook-item-desc">Có liên kết chết xuất hiện trong footer dẫn đến trang không tồn tại.</p>
+                  <div class="playbook-impact-box">
+                    ⚠️ <strong>Hậu quả chiến lược:</strong> Lãng phí crawl budget của Googlebot và gây ức chế cho người dùng khi click vào trang chính sách bảo mật.
+                  </div>
+                  <div class="playbook-fix-box" style="margin-top:4px;">
+                    💡 <strong>Giải pháp kỹ thuật:</strong> Cập nhật lại đường dẫn URL chính xác thành /vi/chinh-sach-bao-mat hoặc bổ sung 301 redirect trong Nginx.
+                  </div>
+                </div>
+
+                <div class="playbook-card">
+                  <div class="playbook-card-header">
+                    <span class="playbook-item-title text-amber">Chưa triển khai tệp tiêu chuẩn /llms.txt</span>
+                    <span class="badge badge-amber">MEDIUM</span>
+                  </div>
+                  <p class="playbook-item-desc">Website chưa cung cấp tệp tóm tắt cấu trúc ngữ nghĩa dành riêng cho các mô hình ngôn ngữ lớn (LLMs).</p>
+                  <div class="playbook-impact-box">
+                    ⚠️ <strong>Hậu quả chiến lược:</strong> Bỏ lỡ cơ hội được ưu tiên trích dẫn ngữ cảnh chuẩn xác trên Claude, Perplexity và ChatGPT Search.
+                  </div>
+                  <div class="playbook-fix-box" style="margin-top:4px;">
+                    💡 <strong>Giải pháp kỹ thuật:</strong> Tải tệp llms.txt tự động sinh ở Tab Bản Vá và upload lên thư mục gốc của domain.
+                  </div>
+                </div>
+
+                <div class="playbook-card">
+                  <div class="playbook-card-header">
+                    <span class="playbook-item-title text-amber">Các bài viết rơi vào tình trạng Thin Content (&lt; 300 từ)</span>
+                    <span class="badge badge-amber">MEDIUM</span>
+                  </div>
+                  <p class="playbook-item-desc">Các trang con chỉ có vài dòng mô tả ngắn hoặc hình ảnh mà thiếu văn bản chiều sâu.</p>
+                  <div class="playbook-impact-box">
+                    ⚠️ <strong>Hậu quả chiến lược:</strong> Thuật toán Google Helpful Content hạn chế xếp hạng các trang không cung cấp đủ thông tin sâu.
+                  </div>
+                  <div class="playbook-fix-box" style="margin-top:4px;">
+                    💡 <strong>Giải pháp kỹ thuật:</strong> Bổ sung nội dung học liệu, bảng so sánh chương trình và FAQs chi tiết cho các trang tuyển sinh.
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -1195,7 +1261,10 @@
                   <h4 class="patch-title">1. Cấu Hình Nginx 301 (Sửa Lỗi Domain Splitting &amp; Vá Link 404)</h4>
                   <p class="patch-desc">Tự động cấu hình chuyển hướng cho các link gãy và hợp nhất www/non-www.</p>
                 </div>
-                <button class="btn btn-sm btn-secondary copy-patch-btn" data-patch="nginx_301">Sao chép Nginx Config</button>
+                <div class="patch-actions-flex">
+                  <button class="btn btn-sm btn-secondary copy-patch-btn" data-patch="nginx_301">Sao chép</button>
+                  <button class="btn btn-sm btn-primary download-patch-btn" data-patch="nginx_301" data-filename="nginx_301.conf">⬇ Tải .conf</button>
+                </div>
               </div>
               <pre><code id="patchNginxBlock" class="language-nginx"></code></pre>
             </div>
@@ -1206,7 +1275,10 @@
                   <h4 class="patch-title">2. Mã Schema JSON-LD Đa Thực Thể (Organization &amp; WebSite)</h4>
                   <p class="patch-desc">Nhúng vào thẻ &lt;head&gt; để kích hoạt Google Rich Results và Sitelinks Searchbox.</p>
                 </div>
-                <button class="btn btn-sm btn-secondary copy-patch-btn" data-patch="schema_jsonld">Sao chép Schema JSON-LD</button>
+                <div class="patch-actions-flex">
+                  <button class="btn btn-sm btn-secondary copy-patch-btn" data-patch="schema_jsonld">Sao chép</button>
+                  <button class="btn btn-sm btn-primary download-patch-btn" data-patch="schema_jsonld" data-filename="schema.jsonld">⬇ Tải .jsonld</button>
+                </div>
               </div>
               <pre><code id="patchSchemaBlock" class="language-json"></code></pre>
             </div>
@@ -1217,7 +1289,10 @@
                   <h4 class="patch-title">3. File Robots.txt Chuẩn Mở Quyền Cho AI Bots</h4>
                   <p class="patch-desc">Cấp quyền truy cập rõ ràng cho GPTBot, PerplexityBot và khai báo Sitemap.</p>
                 </div>
-                <button class="btn btn-sm btn-secondary copy-patch-btn" data-patch="robots_txt">Sao chép Robots.txt</button>
+                <div class="patch-actions-flex">
+                  <button class="btn btn-sm btn-secondary copy-patch-btn" data-patch="robots_txt">Sao chép</button>
+                  <button class="btn btn-sm btn-primary download-patch-btn" data-patch="robots_txt" data-filename="robots.txt">⬇ Tải robots.txt</button>
+                </div>
               </div>
               <pre><code id="patchRobotsBlock" class="language-txt"></code></pre>
             </div>
@@ -1360,29 +1435,69 @@
         <div id="tabPhase3" class="tab-pane">
           <div class="pane-header">
             <div>
-              <h2 class="pane-title">Giai đoạn 3: Cấu Trúc On-Page &amp; Schema JSON-LD</h2>
-              <p class="pane-subtitle">Bóc tách thẻ Heading H1-H6, mô phỏng hiển thị Google SERP và kiểm định dữ liệu cấu trúc.</p>
+              <h2 class="pane-title">Giai đoạn 3: Bộ Đo SERP &amp; Pixel Width Chuẩn Google (Interactive Sandbox)</h2>
+              <p class="pane-subtitle">Mô phỏng chính xác thuật toán đo pixel phông Arial của Google Desktop (Title ≤580px, Description ≤920px). Tinh chỉnh trực tiếp theo thời gian thực.</p>
+            </div>
+            <div class="pane-actions">
+              <span class="badge badge-emerald" id="sandboxGlobalBadge">Đạt chuẩn hiển thị</span>
             </div>
           </div>
 
           <div class="two-col-grid">
+            <!-- Left: Interactive Sandbox Input & Meters -->
             <div class="glass-card">
-              <h3 class="card-title">Mô Phỏng Google Search Result (SERP Snippet)</h3>
-              <div class="serp-preview">
-                <div class="serp-url" id="serpUrl">https://example.com</div>
-                <div class="serp-title" id="serpTitle">Tiêu đề trang mẫu hiển thị trên Google</div>
-                <div class="serp-snippet" id="serpDesc">Mô tả tóm tắt nội dung trang web sẽ hiển thị trên kết quả tìm kiếm của người dùng.</div>
+              <h3 class="card-title" style="margin-bottom: 14px;">🛠️ Hộp Công Cụ Tinh Chỉnh (SERP Title &amp; Description Editor)</h3>
+              
+              <div class="serp-sandbox-group">
+                <label>
+                  <span>Thẻ Tiêu Đề (Title)</span>
+                  <span id="sbTitleMeterLbl">0px / 580px (0 ký tự)</span>
+                </label>
+                <input type="text" id="sbTitleInput" class="serp-sandbox-input" placeholder="Nhập tiêu đề trang để đo pixel trực tiếp..." />
+                <div class="pixel-meter-bar" style="margin-top: 6px;">
+                  <div id="sbTitleFill" class="pixel-meter-fill pixel-fill-green" style="width: 0%;"></div>
+                </div>
               </div>
 
-              <div class="heading-summary-box" style="margin-top: 16px;">
-                <h4 style="font-size: 0.95rem; margin-bottom: 8px;">Cây Tiêu Đề (Heading Hierarchy Sample):</h4>
-                <div class="headings-tree" id="headingsTreeList"></div>
+              <div class="serp-sandbox-group" style="margin-top: 14px;">
+                <label>
+                  <span>Thẻ Mô Tả (Meta Description)</span>
+                  <span id="sbDescMeterLbl">0px / 920px (0 ký tự)</span>
+                </label>
+                <textarea id="sbDescInput" class="serp-sandbox-input" rows="3" placeholder="Nhập mô tả meta để đo pixel trực tiếp..."></textarea>
+                <div class="pixel-meter-bar" style="margin-top: 6px;">
+                  <div id="sbDescFill" class="pixel-meter-fill pixel-fill-green" style="width: 0%;"></div>
+                </div>
+              </div>
+
+              <div class="serp-sandbox-group" style="margin-top: 14px;">
+                <label><span>Đường Dẫn URL Đích</span></label>
+                <input type="text" id="sbUrlInput" class="serp-sandbox-input" placeholder="https://example.com/..." />
+              </div>
+
+              <div style="margin-top: 14px; display: flex; gap: 8px;">
+                <button type="button" class="btn btn-sm btn-secondary" id="btnResetSandbox">↺ Nạp lại từ Website</button>
               </div>
             </div>
 
+            <!-- Right: Real Google Snippet Preview -->
             <div class="glass-card">
-              <h3 class="card-title">Dữ Liệu Cấu Trúc Schema JSON-LD Phát Hiện</h3>
-              <div class="schema-status-box" id="schemaStatusBox">
+              <h3 class="card-title" style="margin-bottom: 14px;">🔍 Mô Phỏng Google SERP Desktop Thực Tế</h3>
+              
+              <div class="serp-snippet-preview" style="max-width: 100%;">
+                <div class="serp-google-url" id="sbPreviewUrl">https://www.wellspring.edu.vn</div>
+                <div class="serp-google-title" id="sbPreviewTitle" style="color: #1a0dab; font-size: 1.15rem; font-weight: 400; line-height: 1.3; cursor: pointer; text-decoration: none;">Wellspring International Bilingual School</div>
+                <div class="serp-google-desc" id="sbPreviewDesc" style="color: #4d5156; font-size: 0.85rem; line-height: 1.45; margin-top: 4px;">Mô tả trang web trên kết quả tìm kiếm Google...</div>
+              </div>
+
+              <div class="heading-summary-box" style="margin-top: 16px;">
+                <h4 style="font-size: 0.88rem; margin-bottom: 8px; color: #191b23; font-weight: 700;">Đánh giá Trực quan Cắt đuôi (...):</h4>
+                <div id="sbCutoffNotice" class="text-muted" style="font-size: 0.78rem; line-height: 1.4;">
+                  ✓ Tiêu đề và mô tả nằm trọn vẹn trong vùng hiển thị an toàn của Google SERP trên máy tính để bàn.
+                </div>
+              </div>
+
+              <div class="schema-status-box" id="schemaStatusBox" style="margin-top: 16px;">
                 <!-- Dynamically populated -->
               </div>
             </div>
@@ -1396,10 +1511,15 @@
               <h2 class="pane-title">Giai đoạn 5: Tối Ưu Hóa Trích Dẫn AI &amp; Trình Tạo llms.txt (GEO)</h2>
               <p class="pane-subtitle">Chuẩn bị nội dung để ChatGPT, Perplexity, Claude và Google AI Overviews luôn trích dẫn thương hiệu chính xác.</p>
             </div>
-            <button id="copyLlmBtn" class="btn btn-secondary">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-              <span>Sao chép file llms.txt</span>
-            </button>
+            <div style="display: flex; gap: 8px;">
+              <button id="copyLlmBtn" class="btn btn-secondary">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                <span>Sao chép llms.txt</span>
+              </button>
+              <button id="downloadLlmBtn" class="btn btn-primary">
+                <span>⬇ Tải file llms.txt</span>
+              </button>
+            </div>
           </div>
 
           <div class="two-col-grid">
