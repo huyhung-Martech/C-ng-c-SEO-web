@@ -250,10 +250,6 @@ const INITIAL_BASELINE_ISSUES = [
 
 document.addEventListener("DOMContentLoaded", () => {
   initEventListeners();
-  // Populate baseline issues table immediately
-  renderAhrefsTopIssues(INITIAL_BASELINE_ISSUES, [{url: "https://wellspring.edu.vn/vichinh-sach-bao-mat"}], Array(11).fill({}), {});
-  renderTestCases(INITIAL_BASELINE_TESTS);
-  renderAgentTraceFeed(INITIAL_BASELINE_TRACE);
   renderInitialPatches();
   initDownloadAndSandboxEngine();
 });
@@ -522,14 +518,18 @@ function switchTab(targetTabId) {
 }
 
 function addStreamLine(type, text) {
-  const feed = document.getElementById("liveStreamFeed");
-  if (!feed) return;
-  const line = document.createElement("div");
-  line.className = `stream-line stream-${type}`;
+  const feed1 = document.getElementById("liveStreamFeed");
+  const feed2 = document.getElementById("agentTraceFeed");
   const now = new Date().toTimeString().split(" ")[0];
-  line.innerHTML = `<span class="stream-time font-mono">[${now}]</span> ${escapeHtml(text)}`;
-  feed.appendChild(line);
-  feed.scrollTop = feed.scrollHeight;
+  [feed1, feed2].forEach(feed => {
+    if (!feed) return;
+    const line = document.createElement("div");
+    line.className = `trace-item stream-line stream-${type}`;
+    line.style.padding = "2px 0";
+    line.innerHTML = `<span class="trace-time font-mono" style="color:#9ca3af; margin-right:8px;">[${now}]</span> <span>${escapeHtml(text)}</span>`;
+    feed.appendChild(line);
+    feed.scrollTop = feed.scrollHeight;
+  });
 }
 
 async function runAudit(url) {
@@ -549,16 +549,18 @@ async function runAudit(url) {
   const qualityThreshold = parseInt(document.getElementById("qualityThresholdSelect").value || "80");
 
   // UI loading state
-  scanBtn.disabled = true;
-  btnText.style.display = "none";
-  btnLoader.style.display = "inline-flex";
-  errorAlert.style.display = "none";
-  progressBanner.style.display = "block";
-  resultsContainer.style.display = "none";
+  if (scanBtn) scanBtn.disabled = true;
+  if (btnText) btnText.style.display = "none";
+  if (btnLoader) btnLoader.style.display = "inline-flex";
+  if (errorAlert) errorAlert.style.display = "none";
+  const emptyState = document.getElementById("initialEmptyState");
+  if (emptyState) emptyState.style.display = "none";
+  if (resultsContainer) resultsContainer.style.display = "none";
+  if (progressBanner) progressBanner.style.display = "block";
 
-  progressBar.style.width = "5%";
-  progressPercent.textContent = "5%";
-  progressText.textContent = "Đang khởi tạo Radar & Kết nối luồng dữ liệu Live SSE...";
+  if (progressBar) progressBar.style.width = "5%";
+  if (progressPercent) progressPercent.textContent = "5%";
+  if (progressText) progressText.textContent = "Đang khởi tạo Radar & Kết nối luồng dữ liệu Live SSE...";
   if (streamBadge) streamBadge.textContent = "Đang nhận dữ liệu trực tiếp...";
   if (feed) feed.innerHTML = "";
 
@@ -578,9 +580,14 @@ async function runAudit(url) {
 
     activeEventSource.addEventListener("agent_log", (e) => {
       try {
-        const log = JSON.parse(e.data);
-        addStreamLine("agent", `${log.avatar} [${log.agent} · ${log.role}]: ${log.message}`);
-        progressText.textContent = `${log.avatar} ${log.agent}: ${log.message}`;
+        const raw = JSON.parse(e.data);
+        const log = raw.data || raw;
+        const av = log.avatar || "🤖";
+        const ag = log.agent || "Agent";
+        const ro = log.role || "Specialist";
+        const msg = log.message || "";
+        addStreamLine("agent", `${av} [${ag} · ${ro}]: ${msg}`);
+        if (progressText) progressText.textContent = `${av} ${ag}: ${msg}`;
       } catch (err) {
         console.error("agent_log parse error:", err);
       }
@@ -690,13 +697,15 @@ async function runAudit(url) {
         }, 300);
 
       } catch (postErr) {
-        progressBanner.style.display = "none";
-        errorAlert.textContent = `❌ Lỗi: ${postErr.message}`;
-        errorAlert.style.display = "block";
+        if (progressBanner) progressBanner.style.display = "none";
+        if (errorAlert) {
+          errorAlert.textContent = `❌ Lỗi: ${postErr.message}`;
+          errorAlert.style.display = "block";
+        }
       } finally {
-        scanBtn.disabled = false;
-        btnText.style.display = "inline";
-        btnLoader.style.display = "none";
+        if (scanBtn) scanBtn.disabled = false;
+        if (btnText) btnText.style.display = "inline";
+        if (btnLoader) btnLoader.style.display = "none";
       }
     };
 
@@ -715,6 +724,8 @@ async function runAudit(url) {
 }
 
 function showResults(data) {
+  const emptyState = document.getElementById("initialEmptyState");
+  if (emptyState) emptyState.style.display = "none";
   const progressBanner = document.getElementById("scanProgress");
   const resultsContainer = document.getElementById("resultsContainer");
   if (progressBanner) progressBanner.style.display = "none";

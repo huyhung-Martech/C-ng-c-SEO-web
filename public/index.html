@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/app.css?v=6.0">
+  <link rel="stylesheet" href="css/app.css?v=7.0">
 </head>
 <body>
   <!-- SEMRUSH OFFICIAL GLOBAL HEADER (54px) -->
@@ -44,7 +44,7 @@
 
         <div class="semrush-search-input-wrap">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--semrush-text-muted);"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-          <input type="url" id="targetUrlInput" class="semrush-search-input" placeholder="Enter website or keyword (e.g., https://www.wellspring.edu.vn)..." value="https://www.wellspring.edu.vn" />
+          <input type="url" id="targetUrlInput" class="semrush-search-input" placeholder="Nhập URL website (ví dụ: https://www.wellspring.edu.vn hoặc https://vnexpress.net)..." value="" />
         </div>
 
         <select id="qualityThresholdSelect" style="display: none;"><option value="80" selected>80</option></select>
@@ -155,6 +155,64 @@
       <div class="semrush-workspace-container openseo-workspace">
 
         <!-- Semrush Project Header Bar -->
+                <!-- Error Alert Banner -->
+        <div id="errorAlert" class="semrush-alert-banner alert-danger" style="display: none; padding: 12px 16px; background: #fee2e2; border: 1px solid #f87171; border-radius: 6px; color: #991b1b; font-size: 0.88rem; margin-bottom: 16px;"></div>
+
+        <!-- Real-Time Crawl & Progress Banner -->
+        <div id="scanProgress" class="semrush-progress-banner" style="display: none;">
+          <div class="progress-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <span class="progress-spinner-dot"></span>
+              <strong id="progressStepText" style="font-size: 0.95rem; color: #111827;">Đang khởi tạo Radar & Kết nối luồng dữ liệu Live SSE...</strong>
+            </div>
+            <span id="progressPercent" style="font-weight: 700; color: var(--semrush-orange); font-size: 1rem;">0%</span>
+          </div>
+          <div class="progress-bar-track" style="height: 6px; background: #e5e7eb; border-radius: 3px; overflow: hidden; margin-bottom: 10px;">
+            <div id="progressBar" style="height: 100%; width: 0%; background: linear-gradient(90deg, #ff642d, #ff8c42); transition: width 0.3s ease;"></div>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.78rem; color: #6b7280; margin-bottom: 10px;">
+            <span id="streamBadgeStatus">Đang nhận dữ liệu mạng thực tế...</span>
+            <span id="crawlUrlLivePreview" style="max-width: 550px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #374151; font-family: monospace;"></span>
+          </div>
+          <div id="liveStreamFeed" class="live-stream-feed-box" style="max-height: 180px; overflow-y: auto; background: #111827; border: 1px solid #1f2937; border-radius: 6px; padding: 10px 14px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 0.78rem; color: #10b981; line-height: 1.6;"></div>
+        </div>
+
+        <!-- Initial Empty State -->
+        <div id="initialEmptyState" class="semrush-empty-state-card" style="display: block;">
+          <div class="empty-state-badge">CÔNG CỤ KIỂM ĐỊNH THỰC TẾ</div>
+          <h2 class="empty-state-title">Hệ Thống Kiểm Định Kỹ Thuật SEO · AEO · GEO Chuyên Sâu</h2>
+          <p class="empty-state-desc">
+            Không sử dụng dữ liệu tĩnh. Hệ thống kết nối trực tiếp đến IP máy chủ mục tiêu, đo độ trễ TTFB thật, bóc tách thẻ HTML/heading, đối soát cấu trúc dữ liệu Schema và cào đệ quy toàn bộ mạng lưới liên kết nội bộ theo thời gian thực.
+          </p>
+
+          <div class="empty-state-steps-grid">
+            <div class="empty-step-box">
+              <div class="step-num">1</div>
+              <div class="step-label">Nhập URL Mục Tiêu</div>
+              <div class="step-desc">Điền tên miền hoặc trang bất kỳ (ví dụ: wellspring.edu.vn, vnexpress.net) vào thanh tìm kiếm phía trên.</div>
+            </div>
+            <div class="empty-step-box">
+              <div class="step-num">2</div>
+              <div class="step-label">Chọn Quy Mô Quét</div>
+              <div class="step-desc">Lựa chọn số lượng trang (25, 50, 100 trang hoặc toàn bộ sitemap) tùy theo kích thước của website.</div>
+            </div>
+            <div class="empty-step-box">
+              <div class="step-num">3</div>
+              <div class="step-label">Bấm "Analyze"</div>
+              <div class="step-desc">Quan sát bot cào dữ liệu trực tiếp từng URL, phát hiện lỗi 404 thực tế và nhận bộ bản vá Nginx/Schema tự động.</div>
+            </div>
+          </div>
+
+          <div class="empty-state-sample-prompt">
+            <span>💡 Quét thử ngay tên miền thực tế:</span>
+            <button type="button" class="sample-chip sample-tag" data-url="https://www.wellspring.edu.vn" style="padding: 4px 10px; background: #f3f4f6; border: 1px solid #d1d5db; border-radius: 4px; color: #111827; cursor: pointer; font-size: 0.8rem; font-weight: 600;">wellspring.edu.vn</button>
+            <button type="button" class="sample-chip sample-tag" data-url="https://vnexpress.net" style="padding: 4px 10px; background: #f3f4f6; border: 1px solid #d1d5db; border-radius: 4px; color: #111827; cursor: pointer; font-size: 0.8rem; font-weight: 600;">vnexpress.net</button>
+            <button type="button" class="sample-chip sample-tag" data-url="https://dantri.com.vn" style="padding: 4px 10px; background: #f3f4f6; border: 1px solid #d1d5db; border-radius: 4px; color: #111827; cursor: pointer; font-size: 0.8rem; font-weight: 600;">dantri.com.vn</button>
+          </div>
+        </div>
+
+        <!-- RESULTS CONTAINER (Hidden until first crawl completes) -->
+        <div id="resultsContainer" style="display: none;">
         <div class="semrush-project-header-bar ahrefs-project-banner" id="ahrefsProjectBanner">
           <div>
             <div class="semrush-breadcrumb">
@@ -1596,6 +1654,7 @@
         </div>
       </footer>
     </section>
+        </div><!-- /#resultsContainer -->
       </div><!-- /.openseo-workspace -->
     </main><!-- /.openseo-main-area -->
   </div><!-- /.openseo-layout -->
@@ -1620,6 +1679,6 @@
     </div>
   </div>
 
-  <script src="js/app.js?v=4.0"></script>
+  <script src="js/app.js?v=5.0"></script>
 </body>
 </html>

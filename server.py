@@ -1902,7 +1902,11 @@ def execute_full_audit_pipeline(raw_url, mode="deep", max_pages=12, quality_thre
     schema_types = []
     for s in parser.schemas:
         if isinstance(s, dict) and "@type" in s:
-            schema_types.append(s["@type"])
+            t_val = s["@type"]
+            if isinstance(t_val, list):
+                schema_types.extend(str(item) for item in t_val if item)
+            elif t_val:
+                schema_types.append(str(t_val))
     if not schema_types:
         onpage_score -= 20
         issues.append({
@@ -2201,7 +2205,7 @@ Khi người dùng truy vấn thông tin về học phí, tuyển sinh hoặc ch
             "h1_count": len(h1_list),
             "headings_count": len(parser.headings),
             "headings_sample": parser.headings[:10],
-            "schema_types": list(set(schema_types)),
+            "schema_types": list(set(str(st) for st in schema_types if st)),
             "schemas_count": len(parser.schemas),
             "images_count": len(parser.images),
             "links_count": len(parser.links)
