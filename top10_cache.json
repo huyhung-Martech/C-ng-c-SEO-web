@@ -1,0 +1,321 @@
+{
+  "success": true,
+  "target_domain": "wellspring.edu.vn",
+  "audit_timestamp": "2026-11-02 17:23:36",
+  "total_audited": 10,
+  "leaderboard": [
+    {
+      "name": "UNIS Hanoi",
+      "domain": "unishanoi.org",
+      "type": "Trường Quốc tế Liên Hợp Quốc",
+      "status": 200,
+      "final_url": "https://www.unishanoi.org/",
+      "ttfb_ms": 591,
+      "server": "cloudflare",
+      "title": "International School In Hanoi Vietnam | UNIS Hanoi",
+      "meta_desc": "UNIS Hanoi is an international school in Hanoi, Vietnam, which is a coed English-language school for students from Early Years (3-year-olds) to Grade 12.",
+      "h1_count": 1,
+      "h1_texts": [
+        "#uniquelyUNIS"
+      ],
+      "canonical": "https://www.unishanoi.org/",
+      "schemas": [
+        "Organization",
+        "WebSite"
+      ],
+      "robots_txt": "Có (200 OK)",
+      "sitemap_xml": "Không / 404",
+      "domain_split": "Không (Chuẩn)",
+      "backlinks": 10,
+      "score": 90,
+      "weaknesses": [
+        "Không phát hiện sitemap.xml chuẩn ở thư mục gốc"
+      ],
+      "tactics": [
+        "Tạo sitemap.xml đệ quy tự động cập nhật và khai báo trong GSC"
+      ],
+      "rank": 1,
+      "is_target": false
+    },
+    {
+      "name": "Vinschool",
+      "domain": "vinschool.edu.vn",
+      "type": "Hệ thống Song ngữ lớn nhất VN",
+      "status": 200,
+      "final_url": "https://vinschool.edu.vn",
+      "ttfb_ms": 774,
+      "server": "cloudflare",
+      "title": "Trang chủ - Vinschool",
+      "meta_desc": "",
+      "h1_count": 1,
+      "h1_texts": [
+        "VINSCHOOL"
+      ],
+      "canonical": "https://vinschool.edu.vn/",
+      "schemas": [
+        "Organization"
+      ],
+      "robots_txt": "Có (200 OK)",
+      "sitemap_xml": "Có (200 OK)",
+      "domain_split": "Không (Đã redirect chuẩn)",
+      "backlinks": 80,
+      "score": 85,
+      "weaknesses": [
+        "Thiếu Meta Description trang chủ - CTR kết quả tìm kiếm thấp"
+      ],
+      "tactics": [
+        "Viết Meta Description chuẩn 155 ký tự có CTA tuyển sinh"
+      ],
+      "rank": 2,
+      "is_target": false
+    },
+    {
+      "name": "BVIS Hanoi (Nord Anglia)",
+      "domain": "nordangliaeducation.com/bvis-hanoi",
+      "type": "Trường Quốc tế Anh Việt",
+      "status": 200,
+      "final_url": "https://www.nordangliaeducation.com/bvis-hanoi",
+      "ttfb_ms": 1362,
+      "server": "Cloudflare/Custom",
+      "title": "British Vietnamese International School - BVIS Hanoi",
+      "meta_desc": "Welcome to BVIS Hanoi, an outstanding international school in Vietnam offering an innovative bilingual education that celebrates the greatness in every child.",
+      "h1_count": 1,
+      "h1_texts": [
+        "A SCHOOL OF OUTCOMES NOT PROMISES"
+      ],
+      "canonical": "https://www.nordangliaeducation.com/bvis-hanoi",
+      "schemas": [
+        "EducationalOrganization",
+        "LocalBusiness"
+      ],
+      "robots_txt": "Có (200 OK)",
+      "sitemap_xml": "Không / 404",
+      "domain_split": "Không (Đã redirect chuẩn)",
+      "backlinks": 10,
+      "score": 85,
+      "weaknesses": [
+        "Không phát hiện sitemap.xml chuẩn ở thư mục gốc"
+      ],
+      "tactics": [
+        "Tạo sitemap.xml đệ quy tự động cập nhật và khai báo trong GSC"
+      ],
+      "rank": 3,
+      "is_target": false
+    },
+    {
+      "name": "Wellspring Hanoi (Mục Tiêu)",
+      "domain": "wellspring.edu.vn",
+      "type": "Song ngữ Quốc tế (K-12)",
+      "status": 200,
+      "final_url": "https://wellspring.edu.vn",
+      "ttfb_ms": 332,
+      "server": "nginx/1.18.0 (Ubuntu)",
+      "title": "Wellspring | Happy schools",
+      "meta_desc": "Trường học Hạnh phúc tại Wellspring tôn vinh niềm hạnh phúc thông qua việc chăm sóc sức khoẻ tinh thần, cảm xúc xã hội, và sự phát triển toàn diện của Học sinh, Giáo viên – Nhân viên, các Gia đình trong Cộng đồng WISers.",
+      "h1_count": 0,
+      "h1_texts": [],
+      "canonical": "",
+      "schemas": [
+        "EducationalOrganization"
+      ],
+      "robots_txt": "Có (200 OK)",
+      "sitemap_xml": "Có (200 OK)",
+      "domain_split": "Có (wellspring.edu.vn vs www.wellspring.edu.vn cùng chạy độc lập)",
+      "backlinks": 80,
+      "score": 80,
+      "weaknesses": [
+        "Thiếu thẻ H1 trang chủ - Google khó định danh thực thể chủ đạo",
+        "Domain Splitting: Cả www và non-www đều phân giải gây trùng lặp nội dung"
+      ],
+      "tactics": [
+        "Đặt H1 chuẩn từ khóa thương hiệu + định vị 'Trường Song ngữ Quốc tế'",
+        "Cấu hình 301 Redirect triệt để từ www sang non-www (hoặc ngược lại)"
+      ],
+      "rank": 4,
+      "is_target": true
+    },
+    {
+      "name": "The Olympia Schools",
+      "domain": "theolympiaschools.edu.vn",
+      "type": "Trường Phổ thông Liên cấp",
+      "status": 200,
+      "final_url": "https://theolympiaschools.edu.vn",
+      "ttfb_ms": 711,
+      "server": "nginx",
+      "title": "Trường Phổ Thông Liên Cấp Song Ngữ | The Olympia Schools",
+      "meta_desc": "Olympia là trường phổ thông liên cấp song ngữ tại Hà Nội, từ Mầm non đến THPT, giúp học sinh phát triển năng lực, tư duy độc lập và tự tin hội nhập quốc tế.",
+      "h1_count": 1,
+      "h1_texts": [
+        "Trường phổ thông liên cấp song ngữ Olympia"
+      ],
+      "canonical": "",
+      "schemas": [],
+      "robots_txt": "Có (200 OK)",
+      "sitemap_xml": "Có (200 OK)",
+      "domain_split": "Không (Đã redirect chuẩn)",
+      "backlinks": 10,
+      "score": 80,
+      "weaknesses": [
+        "Thiếu Schema JSON-LD cấu trúc Thực thể (School, EducationalOrganization)"
+      ],
+      "tactics": [
+        "Chèn Schema School + PostalAddress + GeoCoordinates để chiếm Knowledge Graph"
+      ],
+      "rank": 5,
+      "is_target": false
+    },
+    {
+      "name": "Concordia Hanoi",
+      "domain": "concordiahanoi.org",
+      "type": "Trường Quốc tế Mỹ",
+      "status": 200,
+      "final_url": "https://www.concordiahanoi.org/",
+      "ttfb_ms": 827,
+      "server": "cloudflare",
+      "title": "Concordia Hanoi | Premier International School in Vietnam",
+      "meta_desc": "Welcome to Concordia International School Hanoi. Discover our vibrant Preschool-G12 community, rigorous American curriculum, athletics, arts, and path to top global universities.",
+      "h1_count": 1,
+      "h1_texts": [
+        "Home"
+      ],
+      "canonical": "https://www.concordiahanoi.org/",
+      "schemas": [],
+      "robots_txt": "Có (200 OK)",
+      "sitemap_xml": "Không / 404",
+      "domain_split": "Không (Đã redirect chuẩn)",
+      "backlinks": 10,
+      "score": 80,
+      "weaknesses": [
+        "Thiếu Schema JSON-LD cấu trúc Thực thể (School, EducationalOrganization)",
+        "Không phát hiện sitemap.xml chuẩn ở thư mục gốc"
+      ],
+      "tactics": [
+        "Chèn Schema School + PostalAddress + GeoCoordinates để chiếm Knowledge Graph",
+        "Tạo sitemap.xml đệ quy tự động cập nhật và khai báo trong GSC"
+      ],
+      "rank": 6,
+      "is_target": false
+    },
+    {
+      "name": "The Dewey Schools",
+      "domain": "thedeweyschools.edu.vn",
+      "type": "Trường Quốc tế Song ngữ",
+      "status": 200,
+      "final_url": "https://thedeweyschools.edu.vn",
+      "ttfb_ms": 446,
+      "server": "nginx/1.18.0 (Ubuntu)",
+      "title": "The Dewey Schools - Trải nghiệm giáo dục Mỹ -",
+      "meta_desc": "giới thiệu The Dewey Schools là hệ thống trường liên cấp thuộc Tập đoàn Giáo dục Edufit. Cùng với Sakura Schools, chúng tôi kiến tạo lộ trình học tập xuyên suốt từ Mầm non đến Trung học phổ thông trong môi trường giáo dục đẳng cấp quốc tế. Về chúng tôi Trường Quốc tế IB […]",
+      "h1_count": 0,
+      "h1_texts": [],
+      "canonical": "https://thedeweyschools.edu.vn/",
+      "schemas": [],
+      "robots_txt": "Có (200 OK)",
+      "sitemap_xml": "Có (200 OK)",
+      "domain_split": "Không (Chuẩn)",
+      "backlinks": 80,
+      "score": 75,
+      "weaknesses": [
+        "Thiếu thẻ H1 trang chủ - Google khó định danh thực thể chủ đạo",
+        "Thiếu Schema JSON-LD cấu trúc Thực thể (School, EducationalOrganization)"
+      ],
+      "tactics": [
+        "Đặt H1 chuẩn từ khóa thương hiệu + định vị 'Trường Song ngữ Quốc tế'",
+        "Chèn Schema School + PostalAddress + GeoCoordinates để chiếm Knowledge Graph"
+      ],
+      "rank": 7,
+      "is_target": false
+    },
+    {
+      "name": "Hanoi Academy",
+      "domain": "hanoiacademy.edu.vn",
+      "type": "Trường Song ngữ Quốc tế",
+      "status": 200,
+      "final_url": "https://hanoiacademy.edu.vn",
+      "ttfb_ms": 1070,
+      "server": "nginx/1.30.1",
+      "title": "Trường Song Ngữ Hanoi Academy-Tuyển sinh từ Mầm Non - THPT",
+      "meta_desc": "TRƯỜNG SONG NGỮ QUỐC TẾ HANOI ACADEMY",
+      "h1_count": 2,
+      "h1_texts": [
+        "TRƯỜNG SONG NGỮ QUỐC TẾ HANOI ACADEMY",
+        "Trường Song Ngữ Hanoi Academy"
+      ],
+      "canonical": "https://hanoiacademy.edu.vn/",
+      "schemas": [],
+      "robots_txt": "Có (200 OK)",
+      "sitemap_xml": "Có (200 OK)",
+      "domain_split": "Không (Đã redirect chuẩn)",
+      "backlinks": 80,
+      "score": 75,
+      "weaknesses": [
+        "Thiếu Schema JSON-LD cấu trúc Thực thể (School, EducationalOrganization)"
+      ],
+      "tactics": [
+        "Chèn Schema School + PostalAddress + GeoCoordinates để chiếm Knowledge Graph"
+      ],
+      "rank": 8,
+      "is_target": false
+    },
+    {
+      "name": "TH School",
+      "domain": "thschool.edu.vn",
+      "type": "Trường Quốc tế nội trú",
+      "status": 200,
+      "final_url": "https://thschool.edu.vn",
+      "ttfb_ms": 722,
+      "server": "LiteSpeed",
+      "title": "Homepage - TH School",
+      "meta_desc": "Welcome to TH School! A world-class international school serving students aged 2–18, preparing future-ready global citizens. About Us Register for a Tour Welcome to TH School! A world-class international school serving students aged 2–18, preparing future-ready global citizens. About Us Register for a Tour Welcome to TH School! A world-class international school serving students aged […]",
+      "h1_count": 0,
+      "h1_texts": [],
+      "canonical": "https://thschool.edu.vn/",
+      "schemas": [],
+      "robots_txt": "Có (200 OK)",
+      "sitemap_xml": "Có (200 OK)",
+      "domain_split": "Không (Đã redirect chuẩn)",
+      "backlinks": 10,
+      "score": 70,
+      "weaknesses": [
+        "Thiếu thẻ H1 trang chủ - Google khó định danh thực thể chủ đạo",
+        "Thiếu Schema JSON-LD cấu trúc Thực thể (School, EducationalOrganization)"
+      ],
+      "tactics": [
+        "Đặt H1 chuẩn từ khóa thương hiệu + định vị 'Trường Song ngữ Quốc tế'",
+        "Chèn Schema School + PostalAddress + GeoCoordinates để chiếm Knowledge Graph"
+      ],
+      "rank": 9,
+      "is_target": false
+    },
+    {
+      "name": "Marie Curie Hanoi",
+      "domain": "mariecuriehanoischool.com",
+      "type": "Trường Tư thục Chất lượng cao",
+      "status": 200,
+      "final_url": "https://mariecuriehanoischool.com",
+      "ttfb_ms": 791,
+      "server": "LiteSpeed",
+      "title": "Trang chủ - Hệ thống giáo dục Marie Curie",
+      "meta_desc": "THÔNG BÁO",
+      "h1_count": 0,
+      "h1_texts": [],
+      "canonical": "https://mariecuriehanoischool.com/",
+      "schemas": [],
+      "robots_txt": "Có (200 OK)",
+      "sitemap_xml": "Có (200 OK)",
+      "domain_split": "Không (Đã redirect chuẩn)",
+      "backlinks": 10,
+      "score": 60,
+      "weaknesses": [
+        "Thiếu thẻ H1 trang chủ - Google khó định danh thực thể chủ đạo",
+        "Thiếu Schema JSON-LD cấu trúc Thực thể (School, EducationalOrganization)"
+      ],
+      "tactics": [
+        "Đặt H1 chuẩn từ khóa thương hiệu + định vị 'Trường Song ngữ Quốc tế'",
+        "Chèn Schema School + PostalAddress + GeoCoordinates để chiếm Knowledge Graph"
+      ],
+      "rank": 10,
+      "is_target": false
+    }
+  ]
+}

@@ -2109,3 +2109,59 @@ pre {
   border-color: var(--semrush-orange);
   box-shadow: 0 1px 3px rgba(255, 100, 45, 0.3);
 }
+
+
+/* Top 10 Competitors Benchmark & Excel Export Styles */
+.semrush-export-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #ff642d;
+  color: #ffffff !important;
+  font-size: 0.74rem;
+  font-weight: 700;
+  padding: 6px 12px;
+  border-radius: 4px;
+  text-decoration: none;
+  transition: all 0.15s ease;
+  box-shadow: 0 1px 3px rgba(255, 100, 45, 0.25);
+}
+.semrush-export-btn:hover {
+  background: #e5531d;
+  color: #ffffff !important;
+  transform: translateY(-1px);
+}
+.top10-target-row {
+  background: #fff7ed !important;
+  border-left: 3px solid #ff642d;
+}
+.top10-rank-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  font-weight: 800;
+  font-size: 0.78rem;
+}
+.rank-1 { background: #fef3c7; color: #b45309; border: 1px solid #fde68a; }
+.rank-2 { background: #f1f5f9; color: #475569; border: 1px solid #e2e8f0; }
+.rank-3 { background: #ffedd5; color: #c2410c; border: 1px solid #fed7aa; }
+.rank-other { background: #f8fafc; color: #64748b; }
+.score-gauge-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.score-track {
+  flex: 1;
+  height: 6px;
+  background: #e2e8f0;
+  border-radius: 3px;
+  overflow: hidden;
+}
+.score-fill {
+  height: 100%;
+  border-radius: 3px;
+}

@@ -611,22 +611,210 @@ function initEventListeners() {
     });
   }
 
-  // Competitor compare button
-  const btnCompare = document.getElementById("btnRunCompetitorCompare");
-  const compInput = document.getElementById("competitorDomainInput");
-  if (btnCompare && compInput) {
-    btnCompare.addEventListener("click", () => {
-      const rival = compInput.value.trim();
-      if (!rival) return;
-      btnCompare.textContent = "⏳ Đang đối soát...";
-      btnCompare.disabled = true;
-      setTimeout(() => {
-        btnCompare.textContent = "✓ Đã đối soát xong!";
-        btnCompare.disabled = false;
-        setTimeout(() => { btnCompare.textContent = "⚔️ Phân Tích Đối Thủ"; }, 2500);
-      }, 1200);
+  // =========================================================================
+  // TOP 10 COMPETITORS BENCHMARK & EXCEL EXPORT ENGINE
+  // =========================================================================
+  function renderTop10Leaderboard(data) {
+    const tbody = document.getElementById("top10Tbody");
+    if (!tbody || !data || !data.leaderboard) return;
+    tbody.innerHTML = "";
+
+    const timeEl = document.getElementById("top10UpdatedTime");
+    if (timeEl && data.audit_timestamp) {
+      timeEl.textContent = `Cập nhật lúc: ${data.audit_timestamp}`;
+    }
+
+    data.leaderboard.forEach((r) => {
+      const tr = document.createElement("tr");
+      const isTarget = r.is_target || (r.domain && r.domain.includes("wellspring.edu.vn"));
+      if (isTarget) {
+        tr.className = "top10-target-row";
+      }
+
+      // Rank badge styling
+      let rankBadgeClass = "rank-other";
+      if (r.rank === 1) rankBadgeClass = "rank-1";
+      else if (r.rank === 2) rankBadgeClass = "rank-2";
+      else if (r.rank === 3) rankBadgeClass = "rank-3";
+
+      // Score color & fill
+      let scoreColor = "#10b981";
+      if (r.score < 50) scoreColor = "#ef4444";
+      else if (r.score < 65) scoreColor = "#f59e0b";
+      else if (r.score < 75) scoreColor = "#3b82f6";
+
+      // TTFB badge
+      let ttfbBadge = "";
+      if (r.ttfb_ms <= 0) {
+        ttfbBadge = `<span class="badge badge-rose">Timeout / Kém</span>`;
+      } else if (r.ttfb_ms < 500) {
+        ttfbBadge = `<span class="badge badge-emerald">⚡ ${r.ttfb_ms}ms</span>`;
+      } else if (r.ttfb_ms < 1200) {
+        ttfbBadge = `<span class="badge badge-blue">${r.ttfb_ms}ms</span>`;
+      } else if (r.ttfb_ms < 2000) {
+        ttfbBadge = `<span class="badge badge-amber">${r.ttfb_ms}ms</span>`;
+      } else {
+        ttfbBadge = `<span class="badge badge-rose">⚠️ ${r.ttfb_ms}ms</span>`;
+      }
+
+      // H1 badge
+      let h1Badge = "";
+      if (r.h1_count === 1) {
+        h1Badge = `<span class="badge badge-emerald">✓ 1 Thẻ Chuẩn</span>`;
+      } else if (r.h1_count === 0) {
+        h1Badge = `<span class="badge badge-rose">✗ Mất H1</span>`;
+      } else {
+        h1Badge = `<span class="badge badge-amber">⚠️ ${r.h1_count} thẻ</span>`;
+      }
+
+      // Weakness text
+      const weakText = (r.weaknesses && r.weaknesses.length > 0)
+        ? r.weaknesses[0]
+        : "Đang duy trì ổn định";
+
+      tr.innerHTML = `
+        <td style="text-align: center; padding: 12px 14px;">
+          <span class="top10-rank-badge ${rankBadgeClass}">#${r.rank}</span>
+        </td>
+        <td style="padding: 12px 14px;">
+          <div style="font-weight: 700; color: #111827; display: flex; align-items: center; gap: 6px;">
+            <span>${r.name}</span>
+            ${isTarget ? '<span class="badge" style="background:#ff642d; color:#fff; font-size:0.65rem; padding:1px 6px;">MỤC TIÊU</span>' : ''}
+          </div>
+          <div style="font-size: 0.74rem; color: #6b7280; font-family: monospace;">${r.domain}</div>
+        </td>
+        <td style="text-align: center; padding: 12px 14px;">
+          <div class="score-gauge-bar">
+            <div class="score-track">
+              <div class="score-fill" style="width: ${r.score}%; background: ${scoreColor};"></div>
+            </div>
+            <span style="font-weight: 800; font-size: 0.95rem; color: ${scoreColor}; width: 32px;">${r.score}</span>
+          </div>
+        </td>
+        <td style="text-align: center; padding: 12px 14px;">${ttfbBadge}</td>
+        <td style="text-align: center; padding: 12px 14px;">${h1Badge}</td>
+        <td style="text-align: center; padding: 12px 14px; font-weight: 700; color: #374151;">${(r.backlinks || 0).toLocaleString()}</td>
+        <td style="padding: 12px 14px; font-size: 0.76rem; color: #4b5563;">
+          <div style="max-width: 320px; line-height: 1.35;">${weakText}</div>
+        </td>
+      `;
+      tbody.appendChild(tr);
     });
   }
+
+  function renderTop10Matrix(data) {
+    const tbody = document.getElementById("top10MatrixTbody");
+    if (!tbody || !data || !data.leaderboard) return;
+    tbody.innerHTML = "";
+
+    data.leaderboard.forEach((r) => {
+      const tr = document.createElement("tr");
+      const isTarget = r.is_target || (r.domain && r.domain.includes("wellspring.edu.vn"));
+      if (isTarget) tr.className = "top10-target-row";
+
+      const httpBadge = r.status === 200 ? '<span class="badge badge-emerald">200 OK</span>' : `<span class="badge badge-rose">${r.status || 'Err'}</span>`;
+      const canonBadge = r.canonical ? '<span class="badge badge-emerald">✓ Có</span>' : '<span class="badge badge-amber">✗ Thiếu</span>';
+      const schemaText = (r.schemas && r.schemas.length > 0) ? r.schemas.slice(0, 2).join(', ') : '<span style="color:#9ca3af;">Không có</span>';
+      const robotsBadge = r.robots_txt && r.robots_txt.includes("Có") ? '<span class="badge badge-emerald">✓ Có</span>' : '<span class="badge badge-rose">✗ 404</span>';
+      const sitemapBadge = r.sitemap_xml && r.sitemap_xml.includes("Có") ? '<span class="badge badge-emerald">✓ Có</span>' : '<span class="badge badge-rose">✗ 404</span>';
+      
+      let splitBadge = '<span style="color:#10b981;">✓ Chuẩn</span>';
+      if (r.domain_split && r.domain_split.includes("Có (")) {
+        splitBadge = '<span class="badge badge-rose">⚠️ Domain Splitting</span>';
+      }
+
+      tr.innerHTML = `
+        <td style="padding: 10px 12px; font-weight: 600; color: #1f2937;">
+          ${r.name}
+          ${isTarget ? ' <strong style="color:#ff642d;">(Wellspring)</strong>' : ''}
+        </td>
+        <td style="padding: 10px 12px; text-align: center;">${httpBadge}</td>
+        <td style="padding: 10px 12px; text-align: center;">${canonBadge}</td>
+        <td style="padding: 10px 12px; font-size: 0.76rem; color: #4b5563;">${schemaText}</td>
+        <td style="padding: 10px 12px; text-align: center;">${robotsBadge}</td>
+        <td style="padding: 10px 12px; text-align: center;">${sitemapBadge}</td>
+        <td style="padding: 10px 12px;">${splitBadge}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  async function loadTop10Data() {
+    try {
+      const res = await fetch("/api/competitors/top10");
+      if (!res.ok) return;
+      const data = await res.json();
+      if (data && data.leaderboard && data.leaderboard.length > 0) {
+        renderTop10Leaderboard(data);
+        renderTop10Matrix(data);
+      }
+    } catch (err) {
+      console.warn("Could not load initial Top 10 data:", err);
+    }
+  }
+
+  // Wire up live audit button
+  const btnRunTop10 = document.getElementById("btnRunTop10Live");
+  if (btnRunTop10) {
+    btnRunTop10.addEventListener("click", async () => {
+      const targetInput = document.getElementById("top10TargetInput");
+      const targetDomain = targetInput ? targetInput.value.trim() : "wellspring.edu.vn";
+      const textSpan = document.getElementById("btnRunTop10Text");
+      const spinnerSpan = document.getElementById("btnRunTop10Spinner");
+      const progressMsg = document.getElementById("top10ProgressMsg");
+
+      btnRunTop10.disabled = true;
+      if (textSpan) textSpan.style.display = "none";
+      if (spinnerSpan) spinnerSpan.style.display = "inline-flex";
+
+      const msgs = [
+        "Đang kết nối 10 máy chủ trường học...",
+        "Đang đo tốc độ TTFB & kiểm tra SSL...",
+        "Đang bóc tách thẻ H1, Title & Schemas...",
+        "Đang đối soát Domain Splitting & Backlinks...",
+        "Đang tổng hợp Leaderboard & xuất ma trận..."
+      ];
+      let msgIdx = 0;
+      const interval = setInterval(() => {
+        msgIdx = (msgIdx + 1) % msgs.length;
+        if (progressMsg) progressMsg.textContent = msgs[msgIdx];
+      }, 2500);
+
+      try {
+        const res = await fetch("/api/competitors/top10", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ target_domain: targetDomain })
+        });
+        clearInterval(interval);
+        if (res.ok) {
+          const data = await res.json();
+          renderTop10Leaderboard(data);
+          renderTop10Matrix(data);
+          if (textSpan) {
+            textSpan.textContent = "✓ Hoàn Tất Đối Soát 10 Trường!";
+            textSpan.style.display = "inline";
+            if (spinnerSpan) spinnerSpan.style.display = "none";
+          }
+          setTimeout(() => {
+            if (textSpan) textSpan.textContent = "🚀 Quét & Đối Soát Top 10 Ngay";
+            btnRunTop10.disabled = false;
+          }, 3500);
+        } else {
+          throw new Error("HTTP " + res.status);
+        }
+      } catch (err) {
+        clearInterval(interval);
+        alert("Lỗi khi quét Top 10: " + err.message);
+        if (textSpan) textSpan.style.display = "inline";
+        if (spinnerSpan) spinnerSpan.style.display = "none";
+        btnRunTop10.disabled = false;
+      }
+    });
+  }
+
+  // Load top 10 on page initialization
+  loadTop10Data();
 
   // Copy patch buttons
   document.querySelectorAll(".copy-patch-btn").forEach((btn) => {

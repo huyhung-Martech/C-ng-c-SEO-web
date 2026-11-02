@@ -63,6 +63,10 @@
 
     <!-- Right User Account & Plan Status -->
     <div class="semrush-header-right">
+      <a href="/api/export/top10-excel" class="semrush-export-btn" id="btnHeaderExportExcel" title="Tải xuống tệp Excel báo cáo Top 10 đối thủ (5 trang tính)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+        <span>Xuất Excel / Sheets</span>
+      </a>
       <div class="semrush-plan-pill" title="Semrush Pro Subscription Active">
         <span class="semrush-plan-dot"></span>
         <span>PRO ACTIVE</span>
@@ -126,7 +130,8 @@
       <div class="semrush-nav-group-label">COMPETITIVE RESEARCH</div>
       <div class="semrush-nav-item sidebar-nav-item" data-tab="tabCompetitorPlaybook">
         <svg class="semrush-nav-icon nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
-        <span>Competitor Gap (Playbook)</span>
+        <span>Top 10 Đối Thủ &amp; Benchmark</span>
+        <span style="background: #ff642d; color: #fff; font-size: 0.65rem; font-weight: 700; padding: 1px 6px; border-radius: 10px; margin-left: auto;">LIVE</span>
       </div>
       <div class="semrush-nav-item sidebar-nav-item" data-tab="tabBacklinks">
         <svg class="semrush-nav-icon nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -1141,172 +1146,192 @@
         </div>
 
         <!-- TAB: COMPETITOR PLAYBOOK & STRATEGIC AUDIT -->
+                <!-- TAB: TOP 10 COMPETITORS BENCHMARK & PLAYBOOK -->
         <div id="tabCompetitorPlaybook" class="tab-pane">
-          <div class="pane-header">
+          <div class="pane-header" style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 14px; margin-bottom: 20px;">
             <div>
-              <h2 class="pane-title">Hồ Sơ Năng Lực &amp; Đối Soát Chiến Lược SEO (Playbook Audit)</h2>
-              <p class="pane-subtitle">Bóc tách toàn diện: Những việc đối thủ / website ĐÃ LÀM ĐƯỢC vs NHỮNG LỖ HỔNG LỚN HỌ ĐÃ BỎ QUÊN HOẶC LÀM SAI.</p>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <h2 class="pane-title" style="margin: 0;">⚔️ Bảng So Kèo &amp; Đối Soát Top 10 Đối Thủ Cùng Ngành</h2>
+                <span class="badge badge-emerald" style="font-size: 0.72rem; padding: 2px 8px;">Real-Time Crawler</span>
+              </div>
+              <p class="pane-subtitle" style="margin-top: 4px;">Kiểm toán thực chiến 10 trường quốc tế &amp; song ngữ hàng đầu: Điểm SEO, Tốc độ TTFB, On-Page, Schema và Backlink Gap.</p>
+            </div>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+              <a href="/api/export/top10-excel" class="btn btn-primary" id="btnExportTop10Excel" style="font-weight: 700; display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; text-decoration: none; border-radius: 6px; background: #ff642d; border-color: #ff642d;">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                <span>📥 Xuất Báo Cáo Excel (.xlsx)</span>
+              </a>
+              <a href="https://sheets.new" target="_blank" rel="noopener" class="btn btn-secondary" style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; text-decoration: none; border-radius: 6px;" title="Kéo thả file vừa tải vào Google Sheets để xem trực tuyến">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14H6v-2h6v2zm4-4H6v-2h10v2zm0-4H6V7h10v2z"/></svg>
+                <span>Mở Google Sheets</span>
+              </a>
             </div>
           </div>
 
-          <!-- Competitor Direct Comparison Bar -->
-          <div class="competitor-compare-bar" style="background: rgba(255,255,255,0.03); border: 1px solid var(--border-card); border-radius: var(--radius-sm); padding: 12px 16px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;">
-            <div style="display: flex; align-items: center; gap: 10px; flex: 1; min-width: 280px;">
-              <span style="font-size: 1.2rem;">⚔️</span>
-              <div style="flex: 1;">
-                <div style="font-size: 0.82rem; font-weight: 600; color: #fff;">Đối Soát Trực Diện Với Đối Thủ Cùng Ngành</div>
-                <div style="font-size: 0.74rem; color: var(--text-muted);">So sánh cấu trúc On-Page, tốc độ TTFB, Schema và độ sâu nội dung:</div>
+          <!-- Top Control Toolbar -->
+          <div class="glass-card" style="margin-bottom: 20px; padding: 14px 18px; border-left: 4px solid #ff642d;">
+            <div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap;">
+              <div style="display: flex; align-items: center; gap: 10px; flex: 1; min-width: 280px;">
+                <span style="font-size: 1.3rem;">🎯</span>
+                <div>
+                  <div style="font-size: 0.85rem; font-weight: 700; color: #191b23;">Website Mục Tiêu So Kèo:</div>
+                  <div style="font-size: 0.76rem; color: var(--semrush-text-muted);">Hệ thống sẽ đối soát tương quan điểm số và hạ tầng với 9 đối thủ còn lại</div>
+                </div>
+              </div>
+              <div style="display: flex; align-items: center; gap: 10px; flex: 1.3; min-width: 300px;">
+                <input type="text" id="top10TargetInput" class="form-input" style="flex: 1; font-size: 0.82rem; padding: 8px 12px;" value="wellspring.edu.vn" />
+                <button type="button" class="btn btn-primary" id="btnRunTop10Live" style="padding: 8px 16px; font-weight: 700; white-space: nowrap; background: #ff642d; border-color: #ff642d;">
+                  <span id="btnRunTop10Text">🚀 Quét &amp; Đối Soát Top 10 Ngay</span>
+                  <span id="btnRunTop10Spinner" style="display: none; align-items: center; gap: 6px;">
+                    <svg class="spinner" viewBox="0 0 50 50" style="width: 14px; height: 14px;"><circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle></svg>
+                    <span id="top10ProgressMsg">Đang quét 10 đối thủ...</span>
+                  </span>
+                </button>
               </div>
             </div>
-            <div style="display: flex; align-items: center; gap: 8px; flex: 1.2; min-width: 280px;">
-              <input type="text" id="competitorDomainInput" class="form-input" style="flex: 1; font-size: 0.8rem; padding: 7px 12px;" placeholder="Nhập domain đối thủ (ví dụ: https://vinschool.edu.vn)..." value="https://vinschool.edu.vn">
-              <button type="button" class="btn btn-secondary" id="btnRunCompetitorCompare" style="padding: 7px 14px; font-size: 0.8rem; white-space: nowrap;">⚔️ Phân Tích Đối Thủ</button>
+
+            <!-- Competitor Chips -->
+            <div style="margin-top: 12px; padding-top: 10px; border-top: 1px solid rgba(0,0,0,0.06); display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+              <span style="font-size: 0.74rem; font-weight: 700; color: var(--semrush-text-muted); text-transform: uppercase;">Top 10 trong danh sách:</span>
+              <span class="sample-tag" style="background: rgba(255,100,45,0.1); color: #c2410c; border-color: rgba(255,100,45,0.25); font-weight: 700;">★ Wellspring Hanoi</span>
+              <span class="sample-tag">Vinschool</span>
+              <span class="sample-tag">TH School</span>
+              <span class="sample-tag">The Dewey Schools</span>
+              <span class="sample-tag">The Olympia Schools</span>
+              <span class="sample-tag">Hanoi Academy</span>
+              <span class="sample-tag">UNIS Hanoi</span>
+              <span class="sample-tag">BVIS Hanoi</span>
+              <span class="sample-tag">Concordia Hanoi</span>
+              <span class="sample-tag">Marie Curie Hanoi</span>
             </div>
           </div>
 
-          <!-- Playbook Comparative Columns -->
-          <div class="playbook-two-col">
-            <!-- Strengths Column -->
-            <div class="playbook-col playbook-strengths-col">
-              <div class="playbook-col-header">
-                <span class="playbook-col-icon">✅</span>
-                <div>
-                  <h3 class="playbook-col-title text-emerald">NHỮNG VIỆC HỌ ĐÃ LÀM TỐT (Strengths Executed)</h3>
-                  <p class="playbook-col-subtitle">Các kỹ thuật, hạ tầng và chiến lược nội dung đã được triển khai đạt chuẩn:</p>
-                </div>
+          <!-- Section 1: Dynamic Top 10 Leaderboard Table -->
+          <div class="glass-card" style="margin-bottom: 24px; padding: 0; overflow: hidden;">
+            <div style="padding: 14px 18px; border-bottom: 1px solid var(--semrush-border); display: flex; justify-content: space-between; align-items: center; background: #fafbfc;">
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ff642d" stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path><path d="M4 22h16"></path><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path></svg>
+                <h3 style="font-size: 0.95rem; font-weight: 700; color: #191b23; margin: 0;">BẢNG XẾP HẠNG THỰC TẾ TOP 10 ĐỐI THỦ (LEADERBOARD)</h3>
               </div>
-              <div class="playbook-items-list" id="playbookStrengthsList">
-                <div class="playbook-card">
-                  <div class="playbook-card-header">
-                    <span class="playbook-item-title">Máy chủ Nginx &amp; Độ trễ TTFB 702ms</span>
-                    <span class="badge badge-emerald">Hạ tầng &amp; Hosting</span>
-                  </div>
-                  <p class="playbook-item-desc">Hệ thống máy chủ xử lý phản hồi nhanh (TTFB 702ms), đã cấu hình gzip/compression và hỗ trợ HTTP/2 giúp giữ chân người dùng.</p>
-                  <div class="playbook-fix-box">
-                    ✦ <strong>Hiệu quả đạt được:</strong> Đạt tiêu chuẩn kỹ thuật giúp tăng tốc độ tải và giữ chân người dùng.
-                  </div>
-                </div>
-
-                <div class="playbook-card">
-                  <div class="playbook-card-header">
-                    <span class="playbook-item-title">Mạng lưới bài viết quy mô lớn (11 bài đã quét, ~3,100 từ)</span>
-                    <span class="badge badge-emerald">Chiến lược Nội dung</span>
-                  </div>
-                  <p class="playbook-item-desc">Website đã xây dựng hệ thống chuyên mục phong phú (7 cụm chủ đề) từ giáo dục, tuyển sinh đến sự kiện và đời sống học đường.</p>
-                  <div class="playbook-fix-box">
-                    ✦ <strong>Hiệu quả đạt được:</strong> Phủ sóng từ khóa chủ đề và tạo phễu thu hút học sinh/phụ huynh.
-                  </div>
-                </div>
-
-                <div class="playbook-card">
-                  <div class="playbook-card-header">
-                    <span class="playbook-item-title">Đã nhúng Schema: EducationalOrganization</span>
-                    <span class="badge badge-purple">Dữ liệu Có Cấu Trúc</span>
-                  </div>
-                  <p class="playbook-item-desc">Giúp Google Knowledge Graph và các bộ máy tìm kiếm hiểu thực thể trường học và thông tin tổ chức.</p>
-                  <div class="playbook-fix-box">
-                    ✦ <strong>Hiệu quả đạt được:</strong> Tăng độ tin cậy thực thể trường học (Entity Authority) trên Google.
-                  </div>
-                </div>
-
-                <div class="playbook-card">
-                  <div class="playbook-card-header">
-                    <span class="playbook-item-title">Meta Viewport Responsive Chuẩn Hóa</span>
-                    <span class="badge badge-emerald">Tối ưu Di động</span>
-                  </div>
-                  <p class="playbook-item-desc">Website đạt chuẩn hiển thị trên thiết bị di động, tự động co giãn theo màn hình điện thoại.</p>
-                  <div class="playbook-fix-box">
-                    ✦ <strong>Hiệu quả đạt được:</strong> Đạt tiêu chí Mobile-First Indexing của Google.
-                  </div>
-                </div>
-              </div>
+              <div style="font-size: 0.74rem; color: var(--semrush-text-muted);" id="top10UpdatedTime">Đã kiểm toán trực tiếp</div>
             </div>
 
-            <!-- Weaknesses / Gaps Column -->
-            <div class="playbook-col playbook-weaknesses-col">
-              <div class="playbook-col-header">
-                <span class="playbook-col-icon">❌</span>
-                <div>
-                  <h3 class="playbook-col-title text-rose">NHỮNG LỖ HỔNG LỚN HỌ ĐÃ BỎ QUÊN (Critical Misses)</h3>
-                  <p class="playbook-col-subtitle">Các điểm mù kỹ thuật nghiêm trọng làm suy giảm thứ hạng và cản trở AI:</p>
-                </div>
+            <div style="overflow-x: auto;">
+              <table class="semrush-table" id="top10Table" style="width: 100%; border-collapse: collapse;">
+                <thead>
+                  <tr style="background: #f4f5f7; font-size: 0.76rem; text-transform: uppercase; color: #5f6368; letter-spacing: 0.03em;">
+                    <th style="padding: 10px 14px; text-align: center; width: 60px;">Hạng</th>
+                    <th style="padding: 10px 14px; text-align: left;">Trường Học &amp; Tên Miền</th>
+                    <th style="padding: 10px 14px; text-align: center; width: 150px;">Điểm SEO / AEO</th>
+                    <th style="padding: 10px 14px; text-align: center; width: 110px;">Tốc Độ TTFB</th>
+                    <th style="padding: 10px 14px; text-align: center; width: 100px;">Thẻ H1</th>
+                    <th style="padding: 10px 14px; text-align: center; width: 90px;">Backlinks</th>
+                    <th style="padding: 10px 14px; text-align: left;">Lỗ Hổng Kỹ Thuật Lớn Nhất</th>
+                  </tr>
+                </thead>
+                <tbody id="top10Tbody">
+                  <!-- Populated dynamically by app.js -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Section 2: Technical Benchmark Matrix -->
+          <div class="glass-card" style="margin-bottom: 24px; padding: 0; overflow: hidden;">
+            <div style="padding: 14px 18px; border-bottom: 1px solid var(--semrush-border); background: #fafbfc;">
+              <h3 style="font-size: 0.92rem; font-weight: 700; color: #191b23; margin: 0;">📊 MA TRẬN ĐỐI SOÁT ON-PAGE &amp; HẠ TẦNG KỸ THUẬT (10 TRƯỜNG)</h3>
+              <p style="font-size: 0.74rem; color: var(--semrush-text-muted); margin: 3px 0 0 0;">So sánh trực quan: Canonical, Schema Entity, Robots.txt, Sitemap.xml và Domain Splitting</p>
+            </div>
+            <div style="overflow-x: auto;">
+              <table class="semrush-table" id="top10MatrixTable" style="width: 100%; font-size: 0.8rem;">
+                <thead>
+                  <tr style="background: #f4f5f7; font-size: 0.74rem; text-transform: uppercase; color: #5f6368;">
+                    <th style="padding: 10px 12px; text-align: left;">Trường</th>
+                    <th style="padding: 10px 12px; text-align: center;">HTTP</th>
+                    <th style="padding: 10px 12px; text-align: center;">Canonical</th>
+                    <th style="padding: 10px 12px; text-align: left;">Schema JSON-LD</th>
+                    <th style="padding: 10px 12px; text-align: center;">Robots.txt</th>
+                    <th style="padding: 10px 12px; text-align: center;">Sitemap</th>
+                    <th style="padding: 10px 12px; text-align: left;">Domain Splitting (www vs non-www)</th>
+                  </tr>
+                </thead>
+                <tbody id="top10MatrixTbody">
+                  <!-- Populated dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Section 3: Tactical SEO Playbook for Wellspring -->
+          <div class="glass-card" style="margin-bottom: 24px; padding: 18px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px;">
+              <div>
+                <h3 style="font-size: 0.95rem; font-weight: 700; color: #191b23; margin: 0;">🎯 KẾ HOẠCH TÁC CHIẾN SEO ĐỂ WELLSPRING BỨT PHÁ TOP 3 GOOGLE</h3>
+                <p style="font-size: 0.75rem; color: var(--semrush-text-muted); margin: 3px 0 0 0;">Lộ trình khắc phục lỗ hổng và khai thác điểm yếu của 9 đối thủ để vươn lên dẫn đầu</p>
               </div>
-              <div class="playbook-items-list" id="playbookWeaknessesList">
-                <div class="playbook-card">
-                  <div class="playbook-card-header">
-                    <span class="playbook-item-title text-rose">Trang chủ hoàn toàn thiếu thẻ &lt;h1&gt;</span>
-                    <span class="badge badge-rose">CRITICAL</span>
-                  </div>
-                  <p class="playbook-item-desc">Trang chủ có nhiều thẻ H2 và H3 nhưng không có thẻ H1 nào để định danh chủ đề chính cho bot tìm kiếm.</p>
-                  <div class="playbook-impact-box">
-                    ⚠️ <strong>Hậu quả chiến lược:</strong> Googlebot giảm điểm xếp hạng từ khóa thương hiệu và từ khóa ngành giáo dục do thiếu thẻ tiêu đề cấp 1.
-                  </div>
-                  <div class="playbook-fix-box" style="margin-top:4px;">
-                    💡 <strong>Giải pháp kỹ thuật:</strong> Bổ sung ngay 1 thẻ &lt;h1&gt; duy nhất chứa tên trường và định vị thương hiệu ở khu vực Hero Banner.
-                  </div>
-                </div>
+              <span class="badge badge-purple" style="font-weight: 700;">Chiến Lược Đột Phá</span>
+            </div>
 
-                <div class="playbook-card">
-                  <div class="playbook-card-header">
-                    <span class="playbook-item-title text-amber">Domain Splitting (Chạy song song www và non-www)</span>
-                    <span class="badge badge-amber">HIGH</span>
-                  </div>
-                  <p class="playbook-item-desc">Cả hai phiên bản tên miền đều trả về HTTP 200 mà không có lệnh chuyển hướng 301.</p>
-                  <div class="playbook-impact-box">
-                    ⚠️ <strong>Hậu quả chiến lược:</strong> Làm loãng 50% sức mạnh PageRank và tạo ra nguy cơ bị Google đánh dấu nội dung trùng lặp (Duplicate Content).
-                  </div>
-                  <div class="playbook-fix-box" style="margin-top:4px;">
-                    💡 <strong>Giải pháp kỹ thuật:</strong> Cấu hình chuyển hướng vĩnh viễn Nginx / Apache 301 từ non-www sang www (hoặc ngược lại).
-                  </div>
+            <div class="roadmap-phases-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px;">
+              <div class="roadmap-phase-card" style="background: #fff; border: 1px solid #fee2e2; border-top: 3px solid #ef4444; border-radius: 6px; padding: 14px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                  <span style="font-size: 0.78rem; font-weight: 700; color: #ef4444; text-transform: uppercase;">P0 · Khẩn cấp (Tuần 1)</span>
+                  <span class="badge badge-rose" style="font-size: 0.68rem;">2 Việc Cần Làm</span>
                 </div>
+                <div style="font-size: 0.82rem; font-weight: 700; color: #111827; margin-bottom: 6px;">Vá Lỗ Hổng Kỹ Thuật Nền Móng</div>
+                <ul style="font-size: 0.76rem; color: #4b5563; padding-left: 16px; margin: 0; line-height: 1.45;">
+                  <li><strong>Thêm thẻ H1 trang chủ:</strong> Định vị rõ <em>"Trường Song ngữ Quốc tế Wellspring Hà Nội"</em>.</li>
+                  <li><strong>Sửa Domain Splitting:</strong> Cấu hình 301 Redirect triệt để từ <code>www</code> sang non-<code>www</code> để hợp nhất 100% PageRank.</li>
+                </ul>
+              </div>
 
-                <div class="playbook-card">
-                  <div class="playbook-card-header">
-                    <span class="playbook-item-title text-rose">Phát hiện 1 liên kết nội bộ bị lỗi 404 (/vichinh-sach-bao-mat)</span>
-                    <span class="badge badge-rose">CRITICAL</span>
-                  </div>
-                  <p class="playbook-item-desc">Có liên kết chết xuất hiện trong footer dẫn đến trang không tồn tại.</p>
-                  <div class="playbook-impact-box">
-                    ⚠️ <strong>Hậu quả chiến lược:</strong> Lãng phí crawl budget của Googlebot và gây ức chế cho người dùng khi click vào trang chính sách bảo mật.
-                  </div>
-                  <div class="playbook-fix-box" style="margin-top:4px;">
-                    💡 <strong>Giải pháp kỹ thuật:</strong> Cập nhật lại đường dẫn URL chính xác thành /vi/chinh-sach-bao-mat hoặc bổ sung 301 redirect trong Nginx.
-                  </div>
+              <div class="roadmap-phase-card" style="background: #fff; border: 1px solid #fef3c7; border-top: 3px solid #f59e0b; border-radius: 6px; padding: 14px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                  <span style="font-size: 0.78rem; font-weight: 700; color: #d97706; text-transform: uppercase;">P1 · Tối Ưu Cao (Tuần 2)</span>
+                  <span class="badge badge-amber" style="font-size: 0.68rem;">Tăng Tốc &amp; AEO</span>
                 </div>
+                <div style="font-size: 0.82rem; font-weight: 700; color: #111827; margin-bottom: 6px;">Tốc Độ &amp; Schema Thực Thể AI</div>
+                <ul style="font-size: 0.76rem; color: #4b5563; padding-left: 16px; margin: 0; line-height: 1.45;">
+                  <li><strong>Bật Cloudflare Edge Caching:</strong> Giữ TTFB ổn định &lt;300ms, vượt mặt cả 10 đối thủ (UNIS đang mất 11s, Dewey 1.2s).</li>
+                  <li><strong>Schema School &amp; Education:</strong> Khai báo tọa độ, chứng nhận Cambridge và chương trình K-12.</li>
+                </ul>
+              </div>
 
-                <div class="playbook-card">
-                  <div class="playbook-card-header">
-                    <span class="playbook-item-title text-amber">Chưa triển khai tệp tiêu chuẩn /llms.txt</span>
-                    <span class="badge badge-amber">MEDIUM</span>
-                  </div>
-                  <p class="playbook-item-desc">Website chưa cung cấp tệp tóm tắt cấu trúc ngữ nghĩa dành riêng cho các mô hình ngôn ngữ lớn (LLMs).</p>
-                  <div class="playbook-impact-box">
-                    ⚠️ <strong>Hậu quả chiến lược:</strong> Bỏ lỡ cơ hội được ưu tiên trích dẫn ngữ cảnh chuẩn xác trên Claude, Perplexity và ChatGPT Search.
-                  </div>
-                  <div class="playbook-fix-box" style="margin-top:4px;">
-                    💡 <strong>Giải pháp kỹ thuật:</strong> Tải tệp llms.txt tự động sinh ở Tab Bản Vá và upload lên thư mục gốc của domain.
-                  </div>
+              <div class="roadmap-phase-card" style="background: #fff; border: 1px solid #dbeafe; border-top: 3px solid #3b82f6; border-radius: 6px; padding: 14px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                  <span style="font-size: 0.78rem; font-weight: 700; color: #2563eb; text-transform: uppercase;">P2 · Bứt Phá (Tuần 3-4)</span>
+                  <span class="badge badge-blue" style="font-size: 0.68rem;">Phủ Sóng SEO</span>
                 </div>
+                <div style="font-size: 0.82rem; font-weight: 700; color: #111827; margin-bottom: 6px;">Topic Cluster &amp; Liên Kết Bánh Đà</div>
+                <ul style="font-size: 0.76rem; color: #4b5563; padding-left: 16px; margin: 0; line-height: 1.45;">
+                  <li><strong>5 Cụm Nội Dung K-12:</strong> Khai thác 737 bài viết hiện có, gắn Inlink vào các Pillar Pages tuyển sinh.</li>
+                  <li><strong>PR Báo Chí Trọng Điểm:</strong> Đi link chất lượng cao trên VnExpress, Dân Trí đón đầu mùa tuyển sinh 2026-2027.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
 
-                <div class="playbook-card">
-                  <div class="playbook-card-header">
-                    <span class="playbook-item-title text-amber">Các bài viết rơi vào tình trạng Thin Content (&lt; 300 từ)</span>
-                    <span class="badge badge-amber">MEDIUM</span>
-                  </div>
-                  <p class="playbook-item-desc">Các trang con chỉ có vài dòng mô tả ngắn hoặc hình ảnh mà thiếu văn bản chiều sâu.</p>
-                  <div class="playbook-impact-box">
-                    ⚠️ <strong>Hậu quả chiến lược:</strong> Thuật toán Google Helpful Content hạn chế xếp hạng các trang không cung cấp đủ thông tin sâu.
-                  </div>
-                  <div class="playbook-fix-box" style="margin-top:4px;">
-                    💡 <strong>Giải pháp kỹ thuật:</strong> Bổ sung nội dung học liệu, bảng so sánh chương trình và FAQs chi tiết cho các trang tuyển sinh.
-                  </div>
+          <!-- Section 4: Export to Google Sheets / Excel Card -->
+          <div class="glass-card" style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); color: #fff; padding: 20px; border-radius: 8px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+              <div>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <span style="font-size: 1.3rem;">📊</span>
+                  <h4 style="font-size: 1rem; font-weight: 700; margin: 0; color: #fff;">BÁO CÁO TOÀN DIỆN TOP 10 SẴN SÀNG CHO EXCEL &amp; GOOGLE SHEETS</h4>
                 </div>
+                <p style="font-size: 0.8rem; color: #94a3b8; margin: 6px 0 0 0; line-height: 1.4;">
+                  Bao gồm 5 trang tính đã được định dạng chuẩn: <strong>BẢNG XẾP HẠNG</strong>, <strong>ĐỐI SOÁT ON-PAGE</strong>, <strong>TỐC ĐỘ TTFB</strong>, <strong>BACKLINK GAP</strong>, và <strong>KẾ HOẠCH TÁC CHIẾN</strong>.
+                </p>
+              </div>
+              <div style="display: flex; gap: 10px; align-items: center;">
+                <a href="/api/export/top10-excel" class="btn btn-primary" style="background: #ff642d; border-color: #ff642d; font-weight: 700; padding: 9px 18px; text-decoration: none; border-radius: 6px;">
+                  📥 Tải Tệp Excel (.xlsx) Ngay
+                </a>
               </div>
             </div>
           </div>
         </div>
-
-        <!-- TAB: BACKLINK SPY & EXTERNAL MENTIONS -->
+<!-- TAB: BACKLINK SPY & EXTERNAL MENTIONS -->
         <div id="tabBacklinks" class="tab-pane">
           <div class="pane-header">
             <div>

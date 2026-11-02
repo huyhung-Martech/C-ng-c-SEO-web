@@ -127,6 +127,24 @@ _URL_JUNK_RE = re.compile(
 
 CURRENT_GSC_DATA = {}
 
+# Competitor Top 10 Benchmark Engine & In-Memory Excel Exporter
+try:
+    from competitor_benchmark import audit_top10_pipeline, generate_top10_excel_bytes, DEFAULT_COMPETITORS
+except ImportError:
+    audit_top10_pipeline = None
+    generate_top10_excel_bytes = None
+    DEFAULT_COMPETITORS = []
+
+CURRENT_TOP10_AUDIT = {}
+try:
+    _cache_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "top10_cache.json")
+    if os.path.exists(_cache_path):
+        with open(_cache_path, "r", encoding="utf-8") as _f_cache:
+            CURRENT_TOP10_AUDIT = json.load(_f_cache)
+except Exception:
+    pass
+
+
 
 class FastHTMLParser(HTMLParser):
     def __init__(self):
@@ -2651,6 +2669,7 @@ class AuditHTTPHandler(http.server.SimpleHTTPRequestHandler):
         self.end_headers()
 
     def do_GET(self):
+        global CURRENT_TOP10_AUDIT
         parsed_path = urllib.parse.urlparse(self.path)
         
         # Real-time SSE Live Streaming Endpoint
@@ -2710,11 +2729,47 @@ class AuditHTTPHandler(http.server.SimpleHTTPRequestHandler):
                 self.send_json_response({"success": True, **bl_data})
         elif parsed_path.path == "/api/rank-history":
             self.send_json_response({"success": True, "history": load_rank_history()})
+        elif parsed_path.path == "/api/competitors/top10":
+            if not CURRENT_TOP10_AUDIT:
+                _c_p = os.path.join(os.path.dirname(os.path.abspath(__file__)), "top10_cache.json")
+                if os.path.exists(_c_p):
+                    try:
+                        with open(_c_p, "r", encoding="utf-8") as _f_c:
+                            CURRENT_TOP10_AUDIT = json.load(_f_c)
+                    except Exception:
+                        pass
+            self.send_json_response(CURRENT_TOP10_AUDIT if CURRENT_TOP10_AUDIT else {"success": True, "leaderboard": []})
+        elif parsed_path.path == "/api/export/top10-excel":
+            try:
+                if not CURRENT_TOP10_AUDIT:
+                    _c_p = os.path.join(os.path.dirname(os.path.abspath(__file__)), "top10_cache.json")
+                    if os.path.exists(_c_p):
+                        try:
+                            with open(_c_p, "r", encoding="utf-8") as _f_c:
+                                CURRENT_TOP10_AUDIT = json.load(_f_c)
+                        except Exception:
+                            pass
+                if generate_top10_excel_bytes and CURRENT_TOP10_AUDIT:
+                    excel_bytes = generate_top10_excel_bytes(CURRENT_TOP10_AUDIT)
+                    self.send_response(200)
+                    self.send_header("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                    self.send_header("Content-Disposition", 'attachment; filename="Bao_Cao_Doi_Thu_SEO_Top10_Wellspring.xlsx"')
+                    self.send_header("Content-Length", str(len(excel_bytes)))
+                    self.end_headers()
+                    self.wfile.write(excel_bytes)
+                else:
+                    self.send_response(500)
+                    self.end_headers()
+                    self.wfile.write(b"Excel exporter unavailable")
+            except Exception as e:
+                self.send_response(500)
+                self.end_headers()
+                self.wfile.write(str(e).encode("utf-8"))
         else:
             super().do_GET()
 
     def do_POST(self):
-        global CURRENT_GSC_DATA
+        global CURRENT_GSC_DATA, CURRENT_TOP10_AUDIT
         parsed_path = urllib.parse.urlparse(self.path)
         if parsed_path.path == "/api/audit":
             content_len = int(self.headers.get("Content-Length", 0))
@@ -2783,6 +2838,26 @@ class AuditHTTPHandler(http.server.SimpleHTTPRequestHandler):
                 pillar_title = data.get("pillar_title", "")
                 brief = generate_content_brief(topic, keywords, pillar_title)
                 self.send_json_response({"success": True, "brief": brief})
+            except Exception as e:
+                self.send_json_response({"success": False, "error": str(e)}, 500)
+        elif parsed_path.path == "/api/competitors/top10":
+            content_len = int(self.headers.get("Content-Length", 0))
+            post_body = self.rfile.read(content_len).decode("utf-8", errors="ignore")
+            try:
+                data = json.loads(post_body) if post_body else {}
+                target_domain = data.get("target_domain", "wellspring.edu.vn").strip()
+                competitors = data.get("competitors", None)
+                if audit_top10_pipeline:
+                    CURRENT_TOP10_AUDIT = audit_top10_pipeline(target_domain, competitors)
+                    try:
+                        _cache_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "top10_cache.json")
+                        with open(_cache_path, "w", encoding="utf-8") as f_c:
+                            json.dump(CURRENT_TOP10_AUDIT, f_c, ensure_ascii=False, indent=2)
+                    except Exception:
+                        pass
+                    self.send_json_response(CURRENT_TOP10_AUDIT, 200)
+                else:
+                    self.send_json_response({"success": False, "error": "Competitor engine not loaded"}, 500)
             except Exception as e:
                 self.send_json_response({"success": False, "error": str(e)}, 500)
         else:
