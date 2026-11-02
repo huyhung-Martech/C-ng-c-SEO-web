@@ -27,6 +27,8 @@ import gzip
 import zlib
 from collections import Counter, defaultdict
 from html.parser import HTMLParser
+import base64
+import html
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 PORT = int(os.environ.get("PORT", 8888))
@@ -1284,6 +1286,177 @@ def analyze_backlink_and_authority(inlinks_map, outlinks_map, external_links_map
     }
 
 
+
+# =============================================================================
+# BACKLINK SPY & EXTERNAL MENTIONS DISCOVERY (Pure Stdlib Engine)
+# ponytail: footprint-based live backlink discovery without 3rd-party paid APIs
+# =============================================================================
+
+BACKLINK_CACHE = {}
+
+def discover_external_backlinks_multi(domain, max_results=30):
+    clean_domain = domain.lower().replace("https://", "").replace("http://", "").split("/")[0].replace("www.", "")
+    if clean_domain in BACKLINK_CACHE:
+        cached_entry, c_time = BACKLINK_CACHE[clean_domain]
+        if time.time() - c_time < 3600:
+            return cached_entry
+
+    queries = [
+        f'"{clean_domain}" -site:{clean_domain}',
+        f'"{clean_domain}" (site:vnexpress.net OR site:dantri.com.vn OR site:vietnamnet.vn OR site:giaoduc.net.vn OR site:thanhnien.vn OR site:vtv.vn)',
+        f'"{clean_domain}" (site:edu.vn OR site:gov.vn)'
+    ]
+
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+        "Accept-Language": "vi-VN,vi;q=0.9,en-US;q=0.8,en;q=0.7"
+    }
+
+    def fetch_one_bing(q):
+        try:
+            url = f"https://www.bing.com/search?q={urllib.parse.quote(q)}"
+            req = urllib.request.Request(url, headers=headers)
+            with urllib.request.urlopen(req, timeout=8) as resp:
+                return resp.read().decode("utf-8", errors="ignore")
+        except Exception:
+            return ""
+
+    raw_htmls = []
+    with ThreadPoolExecutor(max_workers=3) as executor:
+        futs = [executor.submit(fetch_one_bing, q) for q in queries]
+        for f in as_completed(futs):
+            raw_htmls.append(f.result())
+
+    discovered = []
+    seen = set()
+    referring_domains_map = {}
+
+    for html_text in raw_htmls:
+        if not html_text:
+            continue
+        b_items = re.findall(r'<li class="b_algo"[^>]*>.*?<h2><a[^>]+href="([^"]+)"[^>]*>(.*?)</a>(?:.*?<p[^>]*>(.*?)</p>)?', html_text, re.S)
+        for link, raw_title, raw_snippet in b_items:
+            clean_link = link.replace("&amp;", "&")
+            real_url = clean_link
+            m = re.search(r'[?&]u=a1([a-zA-Z0-9_\-]+)', clean_link)
+            if m:
+                b64_str = m.group(1).replace("-", "+").replace("_", "/")
+                b64_str += "=" * ((4 - len(b64_str) % 4) % 4)
+                try:
+                    real_url = base64.b64decode(b64_str).decode("utf-8", errors="ignore")
+                except Exception:
+                    real_url = clean_link
+
+            p_dom = urllib.parse.urlparse(real_url).netloc.lower()
+            if not p_dom or clean_domain in p_dom or real_url in seen or "bing.com" in p_dom:
+                continue
+            seen.add(real_url)
+
+            title = html.unescape(re.sub(r'<[^>]+>', '', raw_title)).strip()
+            snip = html.unescape(re.sub(r'<[^>]+>', '', raw_snippet)).strip() if raw_snippet else ""
+
+            cat = "Trang Tin tức & Đánh giá"
+            badge = "badge-cyan"
+            authority_tier = "Tier 3"
+            if any(k in p_dom for k in ["vnexpress", "dantri", "tuoitre", "thanhnien", "vtv", "vietnamnet", "cafef", "cafebiz", "giaoduc", "kenh14", "zing", "laodong"]):
+                cat = "Báo chí Chính thống (High E-E-A-T PR)"
+                badge = "badge-emerald"
+                authority_tier = "Tier 1 (Báo chí TW)"
+            elif any(k in p_dom for k in [".gov.vn", ".edu.vn"]):
+                cat = "Cơ quan Giáo dục & Nhà nước (.gov/.edu)"
+                badge = "badge-purple"
+                authority_tier = "Tier 1 (.gov / .edu)"
+            elif any(k in p_dom for k in ["facebook.com", "webtretho.com", "lamchame.com", "youtube.com", "tiktok.com", "linkedin.com"]):
+                cat = "Cộng đồng Phụ huynh & Mạng xã hội"
+                badge = "badge-blue"
+                authority_tier = "Tier 2 (Social / Forum)"
+
+            discovered.append({
+                "referring_url": real_url,
+                "referring_domain": p_dom,
+                "title": title,
+                "snippet": snip,
+                "category": cat,
+                "badge": badge,
+                "authority_tier": authority_tier
+            })
+            referring_domains_map[p_dom] = referring_domains_map.get(p_dom, 0) + 1
+
+    tier_order = {"Tier 1 (Báo chí TW)": 0, "Tier 1 (.gov / .edu)": 1, "Tier 2 (Social / Forum)": 2, "Tier 3": 3}
+    discovered.sort(key=lambda x: tier_order.get(x["authority_tier"], 4))
+
+    top_referring = [
+        {"domain": d, "count": c}
+        for d, c in sorted(referring_domains_map.items(), key=lambda x: -x[1])
+    ]
+
+    gov_edu_count = sum(1 for d in referring_domains_map if ".gov.vn" in d or ".edu.vn" in d)
+    media_count = sum(1 for d in referring_domains_map if any(m in d for m in ["vnexpress", "dantri", "tuoitre", "thanhnien", "vtv", "vietnamnet", "giaoduc", "cafef"]))
+
+    res = {
+        "domain": clean_domain,
+        "total_backlinks_found": len(discovered),
+        "total_referring_domains": len(referring_domains_map),
+        "gov_edu_domains_count": gov_edu_count,
+        "media_domains_count": media_count,
+        "top_referring_domains": top_referring[:15],
+        "backlinks": discovered[:max_results]
+    }
+    BACKLINK_CACHE[clean_domain] = (res, time.time())
+    return res
+
+
+def compare_backlink_gap(target_domain, competitor_domain):
+    t_res = discover_external_backlinks_multi(target_domain)
+    c_res = discover_external_backlinks_multi(competitor_domain)
+
+    t_doms = {d["domain"]: d["count"] for d in t_res.get("top_referring_domains", [])}
+    c_doms = {d["domain"]: d["count"] for d in c_res.get("top_referring_domains", [])}
+
+    gap_domains = []
+    for c_dom, c_count in c_doms.items():
+        if c_dom not in t_doms:
+            sample_links = [b for b in c_res.get("backlinks", []) if b["referring_domain"] == c_dom]
+            cat = sample_links[0]["category"] if sample_links else "Cơ hội Backlink"
+            badge = sample_links[0]["badge"] if sample_links else "badge-cyan"
+            gap_domains.append({
+                "domain": c_dom,
+                "competitor_mentions": c_count,
+                "category": cat,
+                "badge": badge,
+                "sample_title": sample_links[0]["title"] if sample_links else "",
+                "sample_url": sample_links[0]["referring_url"] if sample_links else "",
+                "recommendation": f"Đối thủ đã có bài viết trên {c_dom}. Hãy xây dựng bài PR hoặc đăng ký hồ sơ trên tên miền này để thu hẹp khoảng cách E-E-A-T."
+            })
+
+    shared_domains = []
+    for d in t_doms:
+        if d in c_doms:
+            shared_domains.append({
+                "domain": d,
+                "target_count": t_doms[d],
+                "competitor_count": c_doms[d]
+            })
+
+    return {
+        "target_domain": target_domain,
+        "competitor_domain": competitor_domain,
+        "target_stats": {
+            "total_backlinks": t_res.get("total_backlinks_found", 0),
+            "referring_domains": t_res.get("total_referring_domains", 0),
+            "media_domains": t_res.get("media_domains_count", 0),
+            "gov_edu_domains": t_res.get("gov_edu_domains_count", 0)
+        },
+        "competitor_stats": {
+            "total_backlinks": c_res.get("total_backlinks_found", 0),
+            "referring_domains": c_res.get("total_referring_domains", 0),
+            "media_domains": c_res.get("media_domains_count", 0),
+            "gov_edu_domains": c_res.get("gov_edu_domains_count", 0)
+        },
+        "gap_domains": gap_domains,
+        "shared_domains": shared_domains
+    }
+
 def analyze_competitor_playbook(hostname, res_main, parser, subpages_list, bot_parity, broken_links, tech_audit, content_silos):
     strengths = []
     weaknesses = []
@@ -2440,6 +2613,7 @@ Khi người dùng truy vấn thông tin về học phí, tuyển sinh hoặc ch
         "gsc_connected": gsc_connected,
         "gsc_performance": CURRENT_GSC_DATA if gsc_connected else None,
         "ai_citation_audit": analyze_ai_citation_recipe(subpages, bot_parity),
+        "external_backlinks": discover_external_backlinks_multi(hostname),
         "competitor_playbook": analyze_competitor_playbook(
             hostname, res_main, parser, subpages, bot_parity, broken_links,
             {"has_domain_split_bug": has_domain_split_bug, "has_llms_txt": has_llms_txt},
@@ -2526,6 +2700,14 @@ class AuditHTTPHandler(http.server.SimpleHTTPRequestHandler):
             self.send_json_response({"query": q, "suggestions": suggestions})
         elif parsed_path.path == "/api/gsc/status":
             self.send_json_response(CURRENT_GSC_DATA if CURRENT_GSC_DATA else {"is_connected": False})
+        elif parsed_path.path == "/api/backlinks":
+            query_params = urllib.parse.parse_qs(parsed_path.query)
+            d = query_params.get("domain", [""])[0]
+            if not d:
+                self.send_json_response({"success": False, "error": "Thiếu domain"}, 400)
+            else:
+                bl_data = discover_external_backlinks_multi(d)
+                self.send_json_response({"success": True, **bl_data})
         elif parsed_path.path == "/api/rank-history":
             self.send_json_response({"success": True, "history": load_rank_history()})
         else:
@@ -2554,6 +2736,20 @@ class AuditHTTPHandler(http.server.SimpleHTTPRequestHandler):
                 self.send_json_response(result, 200 if result.get("success") else 500)
             except Exception as e:
                 self.send_json_response({"success": False, "error": f"Lỗi xử lý server: {str(e)}"}, 500)
+        elif parsed_path.path == "/api/backlinks/spy":
+            content_len = int(self.headers.get("Content-Length", 0))
+            post_body = self.rfile.read(content_len).decode("utf-8", errors="ignore")
+            try:
+                data = json.loads(post_body)
+                target_domain = data.get("domain", "").strip()
+                competitor_domain = data.get("competitor", "").strip()
+                if not target_domain or not competitor_domain:
+                    self.send_json_response({"success": False, "error": "Cần nhập cả domain mục tiêu và domain đối thủ"}, 400)
+                    return
+                gap_result = compare_backlink_gap(target_domain, competitor_domain)
+                self.send_json_response({"success": True, **gap_result}, 200)
+            except Exception as e:
+                self.send_json_response({"success": False, "error": str(e)}, 500)
         elif parsed_path.path == "/api/gsc/upload":
             content_len = int(self.headers.get("Content-Length", 0))
             post_bytes = self.rfile.read(content_len)

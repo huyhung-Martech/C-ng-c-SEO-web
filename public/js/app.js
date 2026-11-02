@@ -532,6 +532,85 @@ function initEventListeners() {
     });
   });
 
+  // Backlink Spy Refresh & Competitor Gap Listeners
+  const btnRefreshBL = document.getElementById("btnRefreshBacklinks");
+  if (btnRefreshBL) {
+    btnRefreshBL.addEventListener("click", async () => {
+      const host = document.getElementById("openseoDomainTitle")?.textContent || "wellspring.edu.vn";
+      btnRefreshBL.disabled = true;
+      btnRefreshBL.textContent = "⏳ Đang quét...";
+      try {
+        const resp = await fetch(`/api/backlinks?domain=${encodeURIComponent(host)}`);
+        const resJson = await resp.json();
+        if (resJson.success) {
+          renderBacklinkSpy(resJson, host);
+        }
+      } catch (e) {
+        console.error("Lỗi quét backlink:", e);
+      } finally {
+        btnRefreshBL.disabled = false;
+        btnRefreshBL.textContent = "🔄 Quét Lại Backlink";
+      }
+    });
+  }
+
+  const btnSpyGap = document.getElementById("btnSpyCompetitorGap");
+  if (btnSpyGap) {
+    btnSpyGap.addEventListener("click", async () => {
+      const targetDom = document.getElementById("openseoDomainTitle")?.textContent || "wellspring.edu.vn";
+      const competitorInput = document.getElementById("spyCompetitorInput");
+      const compDom = competitorInput ? competitorInput.value.trim() : "";
+      if (!compDom) {
+        alert("Vui lòng nhập tên miền đối thủ!");
+        return;
+      }
+      btnSpyGap.disabled = true;
+      btnSpyGap.textContent = "⏳ Đang soi đối thủ...";
+      const resultArea = document.getElementById("spyGapResultArea");
+      const gapTbody = document.getElementById("spyGapTableBody");
+      const gapBadge = document.getElementById("spyGapCountBadge");
+
+      try {
+        const resp = await fetch("/api/backlinks/spy", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ domain: targetDom, competitor: compDom })
+        });
+        const resJson = await resp.json();
+        if (resJson.success && resultArea && gapTbody) {
+          resultArea.style.display = "block";
+          const gaps = resJson.gap_domains || [];
+          if (gapBadge) gapBadge.textContent = `${gaps.length} Cơ Hội`;
+          gapTbody.innerHTML = "";
+          if (gaps.length === 0) {
+            gapTbody.innerHTML = `<tr><td colspan="4" style="text-align:center; padding:16px; color:#10b981;">Tuyệt vời! Đối thủ chưa có tên miền báo chí nào vượt trội hơn bạn trong mẫu quét này.</td></tr>`;
+          } else {
+            gaps.forEach((g) => {
+              const tr = document.createElement("tr");
+              tr.innerHTML = `
+                <td><strong class="font-mono text-rose">${escapeHtml(g.domain)}</strong></td>
+                <td><span class="badge ${g.badge || 'badge-cyan'}">${escapeHtml(g.category)}</span></td>
+                <td>
+                  <div style="font-weight:600; font-size:0.8rem; margin-bottom:2px;">${escapeHtml(g.sample_title || 'Bài viết đối thủ')}</div>
+                  <a href="${escapeHtml(g.sample_url)}" target="_blank" rel="noopener noreferrer" style="font-size:0.72rem; color:var(--text-muted); text-decoration:none;">↗ Mở bài đối thủ</a>
+                </td>
+                <td style="font-size:0.78rem; color:#1e3a8a; line-height:1.4;">
+                  💡 ${escapeHtml(g.recommendation)}
+                </td>
+              `;
+              gapTbody.appendChild(tr);
+            });
+          }
+        }
+      } catch (err) {
+        console.error("Lỗi spy gap:", err);
+      } finally {
+        btnSpyGap.disabled = false;
+        btnSpyGap.textContent = "🕵️ Soi Khoảng Trống Backlink";
+      }
+    });
+  }
+
   // Competitor compare button
   const btnCompare = document.getElementById("btnRunCompetitorCompare");
   const compInput = document.getElementById("competitorDomainInput");
@@ -1076,6 +1155,9 @@ function renderResults(data) {
 
   // 8.2 Competitor Strategic Playbook Tab
   renderCompetitorPlaybook(data.competitor_playbook || {});
+
+  // 8.3 Backlink Spy & External Mentions Tab
+  renderBacklinkSpy(data.external_backlinks || {}, data.hostname || "");
 
   // 9. Auto Patches in Roadmap Tab
   if (data.patches) {
@@ -2217,6 +2299,79 @@ function renderBacklinkAuthority(backlinks) {
           <span class="badge ${a.badge} badge-xs" style="margin-left:2px;">${escapeHtml(a.type)}</span>
         `;
         cloudContainer.appendChild(span);
+      });
+    }
+  }
+}
+
+
+// ==============================================================================
+// BACKLINK SPY & EXTERNAL MENTIONS RENDERER (Ahrefs / Semrush Backlink Matrix)
+// ==============================================================================
+function renderBacklinkSpy(bl, currentHost = "") {
+  const totalEl = document.getElementById("blTotalDiscovered");
+  const refDomEl = document.getElementById("blTotalRefDomains");
+  const govEduEl = document.getElementById("blGovEduCount");
+  const mediaEl = document.getElementById("blMediaCount");
+  const listBadge = document.getElementById("backlinksListCountBadge");
+
+  const total = bl.total_backlinks_found || 0;
+  const refCount = bl.total_referring_domains || 0;
+  const govEdu = bl.gov_edu_domains_count || 0;
+  const media = bl.media_domains_count || 0;
+  const items = bl.backlinks || [];
+  const topDoms = bl.top_referring_domains || [];
+
+  if (totalEl) totalEl.textContent = total;
+  if (refDomEl) refDomEl.textContent = refCount;
+  if (govEduEl) govEduEl.textContent = govEdu;
+  if (mediaEl) mediaEl.textContent = media;
+  if (listBadge) listBadge.textContent = `${items.length} Backlinks`;
+
+  // Main Backlinks Table
+  const tbody = document.getElementById("backlinksTableBody");
+  if (tbody) {
+    tbody.innerHTML = "";
+    if (items.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; padding:20px; color:var(--text-muted);">Chưa tìm thấy backlink bên ngoài nào cho tên miền này. Vui lòng bấm "Quét Lại Backlink".</td></tr>`;
+    } else {
+      items.forEach((item) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>
+            <strong class="font-mono text-cyan" style="font-size:0.85rem;">${escapeHtml(item.referring_domain)}</strong>
+          </td>
+          <td>
+            <span class="badge ${item.badge || 'badge-cyan'}">${escapeHtml(item.category)}</span>
+            <div style="font-size:0.7rem; color:var(--text-muted); margin-top:2px;">${escapeHtml(item.authority_tier || 'Tier 3')}</div>
+          </td>
+          <td>
+            <div style="font-weight:600; font-size:0.85rem; color:#111827; margin-bottom:4px;">${escapeHtml(item.title)}</div>
+            <div style="font-size:0.75rem; color:#4b5563; line-height:1.4;">${escapeHtml(item.snippet || 'Trích dẫn tên miền')}</div>
+          </td>
+          <td>
+            <a href="${escapeHtml(item.referring_url)}" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-xs" style="text-decoration:none; white-space:nowrap;">↗ Mở Xem</a>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+  }
+
+  // Top Referring Domains Table
+  const refTbody = document.getElementById("topRefDomainsTableBody");
+  if (refTbody) {
+    refTbody.innerHTML = "";
+    if (topDoms.length === 0) {
+      refTbody.innerHTML = `<tr><td colspan="2" style="text-align:center; padding:14px; color:var(--text-muted);">Không có dữ liệu</td></tr>`;
+    } else {
+      topDoms.forEach((td) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td><strong class="font-mono">${escapeHtml(td.domain)}</strong></td>
+          <td><span class="badge badge-emerald">${td.count} trích dẫn</span></td>
+        `;
+        refTbody.appendChild(tr);
       });
     }
   }
