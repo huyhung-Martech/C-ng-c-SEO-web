@@ -76,6 +76,88 @@ const INITIAL_BASELINE_TRACE = [
 
 
 const INITIAL_BASELINE_PATCHES = {
+  htaccess_apache: `# ==============================================================================
+# BẢN VÁ .HTACCESS (DÀNH CHO APACHE / LITESPEED / WORDPRESS / CPANEL)
+# Dán vào đầu tệp .htaccess trong thư mục gốc public_html
+# ==============================================================================
+<IfModule mod_rewrite.c>
+RewriteEngine On
+
+# 1. Tự động hợp nhất non-www về Canonical https://www.wellspring.edu.vn
+RewriteCond %{HTTP_HOST} ^wellspring\.edu\.vn$ [NC]
+RewriteRule ^(.*)$ https://www.wellspring.edu.vn/$1 [R=301,L]
+
+# 2. Ép buộc giao thức HTTPS bảo mật
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+</IfModule>
+
+# 3. Vá các liên kết nội bộ 404 bị gãy
+Redirect 301 /vichinh-sach-bao-mat https://www.wellspring.edu.vn/chinh-sach-bao-mat
+`,
+
+  wordpress_php: `<?php
+// ==============================================================================
+// BẢN VÁ WORDPRESS DÀNH CHO WEB DÙNG CMS WORDPRESS
+// Thêm đoạn code này vào file functions.php của Theme hoặc qua plugin WPCode
+// ==============================================================================
+add_action('template_redirect', function() {
+    $request_uri = $_SERVER['REQUEST_URI'];
+
+    // 1. Chuyển hướng các đường dẫn link gãy 404 về trang đích chuẩn
+    if (strpos($request_uri, '/vichinh-sach-bao-mat') !== false) {
+        wp_redirect(home_url('/chinh-sach-bao-mat'), 301);
+        exit;
+    }
+
+    // 2. Chống Domain Splitting cấp độ ứng dụng WordPress
+    if (strpos($_SERVER['HTTP_HOST'], 'wellspring.edu.vn') !== false && strpos($_SERVER['HTTP_HOST'], 'www.') === false) {
+        wp_redirect('https://www.wellspring.edu.vn' . $request_uri, 301);
+        exit;
+    }
+});
+`,
+
+  nextjs_redirects: `// ==============================================================================
+// BẢN VÁ NEXT.JS (Thêm vào tệp next.config.js / next.config.mjs)
+// ==============================================================================
+module.exports = {
+  async redirects() {
+    return [
+      {
+        source: '/:path*',
+        has: [{ type: 'host', value: 'wellspring.edu.vn' }],
+        destination: 'https://www.wellspring.edu.vn/:path*',
+        permanent: true,
+      },
+      {
+        source: '/vichinh-sach-bao-mat',
+        destination: '/chinh-sach-bao-mat',
+        permanent: true,
+      },
+    ];
+  },
+};
+`,
+
+  cloudflare_rules: `# ==============================================================================
+# HƯỚNG DẪN CẤU HÌNH CLOUDFLARE REDIRECT RULES (KHÔNG CẦN CHẠM VÀO SERVER)
+# ==============================================================================
+1. Đăng nhập Cloudflare Dashboard -> Chọn tên miền wellspring.edu.vn
+2. Điều hướng tới mục: Rules -> Redirect Rules (Quy tắc chuyển hướng) -> Create Rule
+
+A. Quy tắc sửa Domain Splitting (non-www sang www):
+   - Rule name: Redirect non-www to www Canonical
+   - When incoming requests match: (http.host eq "wellspring.edu.vn")
+   - Then: Type = Dynamic Redirect
+   - Expression: concat("https://www.wellspring.edu.vn", http.request.uri.path)
+   - Status code: 301 (Permanent Redirect)
+
+B. Quy tắc chuyển hướng link 404 gãy:
+   - Match: (http.request.uri.path eq "/vichinh-sach-bao-mat")
+   - Target: https://www.wellspring.edu.vn/chinh-sach-bao-mat (301 Permanent)
+`,
+
   nginx_301: `# ==============================================================================
 # BẢN VÁ NGINX 301 CHUẨN SẢN XUẤT (SỬA LỖI DOMAIN SPLITTING & VÁ LINK 404 GÃY)
 # Tự động sinh bởi Tester-AI (Huy Hưng SEO Executive)
@@ -185,7 +267,77 @@ llms-txt: https://www.wellspring.edu.vn/llms.txt`,
 - [Chính sách bảo mật & Pháp lý](https://www.wellspring.edu.vn/chinh-sach-bao-mat): Điều khoản bảo vệ dữ liệu học sinh`
 };
 
+
+let activeRedirectStack = "htaccess_apache";
+
+const STACK_FILENAME_MAP = {
+  htaccess_apache: ".htaccess",
+  nginx_301: "nginx_301.conf",
+  wordpress_php: "functions.php",
+  nextjs_redirects: "next.config.js",
+  cloudflare_rules: "cloudflare_rules.txt"
+};
+
+function renderRedirectPatch(stackKey) {
+  activeRedirectStack = stackKey || "htaccess_apache";
+  
+  // Highlight active button
+  document.querySelectorAll(".stack-tab-btn").forEach(btn => {
+    if (btn.getAttribute("data-stack") === activeRedirectStack) {
+      btn.classList.add("active");
+    } else {
+      btn.classList.remove("active");
+    }
+  });
+
+  const codeEl = document.getElementById("patchRedirectCodeBlock");
+  const pNginx = document.getElementById("patchNginxBlock");
+  const patches = currentAuditData?.patches || INITIAL_BASELINE_PATCHES;
+  const content = patches[activeRedirectStack] || INITIAL_BASELINE_PATCHES[activeRedirectStack] || "# Không có mã cho nền tảng này";
+
+  if (codeEl) codeEl.textContent = content;
+  if (pNginx) pNginx.textContent = patches.nginx_301 || INITIAL_BASELINE_PATCHES.nginx_301;
+}
+
+function initStackSwitcher() {
+  document.querySelectorAll(".stack-tab-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const stack = btn.getAttribute("data-stack");
+      renderRedirectPatch(stack);
+    });
+  });
+
+  const copyBtn = document.getElementById("copyRedirectBtn");
+  if (copyBtn) {
+    copyBtn.addEventListener("click", () => {
+      const patches = currentAuditData?.patches || INITIAL_BASELINE_PATCHES;
+      const textToCopy = patches[activeRedirectStack] || INITIAL_BASELINE_PATCHES[activeRedirectStack];
+      if (!textToCopy) return;
+      navigator.clipboard.writeText(textToCopy).then(() => {
+        const orig = copyBtn.textContent;
+        copyBtn.textContent = "✓ Đã sao chép!";
+        copyBtn.classList.add("copied");
+        setTimeout(() => {
+          copyBtn.textContent = orig;
+          copyBtn.classList.remove("copied");
+        }, 2000);
+      });
+    });
+  }
+
+  const dlBtn = document.getElementById("downloadRedirectBtn");
+  if (dlBtn) {
+    dlBtn.addEventListener("click", () => {
+      const patches = currentAuditData?.patches || INITIAL_BASELINE_PATCHES;
+      const content = patches[activeRedirectStack] || INITIAL_BASELINE_PATCHES[activeRedirectStack];
+      const filename = STACK_FILENAME_MAP[activeRedirectStack] || "redirect_patch.conf";
+      if (content) triggerFileDownload(filename, content);
+    });
+  }
+}
+
 function renderInitialPatches() {
+  renderRedirectPatch(activeRedirectStack);
   const pNginx = document.getElementById("patchNginxBlock");
   if (pNginx && !pNginx.textContent.trim()) pNginx.textContent = INITIAL_BASELINE_PATCHES.nginx_301;
   const pSchema = document.getElementById("patchSchemaBlock");
@@ -252,6 +404,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initEventListeners();
   renderInitialPatches();
   initDownloadAndSandboxEngine();
+  initStackSwitcher();
 });
 
 function initEventListeners() {
@@ -926,6 +1079,16 @@ function renderResults(data) {
 
   // 9. Auto Patches in Roadmap Tab
   if (data.patches) {
+    const stackInfo = data.patches.tech_stack || data.tech_stack;
+    const badgeEl = document.getElementById("detectedStackBadge");
+    if (badgeEl && stackInfo) {
+      badgeEl.textContent = `🔍 Nhận diện: ${stackInfo.display_summary || stackInfo.server}`;
+      badgeEl.className = `badge ${stackInfo.cms_badge || 'badge-emerald'}`;
+    }
+
+    const primaryStack = stackInfo?.primary_patch || "htaccess_apache";
+    renderRedirectPatch(primaryStack);
+
     const pNginx = document.getElementById("patchNginxBlock");
     if (pNginx) pNginx.textContent = data.patches.nginx_301 || "# Không có bản vá Nginx";
     const pSchema = document.getElementById("patchSchemaBlock");

@@ -2073,3 +2073,39 @@ pre {
     gap: 12px;
   }
 }
+
+
+/* STACK SWITCHER BUTTONS FOR ADAPTIVE PATCHES */
+.stack-switcher-bar {
+  display: flex;
+  gap: 8px;
+  margin: 12px 0 14px 0;
+  flex-wrap: wrap;
+}
+
+.stack-tab-btn {
+  background: #f3f4f6;
+  border: 1px solid #d1d5db;
+  color: #374151;
+  font-size: 0.76rem;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.stack-tab-btn:hover {
+  background: #e5e7eb;
+  color: #111827;
+}
+
+.stack-tab-btn.active {
+  background: var(--semrush-orange);
+  color: #ffffff;
+  border-color: var(--semrush-orange);
+  box-shadow: 0 1px 3px rgba(255, 100, 45, 0.3);
+}

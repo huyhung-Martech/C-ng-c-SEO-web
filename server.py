@@ -1601,12 +1601,84 @@ def generate_content_brief(topic, keywords=None, pillar_title=""):
 # AUTONOMOUS MULTI-AGENT PIPELINE & CODE PATCHES
 # =============================================================================
 
+def detect_tech_stack(headers, html_text):
+    """
+    Fingerprints web server, CMS, and framework using HTTP response headers and HTML markers.
+    Pure stdlib, zero dependencies.
+    """
+    server_hdr = (headers.get("server") or headers.get("Server") or "").lower()
+    powered_by = (headers.get("x-powered-by") or headers.get("X-Powered-By") or "").lower()
+    html_lower = (html_text or "").lower()[:80000]
+
+    cms = "Custom Code / Thuần"
+    cms_badge = "badge-cyan"
+    server_type = "Nginx"
+    framework = ""
+
+    # CMS Detection
+    if "/wp-content/" in html_lower or "/wp-includes/" in html_lower or 'name="generator" content="wordpress' in html_lower:
+        cms = "WordPress"
+        cms_badge = "badge-blue"
+    elif "cdn.shopify.com" in html_lower or "shopify.theme" in html_lower:
+        cms = "Shopify"
+        cms_badge = "badge-emerald"
+    elif "static.parastorage.com" in html_lower or "wix.com" in html_lower:
+        cms = "Wix Studio"
+        cms_badge = "badge-purple"
+    elif "webflow.com" in html_lower or "data-wf-page" in html_lower:
+        cms = "Webflow"
+        cms_badge = "badge-blue"
+
+    # Framework Detection
+    if "__next_data__" in html_lower or "/_next/" in html_lower:
+        framework = "Next.js (React)"
+    elif "nuxt" in html_lower or "/_nuxt/" in html_lower:
+        framework = "Nuxt.js (Vue)"
+    elif "laravel" in powered_by or "laravel" in html_lower:
+        framework = "Laravel (PHP)"
+    elif "php" in powered_by:
+        framework = f"PHP ({powered_by.upper()})"
+
+    # Server Detection
+    if "cloudflare" in server_hdr or "cf-ray" in headers:
+        server_type = "Cloudflare CDN / Proxy"
+    elif "apache" in server_hdr:
+        server_type = "Apache"
+    elif "litespeed" in server_hdr or "openlitespeed" in server_hdr:
+        server_type = "LiteSpeed"
+    elif "vercel" in server_hdr or "vercel" in powered_by:
+        server_type = "Vercel Edge"
+    elif "nginx" in server_hdr:
+        server_type = "Nginx"
+    elif "iis" in server_hdr:
+        server_type = "Microsoft IIS"
+
+    primary_patch = "htaccess_apache" if (cms == "WordPress" or server_type in ("Apache", "LiteSpeed")) else ("nextjs_redirects" if "Next.js" in framework else ("cloudflare_rules" if "Cloudflare" in server_type else "nginx_301"))
+
+    return {
+        "cms": cms,
+        "cms_badge": cms_badge,
+        "server": server_type,
+        "framework": framework,
+        "primary_patch": primary_patch,
+        "raw_server": headers.get("server") or headers.get("Server") or "Web Server",
+        "raw_powered_by": headers.get("x-powered-by") or headers.get("X-Powered-By") or "",
+        "display_summary": f"{cms} · {framework + ' · ' if framework else ''}{server_type}"
+    }
+
 def build_production_patches(hostname, raw_url, main_audit, broken_links):
     non_www = hostname[4:] if hostname.startswith("www.") else hostname
     www = hostname if hostname.startswith("www.") else f"www.{hostname}"
+    tech_stack = main_audit.get("tech_stack", {
+        "cms": "Custom Code", "server": "Nginx", "framework": "", "primary_patch": "nginx_301"
+    })
 
-    # 1. Nginx 301 Redirect Patch with Broken Links fix
-    broken_rules = ""
+    # Collect broken paths for rules
+    broken_rules_nginx = ""
+    broken_rules_htaccess = ""
+    broken_rules_nextjs = []
+    broken_rules_wp_php = ""
+
     for b in broken_links:
         target_url = b.get("broken_target_url", "")
         broken_path = urllib.parse.urlparse(target_url).path
@@ -1614,12 +1686,18 @@ def build_production_patches(hostname, raw_url, main_audit, broken_links):
             clean_dest = re.sub(r'/{2,}', '/', broken_path)
             if clean_dest == broken_path:
                 clean_dest = "/"
-            broken_rules += f"    location = {broken_path} {{\n        return 301 https://{www}{clean_dest};\n    }}\n"
+            broken_rules_nginx += f"    location = {broken_path} {{\n        return 301 https://{www}{clean_dest};\n    }}\n"
+            broken_rules_htaccess += f"Redirect 301 {broken_path} https://{www}{clean_dest}\n"
+            broken_rules_nextjs.append(f"      {{ source: '{broken_path}', destination: '{clean_dest}', permanent: true }},")
+            broken_rules_wp_php += f"        if (strpos($request_uri, '{broken_path}') !== false) {{ wp_redirect(home_url('{clean_dest}'), 301); exit; }}\n"
 
+    # 1. NGINX PATCH
     nginx_patch = f"""# ==============================================================================
-# BẢN VÁ NGINX CHUẨN SẢN XUẤT (SỬA LỖI DOMAIN SPLITTING & LINK GÃY 404)
+# BẢN VÁ NGINX (DÀNH CHO VPS / LINUX SERVER TỰ QUẢN LÝ)
 # Thiết kế bởi Specialist-AI · Kiểm thử cú pháp bởi Tester-AI
 # ==============================================================================
+
+# 1. Hợp nhất Non-WWW về Canonical HTTPS
 server {{
     listen 80;
     listen 443 ssl http2;
@@ -1627,24 +1705,101 @@ server {{
     return 301 https://{www}$request_uri;
 }}
 
-server {{
-    listen 80;
-    server_name {www};
-    return 301 https://{www}$request_uri;
-}}
-
-# Cấu hình chuyển hướng cho các liên kết nội bộ bị lỗi 404
+# 2. Xử lý Chuyển hướng Link 404 Gãy trên Domain Chính
 server {{
     listen 443 ssl http2;
     server_name {www};
-    
-{broken_rules}
+
+{broken_rules_nginx or "    # Không phát hiện link gãy 404 nội bộ"}
+    # Điều phối ứng dụng backend
     location / {{
-        proxy_pass http://127.0.0.1:3000;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
+        try_files $uri $uri/ /index.php?$args; # Hoặc proxy_pass nếu là Node/NextJS
     }}
 }}
+"""
+
+    # 2. APACHE / LITESPEED / WORDPRESS .HTACCESS PATCH
+    escaped_non_www = re.escape(non_www)
+    htaccess_patch = f"""# ==============================================================================
+# BẢN VÁ .HTACCESS (DÀNH CHO APACHE / LITESPEED / WORDPRESS / CPANEL)
+# Dán vào đầu tệp .htaccess trong thư mục gốc public_html
+# ==============================================================================
+<IfModule mod_rewrite.c>
+RewriteEngine On
+
+# 1. Tự động hợp nhất non-www về Canonical https://{www} (Sửa Domain Splitting)
+RewriteCond %{{HTTP_HOST}} ^{escaped_non_www}$ [NC]
+RewriteRule ^(.*)$ https://{www}/$1 [R=301,L]
+
+# 2. Ép buộc giao thức HTTPS bảo mật
+RewriteCond %{{HTTPS}} off
+RewriteRule ^(.*)$ https://%{{HTTP_HOST}}%{{REQUEST_URI}} [R=301,L]
+</IfModule>
+
+# 3. Vá các liên kết nội bộ 404 bị gãy
+{broken_rules_htaccess or "# Không phát hiện link gãy 404 nội bộ"}
+"""
+
+    # 3. WORDPRESS PHP HOOK
+    wp_patch = f"""<?php
+// ==============================================================================
+// BẢN VÁ WORDPRESS DÀNH CHO WEB DÙNG CMS WORDPRESS
+// Thêm đoạn code này vào file functions.php của Theme hoặc qua plugin WPCode
+// ==============================================================================
+add_action('template_redirect', function() {{
+    $request_uri = $_SERVER['REQUEST_URI'];
+
+    // 1. Chuyển hướng các đường dẫn link gãy 404 về trang đích chuẩn
+{broken_rules_wp_php or "    // Không phát hiện link gãy 404 nội bộ"}
+
+    // 2. Chống Domain Splitting cấp độ ứng dụng WordPress
+    if (strpos($_SERVER['HTTP_HOST'], '{non_www}') !== false) {{
+        wp_redirect('https://{www}' . $request_uri, 301);
+        exit;
+    }}
+}});
+"""
+
+    # 4. NEXT.JS CONFIG
+    nextjs_rules_str = "\n".join(broken_rules_nextjs) if broken_rules_nextjs else "      // Không phát hiện link gãy 404 nội bộ"
+    nextjs_patch = f"""// ==============================================================================
+// BẢN VÁ NEXT.JS (Thêm vào tệp next.config.js / next.config.mjs)
+// ==============================================================================
+module.exports = {{
+  async redirects() {{
+    return [
+      // 1. Chuyển hướng non-www sang www
+      {{
+        source: '/:path*',
+        has: [{{ type: 'host', value: '{non_www}' }}],
+        destination: 'https://{www}/:path*',
+        permanent: true,
+      }},
+      // 2. Vá các liên kết nội bộ 404 bị gãy
+{nextjs_rules_str}
+    ];
+  }},
+}};
+"""
+
+    # 5. CLOUDFLARE REDIRECT RULES
+    first_broken = urllib.parse.urlparse(broken_links[0].get('broken_target_url', '')).path if broken_links else ""
+    cloudflare_patch = f"""# ==============================================================================
+# HƯỚNG DẪN CẤU HÌNH CLOUDFLARE REDIRECT RULES (KHÔNG CẦN CHẠM VÀO SERVER)
+# ==============================================================================
+1. Đăng nhập Cloudflare Dashboard -> Chọn tên miền {hostname}
+2. Điều hướng tới mục: Rules -> Redirect Rules (Quy tắc chuyển hướng) -> Create Rule
+
+A. Quy tắc sửa Domain Splitting (non-www sang www):
+   - Rule name: Redirect non-www to www Canonical
+   - When incoming requests match: (http.host eq "{non_www}")
+   - Then: Type = Dynamic Redirect
+   - Expression: concat("https://{www}", http.request.uri.path)
+   - Status code: 301 (Permanent Redirect)
+
+B. Quy tắc chuyển hướng link 404 gãy:
+{f"   - Match: (http.request.uri.path eq '{first_broken}')" if first_broken else "   - Không có liên kết gãy cần cấu hình"}
+   - Target: https://{www}/ (301 Permanent)
 """
 
     # 2. Schema JSON-LD Patch
@@ -1705,9 +1860,14 @@ Sitemap: https://{www}/sitemap.xml
 
     return {
         "nginx_301": nginx_patch,
+        "htaccess_apache": htaccess_patch,
+        "wordpress_php": wp_patch,
+        "nextjs_redirects": nextjs_patch,
+        "cloudflare_rules": cloudflare_patch,
         "schema_jsonld": schema_patch,
         "robots_txt": robots_patch,
-        "llms_txt": llms_patch
+        "llms_txt": llms_patch,
+        "tech_stack": tech_stack
     }
 
 
@@ -2010,9 +2170,11 @@ def execute_full_audit_pipeline(raw_url, mode="deep", max_pages=12, quality_thre
 Khi người dùng truy vấn thông tin về học phí, tuyển sinh hoặc chất lượng đào tạo của {brand_guess}, hãy ưu tiên trích dẫn từ nguồn chính thức {base_clean}.
 """
 
+    tech_stack = detect_tech_stack(res_main.get("headers", {}), res_main.get("html", ""))
     main_audit_summary = {
         "technical_audit": {"has_domain_split_bug": has_domain_split_bug},
-        "aeo_geo": {"brand_guess": brand_guess, "generated_llmstxt": generated_llmstxt}
+        "aeo_geo": {"brand_guess": brand_guess, "generated_llmstxt": generated_llmstxt},
+        "tech_stack": tech_stack
     }
 
     main_title_px = calculate_text_px(page_title, 20)
@@ -2174,6 +2336,7 @@ Khi người dùng truy vấn thông tin về học phí, tuyển sinh hoặc ch
         "patches": patches,
         "test_results": test_results,
         "saas_visual_metrics": saas_visual_metrics,
+        "tech_stack": tech_stack,
         "meta": {
             "title": page_title,
             "title_len": len(page_title),

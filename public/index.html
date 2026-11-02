@@ -1314,17 +1314,32 @@
           <!-- Auto-Fix Code Patches Grid -->
           <div class="patches-container" id="patchesContainer">
             <div class="glass-card patch-card">
-              <div class="patch-header">
+              <div class="patch-header" style="flex-wrap: wrap; gap: 10px;">
                 <div>
-                  <h4 class="patch-title">1. Cấu Hình Nginx 301 (Sửa Lỗi Domain Splitting &amp; Vá Link 404)</h4>
-                  <p class="patch-desc">Tự động cấu hình chuyển hướng cho các link gãy và hợp nhất www/non-www.</p>
+                  <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px; flex-wrap: wrap;">
+                    <h4 class="patch-title" style="margin: 0;">1. Bản Vá Chuyển Hướng 301 &amp; Sửa Link 404 (Theo Nền Tảng)</h4>
+                    <span id="detectedStackBadge" class="badge badge-emerald" style="font-size: 0.72rem; padding: 2px 8px;">Tự Động Nhận Diện Nền Tảng</span>
+                  </div>
+                  <p class="patch-desc">Tự động cấu hình chuẩn theo Web Server &amp; CMS nhận diện của website bạn (WordPress, Apache, Nginx, Next.js, Cloudflare).</p>
                 </div>
                 <div class="patch-actions-flex">
-                  <button class="btn btn-sm btn-secondary copy-patch-btn" data-patch="nginx_301">Sao chép</button>
-                  <button class="btn btn-sm btn-primary download-patch-btn" data-patch="nginx_301" data-filename="nginx_301.conf">⬇ Tải .conf</button>
+                  <button class="btn btn-sm btn-secondary" id="copyRedirectBtn">Sao chép</button>
+                  <button class="btn btn-sm btn-primary" id="downloadRedirectBtn">⬇ Tải tệp cấu hình</button>
                 </div>
               </div>
-              <pre><code id="patchNginxBlock" class="language-nginx"></code></pre>
+
+              <!-- Stack Selector Sub-tabs -->
+              <div class="stack-switcher-bar">
+                <button type="button" class="stack-tab-btn active" data-stack="htaccess_apache">.htaccess (WordPress / Apache / LiteSpeed)</button>
+                <button type="button" class="stack-tab-btn" data-stack="nginx_301">Nginx (nginx.conf)</button>
+                <button type="button" class="stack-tab-btn" data-stack="wordpress_php">WordPress (functions.php)</button>
+                <button type="button" class="stack-tab-btn" data-stack="nextjs_redirects">Next.js (next.config.js)</button>
+                <button type="button" class="stack-tab-btn" data-stack="cloudflare_rules">Cloudflare Rules</button>
+              </div>
+
+              <pre><code id="patchRedirectCodeBlock" class="language-apache"></code></pre>
+              <!-- Hidden compatibility anchor -->
+              <pre style="display: none;"><code id="patchNginxBlock"></code></pre>
             </div>
 
             <div class="glass-card patch-card">
