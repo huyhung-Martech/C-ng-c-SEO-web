@@ -727,7 +727,9 @@ def recursive_network_crawl(root_url, sitemap_html="", max_pages=15, stream_call
     base_clean = f"{parsed_root.scheme}://{parsed_root.netloc}"
 
     visited = set()
-    queue = [base_clean]
+    queue = [root_url]
+    if base_clean != root_url and base_clean not in queue:
+        queue.append(base_clean)
     
     # Target limit: 0 or negative means exhaustive catalog crawl (up to 1,000 pages)
     target_limit = 1000 if max_pages <= 0 else max_pages
@@ -767,6 +769,16 @@ def recursive_network_crawl(root_url, sitemap_html="", max_pages=15, stream_call
                                             queue.append(c_target)
                     except Exception:
                         pass
+
+    # Proactive Route Probing for modern headless CMS / Next.js hidden sections
+    PROBE_SECTIONS = [
+        "/tin-tuc?campus=wellspring-hanoi", "/tin-tuc", "/vi/tin-tuc",
+        "/blog", "/news", "/su-kien", "/tuyen-sinh", "/gioi-thieu", "/lien-he"
+    ]
+    for ps in PROBE_SECTIONS:
+        probe_target = f"{base_clean}{ps}"
+        if probe_target not in queue:
+            queue.append(probe_target)
 
     pages_data = {}
     inlinks_map = defaultdict(set)
@@ -833,10 +845,23 @@ def recursive_network_crawl(root_url, sitemap_html="", max_pages=15, stream_call
                     except Exception:
                         pass
 
-                    # Extract Next.js or regex links
-                    nextjs_links = re.findall(r'["\'](/?vi/[a-zA-Z0-9_\-\/]+)["\']', res["html"])
-                    for nl in nextjs_links:
-                        parser.links.append({"href": nl, "text": "", "rel": ""})
+                                        # Multi-Source Modern Link Extractor (HTML + Next.js App Router RSC Stream + Data Attributes)
+                    # 1. Next.js App Router RSC Slugs (e.g. \"slug\":\"talent-incubation-wellspring-hanoi\")
+                    rsc_slugs = re.findall(r'\\?"slug\\?":\s*\\?"([a-zA-Z0-9_\-]+)\\?"', res["html"])
+                    for sl in rsc_slugs:
+                        if len(sl) > 8 and not any(k in sl for k in ("wellspring-hanoi", "wellspring-saigon", "thong-bao", "du-hoc", "category", "highlight", "thumbnail")):
+                            sec = "/tin-tuc/" if "tin-tuc" in norm_url else "/vi/tin-tuc/"
+                            parser.links.append({"href": f"{sec}{sl}", "text": sl.replace("-", " ").capitalize(), "rel": ""})
+
+                    # 2. General REST/JSON/Regex paths
+                    generic_paths = re.findall(r"""['"](/(?:tin-tuc|bai-viet|su-kien|blog|vi|en|tuyen-sinh|gioi-thieu)/[a-zA-Z0-9_\-/]+)['"]""", res["html"])
+                    for gp in generic_paths:
+                        parser.links.append({"href": gp, "text": "", "rel": ""})
+
+                    # 3. Data-href / Data-url attributes
+                    data_links = re.findall(r"""data-(?:href|url)=['"]([^'"]+)['"]""", res["html"])
+                    for dl in data_links:
+                        parser.links.append({"href": dl, "text": "", "rel": ""})
 
                     clean_outlinks = set()
                     for link in parser.links:
@@ -1089,6 +1114,7 @@ def recursive_network_crawl(root_url, sitemap_html="", max_pages=15, stream_call
         "total_internal_links": sum(len(v) for v in outlinks_map.values()),
         "content_silos": content_silos,
         "backlink_authority": backlink_authority,
+        "inlinks_map": inlinks_map,
         "edges": graph_edges[:600]
     }
 
@@ -1926,6 +1952,7 @@ def execute_full_audit_pipeline(raw_url, mode="deep", max_pages=12, quality_thre
     scheme = parsed_url.scheme or "https"
     hostname = parsed_url.netloc.lower()
     base_clean = f"{scheme}://{hostname}"
+    clean_target_url = urllib.parse.urlunparse(parsed_url)
 
     agent_trace = []
     def log_agent(agent_name, role, avatar, badge, message, iteration=1):
@@ -1952,7 +1979,7 @@ def execute_full_audit_pipeline(raw_url, mode="deep", max_pages=12, quality_thre
     www_domain = hostname if hostname.startswith("www.") else f"www.{hostname}"
 
     with ThreadPoolExecutor(max_workers=7) as executor:
-        f_main = executor.submit(fetch_url, base_clean)
+        f_main = executor.submit(fetch_url, clean_target_url)
         f_robots = executor.submit(fetch_url, f"{scheme}://{hostname}/robots.txt")
         f_sitemap = executor.submit(fetch_url, f"{scheme}://{hostname}/sitemap.xml")
         f_llms = executor.submit(fetch_url, f"{scheme}://{hostname}/llms.txt")
@@ -2099,12 +2126,29 @@ def execute_full_audit_pipeline(raw_url, mode="deep", max_pages=12, quality_thre
     log_agent("Specialist-AI", "Kỹ Sư Trưởng Thực Thi", "👷", "badge-cyan",
               f"Bắt đầu crawl mạng lưới đệ quy ({max_pages} trang/bài viết), bóc tách đồ thị liên kết nội bộ và từ khóa...", 1)
 
-    crawl_res = recursive_network_crawl(base_clean, res_sitemap["html"], max_pages=max_pages, stream_callback=stream_callback)
+    crawl_res = recursive_network_crawl(clean_target_url, res_sitemap["html"], max_pages=max_pages, stream_callback=stream_callback)
     subpages = crawl_res["subpages"]
     broken_links = crawl_res["broken_links"]
     auth_restricted_links = crawl_res.get("auth_restricted_links", [])
     orphan_pages = crawl_res["orphan_pages"]
     dead_end_pages = crawl_res["dead_end_pages"]
+
+    # Check for Isolated Sections / Orphan Silos
+    crawl_inlinks = crawl_res.get("inlinks_map", {})
+    has_isolated_news = False
+    for p in subpages:
+        if "/tin-tuc" in p["url"] and base_clean not in crawl_inlinks.get(p["url"], set()):
+            has_isolated_news = True
+            break
+    if has_isolated_news:
+        issues.append({
+            "phase": 1,
+            "severity": "HIGH",
+            "category": "Cấu trúc Điều hướng & Thu thập dữ liệu (Site Navigation)",
+            "title": "Chuyên mục Tin tức / Bài viết bị cô lập (Thiếu link từ Menu trang chủ)",
+            "description": "Hệ thống phát hiện các bài viết trên chuyên mục /tin-tuc nhưng trên Menu trang chủ hoàn toàn không có link trỏ tới. Điều này khiến bot tìm kiếm không thể phân bổ PageRank và bỏ sót việc index bài viết.",
+            "fix": "Thêm mục 'Tin tức' hoặc 'Hoạt động học sinh' vào thanh điều hướng chính (Main Menu) của trang chủ và khai báo sitemap XML bài viết tự động."
+        })
 
     # Cross-page cannibalization
     cross_page_audit = analyze_cross_page_cannibalization(subpages)
