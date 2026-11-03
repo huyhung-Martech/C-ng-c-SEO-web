@@ -1,0 +1,1273 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mô Phỏng Không Gian 3D Mạng Lưới Trang Web · Wellspring Hanoi | Huy Hưng SEO Executive</title>
+  <meta name="description" content="Mô phỏng 3D tương tác không gian đa chiều toàn bộ cấu trúc logic, cụm chủ đề (Pillars & Clusters) và luồng liên kết nội bộ website wellspring.edu.vn. Có thể kéo thả điểm, xoay 360 độ và kiểm tra liên kết." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- Standalone 3D Engine Scripts -->
+  <script src="js/three.min.js"></script>
+  <script src="js/3d-force-graph.min.js"></script>
+
+  <style>
+    :root {
+      --bg-space: #07090e;
+      --panel-bg: rgba(13, 17, 28, 0.82);
+      --panel-border: rgba(255, 255, 255, 0.1);
+      --panel-glow: rgba(56, 189, 248, 0.15);
+      --semrush-orange: #ff642d;
+      --cyan-neon: #38bdf8;
+      --gold-neon: #f59e0b;
+      --green-neon: #10b981;
+      --purple-neon: #a855f7;
+      --rose-neon: #f43f5e;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      background-color: var(--bg-space);
+      color: var(--text-main);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      overflow: hidden;
+      width: 100vw;
+      height: 100vh;
+      user-select: none;
+    }
+
+    /* 3D Canvas Viewport */
+    #3d-graph-viewport {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
+
+    /* TOP GLOBAL BAR */
+    .top-header-bar {
+      position: absolute;
+      top: 14px;
+      left: 18px;
+      right: 18px;
+      height: 56px;
+      background: var(--panel-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--panel-border);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 18px;
+      z-index: 10;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px var(--panel-glow);
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-flame {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #ff642d, #ff9900);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 15px rgba(255, 100, 45, 0.4);
+    }
+
+    .brand-title {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      letter-spacing: -0.01em;
+    }
+
+    .badge-live-domain {
+      background: rgba(56, 189, 248, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      color: var(--cyan-neon);
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .kpi-strip {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .kpi-pill {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 4px 10px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.78rem;
+    }
+
+    .kpi-val {
+      font-weight: 800;
+      color: #fff;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .kpi-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+    }
+
+    .dot-gold { background: var(--gold-neon); box-shadow: 0 0 6px var(--gold-neon); }
+    .dot-blue { background: var(--cyan-neon); box-shadow: 0 0 6px var(--cyan-neon); }
+    .dot-purple { background: var(--purple-neon); box-shadow: 0 0 6px var(--purple-neon); }
+    .dot-red { background: var(--rose-neon); box-shadow: 0 0 6px var(--rose-neon); }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-hdr {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #e2e8f0;
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    .btn-hdr:hover {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.3);
+      color: #fff;
+      transform: translateY(-1px);
+    }
+
+    .btn-hdr-primary {
+      background: linear-gradient(135deg, #ff642d, #ea580c);
+      border-color: #ff642d;
+      color: #fff;
+      box-shadow: 0 0 12px rgba(255, 100, 45, 0.35);
+    }
+    .btn-hdr-primary:hover {
+      background: linear-gradient(135deg, #ff7a45, #f97316);
+      box-shadow: 0 0 18px rgba(255, 100, 45, 0.55);
+    }
+
+    /* LEFT FLOATING CONTROLS PANEL */
+    .left-controls-card {
+      position: absolute;
+      top: 84px;
+      left: 18px;
+      width: 320px;
+      background: var(--panel-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--panel-border);
+      border-radius: 12px;
+      padding: 16px;
+      z-index: 10;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .panel-section-title {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--cyan-neon);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    /* Search Input with Autocomplete */
+    .search-input-wrap {
+      position: relative;
+      margin-bottom: 14px;
+    }
+
+    .search-input {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 8px;
+      padding: 8px 12px 8px 34px;
+      color: #fff;
+      font-size: 0.82rem;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    .search-input:focus {
+      border-color: var(--cyan-neon);
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
+    }
+
+    .search-icon {
+      position: absolute;
+      top: 9px;
+      left: 10px;
+      width: 15px;
+      height: 15px;
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+
+    .search-results-dropdown {
+      position: absolute;
+      top: 40px;
+      left: 0;
+      right: 0;
+      max-height: 240px;
+      overflow-y: auto;
+      background: #0f172a;
+      border: 1px solid var(--panel-border);
+      border-radius: 8px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.8);
+      display: none;
+      z-index: 50;
+    }
+
+    .search-item {
+      padding: 8px 12px;
+      font-size: 0.78rem;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      transition: background 0.15s ease;
+    }
+
+    .search-item:hover {
+      background: rgba(56, 189, 248, 0.15);
+    }
+
+    .search-item-title {
+      color: #fff;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .search-item-url {
+      color: var(--text-muted);
+      font-size: 0.7rem;
+      font-family: 'JetBrains Mono', monospace;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Filter Chips */
+    .filter-chips-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 14px;
+    }
+
+    .chip-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #cbd5e1;
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 4px 8px;
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.15s ease;
+    }
+
+    .chip-btn:hover, .chip-btn.active {
+      background: rgba(56, 189, 248, 0.2);
+      border-color: var(--cyan-neon);
+      color: #fff;
+    }
+
+    .chip-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+    }
+
+    /* View Tools Grid */
+    .tools-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+    }
+
+    .tool-btn {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: #cbd5e1;
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 6px 8px;
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      transition: all 0.15s ease;
+    }
+
+    .tool-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.25);
+      color: #fff;
+    }
+
+    .tool-btn.active {
+      background: rgba(245, 158, 11, 0.2);
+      border-color: var(--gold-neon);
+      color: #fff;
+    }
+
+    /* RIGHT DRAWER: NODE INSPECTOR */
+    .node-inspector-drawer {
+      position: absolute;
+      top: 84px;
+      right: 18px;
+      width: 380px;
+      max-height: calc(100vh - 120px);
+      overflow-y: auto;
+      background: var(--panel-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--panel-border);
+      border-radius: 14px;
+      padding: 20px;
+      z-index: 10;
+      box-shadow: -10px 15px 35px rgba(0, 0, 0, 0.6), 0 0 25px rgba(56, 189, 248, 0.12);
+      display: none;
+      animation: slideInRight 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes slideInRight {
+      from { transform: translateX(30px); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    .inspector-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .inspector-type-badge {
+      display: inline-block;
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 6px;
+    }
+
+    .badge-hub { background: rgba(245, 158, 11, 0.2); color: var(--gold-neon); border: 1px solid var(--gold-neon); }
+    .badge-pillar { background: rgba(56, 189, 248, 0.2); color: var(--cyan-neon); border: 1px solid var(--cyan-neon); }
+    .badge-cluster { background: rgba(16, 185, 129, 0.2); color: var(--green-neon); border: 1px solid var(--green-neon); }
+    .badge-news { background: rgba(99, 102, 241, 0.2); color: #818cf8; border: 1px solid #818cf8; }
+    .badge-404 { background: rgba(239, 68, 68, 0.2); color: var(--rose-neon); border: 1px solid var(--rose-neon); }
+
+    .inspector-close-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 1.1rem;
+      padding: 4px;
+      border-radius: 4px;
+    }
+    .inspector-close-btn:hover { color: #fff; background: rgba(255, 255, 255, 0.1); }
+
+    .inspector-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.4;
+      margin-bottom: 8px;
+    }
+
+    .inspector-url-box {
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 8px;
+      padding: 8px 10px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--cyan-neon);
+      word-break: break-all;
+      margin-bottom: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-copy-url {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 0.8rem;
+    }
+    .btn-copy-url:hover { color: #fff; }
+
+    .inspector-actions-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .btn-inspector-action {
+      flex: 1;
+      padding: 7px 10px;
+      font-size: 0.74rem;
+      font-weight: 600;
+      border-radius: 6px;
+      text-align: center;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+    }
+
+    .btn-open-tab {
+      background: linear-gradient(135deg, #38bdf8, #0284c7);
+      border: 1px solid #38bdf8;
+      color: #fff;
+    }
+    .btn-open-tab:hover { background: #0ea5e9; }
+
+    .btn-isolate-links {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #e2e8f0;
+    }
+    .btn-isolate-links:hover { background: rgba(255, 255, 255, 0.12); color: #fff; }
+
+    .stats-2x2-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .stat-mini-box {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: 8px;
+      padding: 10px;
+    }
+
+    .stat-mini-label {
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      margin-bottom: 2px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .stat-mini-val {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: #fff;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .inspector-detail-item {
+      margin-bottom: 10px;
+      font-size: 0.78rem;
+      line-height: 1.5;
+    }
+    .detail-label {
+      font-weight: 600;
+      color: var(--text-muted);
+      font-size: 0.72rem;
+      display: block;
+      margin-bottom: 2px;
+    }
+    .detail-val {
+      color: #e2e8f0;
+    }
+
+    .inlinks-list-box {
+      max-height: 140px;
+      overflow-y: auto;
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 6px;
+      padding: 6px 10px;
+      font-size: 0.72rem;
+      margin-top: 4px;
+    }
+
+    .inlink-item {
+      padding: 4px 0;
+      border-bottom: 1px dashed rgba(255, 255, 255, 0.06);
+      color: #cbd5e1;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .inlink-item:last-child { border-bottom: none; }
+
+    /* BOTTOM GUIDANCE STRIP */
+    .bottom-hud-strip {
+      position: absolute;
+      bottom: 14px;
+      left: 18px;
+      right: 18px;
+      height: 40px;
+      background: var(--panel-bg);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid var(--panel-border);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      z-index: 10;
+      font-size: 0.74rem;
+      color: var(--text-muted);
+    }
+
+    .hud-hint {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .hud-hint-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .key-badge {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 4px;
+      padding: 1px 5px;
+      font-family: 'JetBrains Mono', monospace;
+      color: #fff;
+      font-size: 0.68rem;
+    }
+
+    /* Floating Tooltip */
+    .graph-3d-tooltip {
+      position: absolute;
+      pointer-events: none;
+      background: rgba(15, 23, 42, 0.92);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--cyan-neon);
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 0.75rem;
+      color: #fff;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.7), 0 0 15px rgba(56, 189, 248, 0.25);
+      z-index: 100;
+      display: none;
+      max-width: 280px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 3D WebGL Canvas Viewport -->
+  <div id="3d-graph-viewport"></div>
+
+  <!-- FLOATING TOOLTIP -->
+  <div id="graphTooltip" class="graph-3d-tooltip"></div>
+
+  <!-- TOP HEADER BAR -->
+  <header class="top-header-bar">
+    <div class="brand-group">
+      <div class="brand-flame">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2C8 6 6 9.5 6 13.5C6 17.5 9 21 13 21C17.5 21 20 17 20 13C20 9 17 5 12 2Z" fill="#fff"/></svg>
+      </div>
+      <div>
+        <div class="brand-title">
+          <span>Huy Hưng SEO Executive</span>
+          <span style="font-weight: 400; color: var(--text-muted);">|</span>
+          <span style="color: var(--cyan-neon); font-size: 0.88rem;">3D Architecture Matrix</span>
+          <span class="badge-live-domain">wellspring.edu.vn</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Live KPI Pills -->
+    <div class="kpi-strip">
+      <div class="kpi-pill">
+        <span class="kpi-dot dot-gold"></span>
+        <span>Tổng Nodes:</span>
+        <span class="kpi-val" id="kpiTotalNodes">82</span>
+      </div>
+      <div class="kpi-pill">
+        <span class="kpi-dot dot-blue"></span>
+        <span>Liên Kết:</span>
+        <span class="kpi-val" id="kpiTotalLinks">137</span>
+      </div>
+      <div class="kpi-pill">
+        <span class="kpi-dot dot-purple"></span>
+        <span>Trang Trụ Cột:</span>
+        <span class="kpi-val">5 Pillars</span>
+      </div>
+      <div class="kpi-pill">
+        <span class="kpi-dot dot-red"></span>
+        <span>Lỗi 404:</span>
+        <span class="kpi-val">10 URLs</span>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="header-actions">
+      <a href="/" class="btn-hdr" title="Quay lại bảng điều khiển chính">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+        <span>Bảng Điều Khiển</span>
+      </a>
+      <a href="/api/export/0-to-100-audit" class="btn-hdr btn-hdr-primary" title="Tải xuống tệp Excel Master 12 trang tính">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+        <span>Xuất Excel 12 Sheets</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- LEFT CONTROLS PANEL -->
+  <aside class="left-controls-card">
+    <!-- Live Search -->
+    <div class="panel-section-title">
+      <span>TÌM KIẾM TRANG TRONG MẠNG LƯỚI</span>
+      <span style="font-size: 0.65rem; color: var(--text-muted);">Bay camera tới node</span>
+    </div>
+    <div class="search-input-wrap">
+      <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+      <input type="text" id="nodeSearchInput" class="search-input" placeholder="Nhập tên trang hoặc link (ví dụ: học phí, cambridge, 404)..." />
+      <div id="searchResults" class="search-results-dropdown"></div>
+    </div>
+
+    <!-- Cluster Filters -->
+    <div class="panel-section-title">
+      <span>LỌC THEO CỤM CHUYÊN ĐỀ (SILOS)</span>
+    </div>
+    <div class="filter-chips-grid">
+      <button class="chip-btn active" data-filter="all">Tất Cả (82)</button>
+      <button class="chip-btn" data-filter="hub"><span class="chip-dot dot-gold"></span>Trang Chủ (2)</button>
+      <button class="chip-btn" data-filter="cluster1"><span class="chip-dot dot-blue"></span>Song Ngữ K-12 (12)</button>
+      <button class="chip-btn" data-filter="cluster2"><span class="chip-dot" style="background: #10b981;"></span>Biểu Phí (6)</button>
+      <button class="chip-btn" data-filter="cluster3"><span class="chip-dot dot-purple"></span>Tuyển Sinh (6)</button>
+      <button class="chip-btn" data-filter="cluster4"><span class="chip-dot" style="background: #f97316;"></span>Review (6)</button>
+      <button class="chip-btn" data-filter="cluster5"><span class="chip-dot" style="background: #06b6d4;"></span>Tú Tài Mỹ (6)</button>
+      <button class="chip-btn" data-filter="news"><span class="chip-dot" style="background: #6366f1;"></span>Tin Tức (34)</button>
+      <button class="chip-btn" data-filter="broken"><span class="chip-dot dot-red"></span>🚨 Link Gãy 404 (10)</button>
+    </div>
+
+    <!-- Tools & Viewport Modes -->
+    <div class="panel-section-title">
+      <span>ĐIỀU KHIỂN &amp; CHẾ ĐỘ 3D</span>
+    </div>
+    <div class="tools-grid">
+      <button class="tool-btn" id="btnResetCamera">⟲ Đặt Lại Góc Nhìn</button>
+      <button class="tool-btn active" id="btnToggleRotate">🪐 Tự Xoay: BẬT</button>
+      <button class="tool-btn active" id="btnTogglePhysics">⚡ Trọng Lực: BẬT</button>
+      <button class="tool-btn" id="btnToggleLabels">🏷️ Nhãn 3D: TẮT</button>
+      <button class="tool-btn" id="btnExportImage" style="grid-column: span 2;">📸 Chụp Ảnh Mạng Lưới 3D (PNG)</button>
+    </div>
+  </aside>
+
+  <!-- RIGHT DRAWER: NODE INSPECTOR -->
+  <aside id="nodeInspector" class="node-inspector-drawer">
+    <div class="inspector-header">
+      <div>
+        <span id="inspBadge" class="inspector-type-badge badge-pillar">Pillar Page</span>
+        <h3 id="inspTitle" class="inspector-title">Chương Trình Đào Tạo Cambridge K-12</h3>
+      </div>
+      <button id="btnCloseInspector" class="inspector-close-btn" title="Đóng bảng">✕</button>
+    </div>
+
+    <div class="inspector-url-box">
+      <span id="inspUrl" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">https://wellspring.edu.vn/vi/chuong-trinh-dao-tao</span>
+      <button id="btnCopyUrl" class="btn-copy-url" title="Sao chép liên kết">📋</button>
+    </div>
+
+    <div class="inspector-actions-row">
+      <a id="inspOpenLink" href="#" target="_blank" rel="noopener noreferrer" class="btn-inspector-action btn-open-tab">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+        <span>Mở Tab Mới ↗</span>
+      </a>
+      <button id="inspIsolateBtn" class="btn-inspector-action btn-isolate-links">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+        <span>Tập Trung Cụm</span>
+      </button>
+    </div>
+
+    <!-- 2x2 Mini Stats -->
+    <div class="stats-2x2-grid">
+      <div class="stat-mini-box">
+        <div class="stat-mini-label">Liên Kết Trỏ Tới (Inlinks)</div>
+        <div class="stat-mini-val" id="inspInlinks" style="color: var(--cyan-neon);">24</div>
+      </div>
+      <div class="stat-mini-box">
+        <div class="stat-mini-label">Liên Kết Dẫn Đi (Outlinks)</div>
+        <div class="stat-mini-val" id="inspOutlinks" style="color: var(--gold-neon);">18</div>
+      </div>
+      <div class="stat-mini-box">
+        <div class="stat-mini-label">Mã Phản Hồi HTTP</div>
+        <div class="stat-mini-val" id="inspHttpStatus" style="color: var(--green-neon);">200 OK</div>
+      </div>
+      <div class="stat-mini-box">
+        <div class="stat-mini-label">Dung Lượng Từ (Words)</div>
+        <div class="stat-mini-val" id="inspWords">3,500</div>
+      </div>
+    </div>
+
+    <div class="inspector-detail-item">
+      <span class="detail-label">Cụm Chủ Đề / Silo</span>
+      <span class="detail-val" id="inspGroupName">Cụm 1: Song Ngữ Cambridge</span>
+    </div>
+
+    <div class="inspector-detail-item">
+      <span class="detail-label">Từ Khóa Trọng Tâm &amp; Ý Định Tìm Kiếm</span>
+      <span class="detail-val" id="inspKeyword">trường song ngữ quốc tế · Commercial Intent</span>
+    </div>
+
+    <div class="inspector-detail-item">
+      <span class="detail-label">Thẻ H1 Thực Tế</span>
+      <span class="detail-val" id="inspH1" style="font-style: italic; color: #94a3b8;">Lộ Trình Đào Tạo Song Ngữ Quốc Tế Cambridge Từ Tiểu Học Đến THPT</span>
+    </div>
+
+    <div class="inspector-detail-item">
+      <span class="detail-label">Vai Trò &amp; Khuyến Nghị Kiến Trúc SEO</span>
+      <span class="detail-val" id="inspDesc">Trang Trụ Cột mẹ định vị toàn bộ năng lực học thuật Cambridge K-12.</span>
+    </div>
+
+    <div class="inspector-detail-item">
+      <span class="detail-label">Nguồn Liên Kết Nội Bộ Trỏ Tới (Sample Inlinks)</span>
+      <div id="inspInlinkSources" class="inlinks-list-box">
+        <!-- populated dynamically -->
+      </div>
+    </div>
+  </aside>
+
+  <!-- BOTTOM HUD GUIDANCE -->
+  <footer class="bottom-hud-strip">
+    <div class="hud-hint">
+      <span class="hud-hint-item">
+        <span class="key-badge">Chuột Trái</span> Giữ &amp; Kéo để Di Chuyển Điểm (Drag Node)
+      </span>
+      <span class="hud-hint-item">
+        <span class="key-badge">Khoảng Trống</span> Giữ Chuột Trái để Xoay 360°
+      </span>
+      <span class="hud-hint-item">
+        <span class="key-badge">Chuột Phải</span> Di Chuyển Khung Nhìn (Pan)
+      </span>
+      <span class="hud-hint-item">
+        <span class="key-badge">Cuộn Chuột</span> Phóng To / Thu Nhỏ (Zoom)
+      </span>
+      <span class="hud-hint-item">
+        <span class="key-badge">Click Điểm</span> Xem Chi Tiết &amp; Mở Tab Link
+      </span>
+    </div>
+    <div style="font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--cyan-neon);">
+      WebGL 3D · 60 FPS ACTIVE
+    </div>
+  </footer>
+
+  <script>
+    // State management
+    let graphData = null;
+    let Graph = null;
+    let isAutoRotating = true;
+    let isPhysicsRunning = true;
+    let showAlwaysLabels = false;
+    let currentFilter = 'all';
+    let selectedNode = null;
+    let highlightNodes = new Set();
+    let highlightLinks = new Set();
+
+    // DOM Elements
+    const container = document.getElementById('3d-graph-viewport');
+    const tooltip = document.getElementById('graphTooltip');
+    const inspector = document.getElementById('nodeInspector');
+    const searchInput = document.getElementById('nodeSearchInput');
+    const searchResults = document.getElementById('searchResults');
+
+    // Init 3D Force Graph
+    async function init3DGraph() {
+      try {
+        const res = await fetch('/api/3d-graph/data');
+        graphData = await res.json();
+      } catch (e) {
+        console.warn('Fallback to static data file:', e);
+        const res2 = await fetch('/data/wellspring_3d_graph.json');
+        graphData = await res2.json();
+      }
+
+      document.getElementById('kpiTotalNodes').textContent = graphData.nodes.length;
+      document.getElementById('kpiTotalLinks').textContent = graphData.links.length;
+
+      Graph = ForceGraph3D()(container)
+        .graphData(graphData)
+        .backgroundColor('#07090e')
+        .nodeId('id')
+        .nodeVal(node => node.val || 12)
+        .nodeColor(node => {
+          if (highlightNodes.size > 0) {
+            return highlightNodes.has(node.id) ? (node.color || '#38bdf8') : 'rgba(255,255,255,0.08)';
+          }
+          return node.color || '#38bdf8';
+        })
+        .nodeResolution(24)
+        .nodeOpacity(0.92)
+        // Link styling
+        .linkSource('source')
+        .linkTarget('target')
+        .linkColor(link => {
+          if (highlightLinks.size > 0) {
+            return highlightLinks.has(link) ? (link.color || '#38bdf8') : 'rgba(255,255,255,0.03)';
+          }
+          return link.color || 'rgba(56, 189, 248, 0.45)';
+        })
+        .linkWidth(link => {
+          if (highlightLinks.size > 0) {
+            return highlightLinks.has(link) ? 3.0 : 0.5;
+          }
+          return (link.type && link.type.includes('Pillar')) ? 2.2 : 1.2;
+        })
+        .linkDirectionalParticles(link => (highlightLinks.size > 0 && !highlightLinks.has(link)) ? 0 : 3)
+        .linkDirectionalParticleSpeed(0.007)
+        .linkDirectionalParticleWidth(link => (highlightLinks.size > 0 && highlightLinks.has(link)) ? 3.0 : 1.8)
+        .linkDirectionalParticleColor(link => link.color || '#38bdf8')
+        // DRAG & DROP SUPPORT (User requirement)
+        .enableNodeDrag(true)
+        .onNodeDrag((node) => {
+          isAutoRotating = false;
+          updateRotateBtn();
+          showNodeInspector(node);
+        })
+        .onNodeDragEnd((node) => {
+          // Keep node pinned or let it float according to physics state
+          if (!isPhysicsRunning) {
+            node.fx = node.x;
+            node.fy = node.y;
+            node.fz = node.z;
+          }
+        })
+        // Hover interactions
+        .onNodeHover(node => {
+          container.style.cursor = node ? 'grab' : 'default';
+          if (node) {
+            tooltip.style.display = 'block';
+            tooltip.innerHTML = `
+              <div style="font-weight: 700; color: #fff; margin-bottom: 2px;">${escapeHtml(node.name || node.shortName)}</div>
+              <div style="font-size: 0.68rem; color: var(--cyan-neon); font-family: monospace; margin-bottom: 4px; overflow:hidden; text-overflow:ellipsis;">${escapeHtml(node.url)}</div>
+              <div style="display: flex; gap: 6px; font-size: 0.68rem;">
+                <span style="color: ${node.color}; font-weight: 700;">● ${escapeHtml(node.groupName || node.group)}</span>
+                <span style="color: var(--text-muted);">| Inlinks: ${node.inlinks || 0}</span>
+                <span style="color: ${node.status === 404 ? '#f43f5e' : '#10b981'}; font-weight: 700;">${node.status || 200}</span>
+              </div>
+            `;
+          } else {
+            tooltip.style.display = 'none';
+          }
+        })
+        // Node Click interaction
+        .onNodeClick(node => {
+          isAutoRotating = false;
+          updateRotateBtn();
+          focusOnNode(node);
+          showNodeInspector(node);
+        })
+        .onBackgroundClick(() => {
+          clearHighlights();
+          inspector.style.display = 'none';
+        });
+
+      // Track cursor for tooltip
+      window.addEventListener('mousemove', (e) => {
+        if (tooltip.style.display === 'block') {
+          tooltip.style.left = (e.clientX + 16) + 'px';
+          tooltip.style.top = (e.clientY + 16) + 'px';
+        }
+      });
+
+      // Initial Camera Fly-in
+      Graph.cameraPosition({ x: 0, y: 120, z: 420 }, { x: 0, y: 0, z: 0 }, 2000);
+
+      // Auto rotation loop
+      let angle = 0;
+      const distance = 420;
+      setInterval(() => {
+        if (isAutoRotating && Graph) {
+          angle += Math.PI / 1200;
+          Graph.cameraPosition({
+            x: distance * Math.sin(angle),
+            z: distance * Math.cos(angle)
+          });
+        }
+      }, 25);
+    }
+
+    // Fly camera smoothly to a node
+    function focusOnNode(node) {
+      if (!node) return;
+      const dist = 90;
+      const distRatio = 1 + dist / Math.hypot(node.x, node.y, node.z);
+      Graph.cameraPosition(
+        { x: node.x * distRatio, y: node.y * distRatio + 15, z: node.z * distRatio },
+        node,
+        1500
+      );
+    }
+
+    // Highlight node & adjacent links
+    function highlightNodeNetwork(node) {
+      highlightNodes.clear();
+      highlightLinks.clear();
+      if (!node) {
+        Graph.nodeColor(Graph.nodeColor()).linkColor(Graph.linkColor());
+        return;
+      }
+
+      highlightNodes.add(node.id);
+      graphData.links.forEach(link => {
+        const srcId = typeof link.source === 'object' ? link.source.id : link.source;
+        const tgtId = typeof link.target === 'object' ? link.target.id : link.target;
+        if (srcId === node.id || tgtId === node.id) {
+          highlightLinks.add(link);
+          highlightNodes.add(srcId);
+          highlightNodes.add(tgtId);
+        }
+      });
+
+      Graph
+        .nodeColor(Graph.nodeColor())
+        .linkColor(Graph.linkColor())
+        .linkWidth(Graph.linkWidth())
+        .linkDirectionalParticles(Graph.linkDirectionalParticles());
+    }
+
+    function clearHighlights() {
+      highlightNodes.clear();
+      highlightLinks.clear();
+      Graph
+        .nodeColor(Graph.nodeColor())
+        .linkColor(Graph.linkColor())
+        .linkWidth(Graph.linkWidth())
+        .linkDirectionalParticles(Graph.linkDirectionalParticles());
+    }
+
+    // Show Node Inspector Drawer
+    function showNodeInspector(node) {
+      selectedNode = node;
+      highlightNodeNetwork(node);
+
+      // Badges
+      const badge = document.getElementById('inspBadge');
+      badge.className = 'inspector-type-badge';
+      if (node.status === 404) {
+        badge.className += ' badge-404';
+        badge.textContent = '🚨 Link Gãy 404';
+      } else if (node.type && node.type.includes('Pillar')) {
+        badge.className += ' badge-pillar';
+        badge.textContent = 'Trụ Cột (Pillar Page)';
+      } else if (node.group === 'hub') {
+        badge.className += ' badge-hub';
+        badge.textContent = 'Trang Chủ & Hub';
+      } else if (node.group === 'news') {
+        badge.className += ' badge-news';
+        badge.textContent = 'Tin Tức Học Đường';
+      } else {
+        badge.className += ' badge-cluster';
+        badge.textContent = 'Bài Vệ Tinh (Cluster Spoke)';
+      }
+
+      document.getElementById('inspTitle').textContent = node.name || node.shortName;
+      document.getElementById('inspUrl').textContent = node.url;
+      document.getElementById('inspOpenLink').href = node.url;
+      document.getElementById('inspInlinks').textContent = node.inlinks || 0;
+      document.getElementById('inspOutlinks').textContent = node.outlinks || 0;
+      
+      const stEl = document.getElementById('inspHttpStatus');
+      stEl.textContent = (node.status || 200) + (node.status === 404 ? ' NOT FOUND' : ' OK');
+      stEl.style.color = node.status === 404 ? 'var(--rose-neon)' : 'var(--green-neon)';
+      
+      document.getElementById('inspWords').textContent = (node.words || 0).toLocaleString();
+      document.getElementById('inspGroupName').textContent = node.groupName || node.group;
+      document.getElementById('inspKeyword').textContent = `${node.targetKw || 'chưa gán'} · ${node.intent || 'Informational'}`;
+      document.getElementById('inspH1').textContent = node.h1 || 'Chưa phát hiện thẻ H1';
+      document.getElementById('inspDesc').textContent = node.desc || 'Trang thành phần trong mạng lưới liên kết.';
+
+      // Populate sample inlinks
+      const inlinksBox = document.getElementById('inspInlinkSources');
+      inlinksBox.innerHTML = '';
+      const parentLinks = graphData.links.filter(l => {
+        const tgtId = typeof l.target === 'object' ? l.target.id : l.target;
+        return tgtId === node.id;
+      });
+
+      if (parentLinks.length > 0) {
+        parentLinks.slice(0, 6).forEach(pl => {
+          const srcId = typeof pl.source === 'object' ? pl.source.id : pl.source;
+          const srcNode = graphData.nodes.find(n => n.id === srcId);
+          const div = document.createElement('div');
+          div.className = 'inlink-item';
+          div.innerHTML = `<span style="color: var(--cyan-neon);">➜</span> <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${escapeHtml(srcNode ? (srcNode.shortName || srcNode.name) : srcId)}</span> <span style="color:var(--text-muted); font-size:0.65rem;">(${escapeHtml(pl.anchor || 'deep link')})</span>`;
+          div.onclick = () => {
+            if (srcNode) {
+              focusOnNode(srcNode);
+              showNodeInspector(srcNode);
+            }
+          };
+          div.style.cursor = 'pointer';
+          inlinksBox.appendChild(div);
+        });
+      } else {
+        inlinksBox.innerHTML = '<span style="color: var(--rose-neon);">Trang mồ côi (0 liên kết nội bộ trỏ tới). Cần bổ sung internal link từ Pillar cha!</span>';
+      }
+
+      inspector.style.display = 'block';
+    }
+
+    // Search and Autocomplete
+    searchInput.addEventListener('input', (e) => {
+      const q = e.target.value.toLowerCase().trim();
+      if (!q) {
+        searchResults.style.display = 'none';
+        return;
+      }
+
+      const matches = graphData.nodes.filter(n =>
+        (n.name && n.name.toLowerCase().includes(q)) ||
+        (n.url && n.url.toLowerCase().includes(q)) ||
+        (n.targetKw && n.targetKw.toLowerCase().includes(q))
+      ).slice(0, 8);
+
+      if (matches.length > 0) {
+        searchResults.innerHTML = '';
+        matches.forEach(m => {
+          const item = document.createElement('div');
+          item.className = 'search-item';
+          item.innerHTML = `
+            <div class="search-item-title">${escapeHtml(m.name || m.shortName)}</div>
+            <div class="search-item-url">${escapeHtml(m.url)}</div>
+          `;
+          item.onclick = () => {
+            searchInput.value = m.name || m.shortName;
+            searchResults.style.display = 'none';
+            focusOnNode(m);
+            showNodeInspector(m);
+          };
+          searchResults.appendChild(item);
+        });
+        searchResults.style.display = 'block';
+      } else {
+        searchResults.style.display = 'none';
+      }
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
+        searchResults.style.display = 'none';
+      }
+    });
+
+    // Filter Chips
+    document.querySelectorAll('.chip-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.chip-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const filter = btn.dataset.filter;
+        currentFilter = filter;
+
+        if (filter === 'all') {
+          Graph.graphData(graphData);
+        } else {
+          const filteredNodes = graphData.nodes.filter(n => n.group === filter);
+          const filteredIds = new Set(filteredNodes.map(n => n.id));
+          const filteredLinks = graphData.links.filter(l => {
+            const s = typeof l.source === 'object' ? l.source.id : l.source;
+            const t = typeof l.target === 'object' ? l.target.id : l.target;
+            return filteredIds.has(s) || filteredIds.has(t);
+          });
+          Graph.graphData({ nodes: filteredNodes, links: filteredLinks });
+        }
+      });
+    });
+
+    // Toolbar Buttons
+    const btnReset = document.getElementById('btnResetCamera');
+    btnReset.onclick = () => {
+      clearHighlights();
+      inspector.style.display = 'none';
+      Graph.cameraPosition({ x: 0, y: 120, z: 420 }, { x: 0, y: 0, z: 0 }, 1500);
+    };
+
+    const btnRotate = document.getElementById('btnToggleRotate');
+    btnRotate.onclick = () => {
+      isAutoRotating = !isAutoRotating;
+      updateRotateBtn();
+    };
+
+    function updateRotateBtn() {
+      btnRotate.classList.toggle('active', isAutoRotating);
+      btnRotate.textContent = isAutoRotating ? '🪐 Tự Xoay: BẬT' : '🪐 Tự Xoay: TẮT';
+    }
+
+    const btnPhysics = document.getElementById('btnTogglePhysics');
+    btnPhysics.onclick = () => {
+      isPhysicsRunning = !isPhysicsRunning;
+      btnPhysics.classList.toggle('active', isPhysicsRunning);
+      btnPhysics.textContent = isPhysicsRunning ? '⚡ Trọng Lực: BẬT' : '⚡ Trọng Lực: TẮT';
+      if (isPhysicsRunning) {
+        Graph.d3ReheatSimulation();
+      } else {
+        Graph.pauseAnimation();
+      }
+    };
+
+    // Label Toggle using Three.js SpriteText
+    const btnLabels = document.getElementById('btnToggleLabels');
+    btnLabels.onclick = () => {
+      showAlwaysLabels = !showAlwaysLabels;
+      btnLabels.classList.toggle('active', showAlwaysLabels);
+      btnLabels.textContent = showAlwaysLabels ? '🏷️ Nhãn 3D: BẬT' : '🏷️ Nhãn 3D: TẮT';
+
+      if (showAlwaysLabels) {
+        Graph.nodeThreeObject(node => {
+          const group = new THREE.Group();
+          // Sphere
+          const sphereGeo = new THREE.SphereGeometry(Math.cbrt(node.val || 10) * 2.5, 16, 16);
+          const sphereMat = new THREE.MeshLambertMaterial({
+            color: node.color || '#38bdf8',
+            transparent: true,
+            opacity: 0.9
+          });
+          const sphere = new THREE.Mesh(sphereGeo, sphereMat);
+          group.add(sphere);
+
+          // Text Sprite Label
+          const canvas = document.createElement('canvas');
+          canvas.width = 256;
+          canvas.height = 64;
+          const ctx = canvas.getContext('2d');
+          ctx.fillStyle = 'rgba(7, 9, 14, 0.75)';
+          if (ctx.roundRect) ctx.roundRect(4, 4, 248, 56, 8); else ctx.rect(4, 4, 248, 56);
+          ctx.fill();
+          ctx.strokeStyle = node.color || '#38bdf8';
+          ctx.lineWidth = 2;
+          ctx.stroke();
+          ctx.font = 'bold 22px Inter, sans-serif';
+          ctx.fillStyle = '#ffffff';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          const txt = node.shortName || node.name || 'Page';
+          ctx.fillText(txt.length > 18 ? txt.slice(0, 16) + '..' : txt, 128, 32);
+
+          const texture = new THREE.CanvasTexture(canvas);
+          const spriteMat = new THREE.SpriteMaterial({ map: texture, depthWrite: false });
+          const sprite = new THREE.Sprite(spriteMat);
+          sprite.position.set(0, Math.cbrt(node.val || 10) * 2.5 + 8, 0);
+          sprite.scale.set(24, 6, 1);
+          group.add(sprite);
+
+          return group;
+        });
+      } else {
+        Graph.nodeThreeObject(null);
+      }
+    };
+
+    // Export Screenshot
+    document.getElementById('btnExportImage').onclick = () => {
+      const renderer = Graph.renderer();
+      if (!renderer) return;
+      Graph.renderer().render(Graph.scene(), Graph.camera());
+      const dataUrl = renderer.domElement.toDataURL('image/png');
+      const a = document.createElement('a');
+      a.download = `Wellspring_3D_Architecture_Topology_${Date.now()}.png`;
+      a.href = dataUrl;
+      a.click();
+    };
+
+    // Close Inspector
+    document.getElementById('btnCloseInspector').onclick = () => {
+      inspector.style.display = 'none';
+      clearHighlights();
+    };
+
+    // Isolate Button
+    document.getElementById('inspIsolateBtn').onclick = () => {
+      if (selectedNode) highlightNodeNetwork(selectedNode);
+    };
+
+    // Copy URL
+    document.getElementById('btnCopyUrl').onclick = () => {
+      if (selectedNode) {
+        navigator.clipboard.writeText(selectedNode.url).then(() => {
+          document.getElementById('btnCopyUrl').textContent = '✅ Đã Chép!';
+          setTimeout(() => { document.getElementById('btnCopyUrl').textContent = '📋'; }, 2000);
+        });
+      }
+    };
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    // Auto-boot on load
+    window.addEventListener('DOMContentLoaded', init3DGraph);
+  </script>
+</body>
+</html>

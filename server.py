@@ -2787,6 +2787,17 @@ class AuditHTTPHandler(http.server.SimpleHTTPRequestHandler):
                 self.send_response(500)
                 self.end_headers()
                 self.wfile.write(str(e).encode("utf-8"))
+        elif parsed_path.path in ["/3d", "/3d-graph"]:
+            self.send_response(302)
+            self.send_header("Location", "/3d-graph.html")
+            self.end_headers()
+        elif parsed_path.path == "/api/3d-graph/data":
+            g_path = os.path.join(PUBLIC_DIR, "data", "wellspring_3d_graph.json")
+            if os.path.exists(g_path):
+                with open(g_path, "r", encoding="utf-8") as f_g:
+                    self.send_json_response(json.load(f_g))
+            else:
+                self.send_json_response({"error": "3D Graph data not yet generated"}, 404)
         else:
             super().do_GET()
 
