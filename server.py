@@ -2739,6 +2739,26 @@ class AuditHTTPHandler(http.server.SimpleHTTPRequestHandler):
                     except Exception:
                         pass
             self.send_json_response(CURRENT_TOP10_AUDIT if CURRENT_TOP10_AUDIT else {"success": True, "leaderboard": []})
+        elif parsed_path.path == "/api/export/0-to-100-audit":
+            try:
+                report_p = os.path.join(os.path.dirname(os.path.abspath(__file__)), "Bao_Cao_SEO_Audit_0_to_100_Wellspring.xlsx")
+                if os.path.exists(report_p):
+                    with open(report_p, "rb") as _fr:
+                        report_bytes = _fr.read()
+                    self.send_response(200)
+                    self.send_header("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                    self.send_header("Content-Disposition", 'attachment; filename="Bao_Cao_SEO_Audit_0_to_100_Wellspring.xlsx"')
+                    self.send_header("Content-Length", str(len(report_bytes)))
+                    self.end_headers()
+                    self.wfile.write(report_bytes)
+                else:
+                    self.send_response(404)
+                    self.end_headers()
+                    self.wfile.write(b"Report file not found")
+            except Exception as e:
+                self.send_response(500)
+                self.end_headers()
+                self.wfile.write(str(e).encode("utf-8"))
         elif parsed_path.path == "/api/export/top10-excel":
             try:
                 if not CURRENT_TOP10_AUDIT:
