@@ -762,3 +762,4 @@ if __name__ == "__main__":
     print(f"Audited {len(data['leaderboard'])} domains successfully!")
     xlsx_bytes = generate_top10_excel_bytes(data)
     print(f"Generated Excel workbook: {len(xlsx_bytes)} bytes!")
+
