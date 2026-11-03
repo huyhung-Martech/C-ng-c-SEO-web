@@ -2741,7 +2741,9 @@ class AuditHTTPHandler(http.server.SimpleHTTPRequestHandler):
             self.send_json_response(CURRENT_TOP10_AUDIT if CURRENT_TOP10_AUDIT else {"success": True, "leaderboard": []})
         elif parsed_path.path == "/api/export/0-to-100-audit":
             try:
-                report_p = os.path.join(os.path.dirname(os.path.abspath(__file__)), "Bao_Cao_SEO_Audit_0_to_100_Wellspring.xlsx")
+                report_v2 = os.path.join(os.path.dirname(os.path.abspath(__file__)), "Bao_Cao_SEO_Audit_0_to_100_Wellspring_v2.xlsx")
+                report_v1 = os.path.join(os.path.dirname(os.path.abspath(__file__)), "Bao_Cao_SEO_Audit_0_to_100_Wellspring.xlsx")
+                report_p = report_v2 if os.path.exists(report_v2) else report_v1
                 if os.path.exists(report_p):
                     with open(report_p, "rb") as _fr:
                         report_bytes = _fr.read()
