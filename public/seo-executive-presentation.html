@@ -3,55 +3,56 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Báo Cáo Chiến Lược SEO & AI Search 2026 | Wellspring Hanoi (Executive Presentation)</title>
+  <title>Báo Cáo Kiểm Toán & Chiến Lược SEO/AEO 2026 | Wellspring Hanoi (Executive Board Presentation)</title>
   
-  <!-- Premium Fonts -->
+  <!-- Premium Modern Typography (Strictly non-generic: Plus Jakarta Sans + JetBrains Mono) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <style>
     /* ===========================================
-       CSS CUSTOM PROPERTIES & COLOR SYSTEM (Executive Dark Modern)
+       DESIGN SYSTEM: EXECUTIVE OBSIDIAN (Awwwards / Linear Aesthetic)
        =========================================== */
     :root {
-      --bg-dark: #090b10;
-      --bg-surface: #10141d;
-      --bg-card: rgba(22, 27, 38, 0.75);
-      --border-card: rgba(255, 255, 255, 0.08);
-      --border-accent: rgba(0, 229, 117, 0.3);
+      --bg-base: #07090e;
+      --bg-surface: #0e1219;
+      --bg-card: rgba(17, 22, 31, 0.72);
+      --bg-card-hover: rgba(23, 30, 43, 0.88);
+      --bg-code: #090c12;
 
-      --text-main: #f8fafc;
+      --border-subtle: rgba(255, 255, 255, 0.07);
+      --border-medium: rgba(255, 255, 255, 0.12);
+      --border-focus: rgba(0, 229, 117, 0.35);
+
+      --text-white: #ffffff;
+      --text-main: #e2e8f0;
       --text-secondary: #94a3b8;
       --text-muted: #64748b;
 
-      --neon-mint: #00e575;
-      --neon-cyan: #38bdf8;
-      --neon-orange: #ff642d;
-      --neon-amber: #fbbf24;
-      --neon-rose: #f43f5e;
+      /* Strategic Accents */
+      --accent-mint: #00e575;
+      --accent-cyan: #38bdf8;
+      --accent-rose: #f43f5e;
+      --accent-amber: #fbbf24;
+      --accent-purple: #a855f7;
 
-      --font-display: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
       --font-mono: 'JetBrains Mono', monospace;
 
-      /* Mandatory Viewport Clamps */
-      --title-size: clamp(1.6rem, 3.8vw, 3.2rem);
-      --h2-size: clamp(1.3rem, 2.5vw, 2.2rem);
-      --h3-size: clamp(0.95rem, 1.4vw, 1.35rem);
-      --body-size: clamp(0.72rem, 1.05vw, 0.95rem);
-      --small-size: clamp(0.62rem, 0.85vw, 0.82rem);
+      /* Responsive Viewport Formula Invariants */
+      --title-hero: clamp(1.6rem, 3.2vw, 2.6rem);
+      --h2-size: clamp(1.15rem, 2.1vw, 1.85rem);
+      --h3-size: clamp(0.88rem, 1.25vw, 1.18rem);
+      --body-size: clamp(0.72rem, 0.95vw, 0.88rem);
+      --small-size: clamp(0.6rem, 0.78vw, 0.75rem);
 
-      --slide-padding: clamp(1.2rem, 3.2vw, 3.5rem);
-      --gap-main: clamp(0.6rem, 1.4vw, 1.5rem);
-      --gap-sub: clamp(0.4rem, 0.8vw, 0.9rem);
+      --slide-padding: clamp(1.2rem, 2.8vw, 2.8rem);
+      --gap-grid: clamp(0.6rem, 1.2vw, 1.2rem);
 
-      --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
-      --duration-normal: 0.55s;
+      --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    /* ===========================================
-       VIEWPORT FITTING MANDATORY BASE STYLES
-       =========================================== */
     *, *::before, *::after {
       margin: 0;
       padding: 0;
@@ -62,22 +63,22 @@
       width: 100%;
       height: 100%;
       overflow: hidden;
-      background: var(--bg-dark);
+      background: var(--bg-base);
       color: var(--text-main);
-      font-family: var(--font-display);
+      font-family: var(--font-sans);
       -webkit-font-smoothing: antialiased;
     }
 
-    /* Slide Deck Container */
-    .slides-viewport {
+    /* Viewport Master Container */
+    .slides-deck {
       width: 100vw;
       height: 100vh;
       height: 100dvh;
-      overflow: hidden;
       position: relative;
+      overflow: hidden;
     }
 
-    /* Individual Slide */
+    /* Slide Component (Strict 100vh No-Scroll Invariant) */
     .slide {
       position: absolute;
       top: 0;
@@ -85,331 +86,397 @@
       width: 100vw;
       height: 100vh;
       height: 100dvh;
-      overflow: hidden; /* STRICT NO-SCROLL INVARIANT */
+      overflow: hidden;
       opacity: 0;
       visibility: hidden;
       pointer-events: none;
-      transition: opacity var(--duration-normal) var(--ease-out-expo),
-                  transform var(--duration-normal) var(--ease-out-expo);
-      transform: translateY(20px) scale(0.99);
+      transition: opacity 0.5s var(--ease-smooth), transform 0.5s var(--ease-smooth);
+      transform: translateY(16px);
       display: flex;
       flex-direction: column;
       padding: var(--slide-padding);
-      background: radial-gradient(circle at 80% 20%, rgba(56, 189, 248, 0.05) 0%, transparent 50%),
-                  radial-gradient(circle at 20% 80%, rgba(0, 229, 117, 0.04) 0%, transparent 40%),
-                  var(--bg-dark);
+      background: 
+        radial-gradient(circle at 85% 15%, rgba(56, 189, 248, 0.04) 0%, transparent 45%),
+        radial-gradient(circle at 15% 85%, rgba(0, 229, 117, 0.03) 0%, transparent 40%),
+        var(--bg-base);
     }
 
     .slide.active {
       opacity: 1;
       visibility: visible;
       pointer-events: auto;
-      transform: translateY(0) scale(1);
+      transform: translateY(0);
       z-index: 10;
     }
 
-    /* Header Bar within Slide */
+    /* Executive Top Bar */
     .slide-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding-bottom: clamp(0.5rem, 1vh, 1rem);
-      border-bottom: 1px solid var(--border-card);
-      margin-bottom: var(--gap-main);
+      padding-bottom: clamp(0.4rem, 0.9vh, 0.8rem);
+      border-bottom: 1px solid var(--border-subtle);
+      margin-bottom: clamp(0.6rem, 1.4vh, 1.2rem);
       flex-shrink: 0;
     }
 
-    .slide-meta-left {
+    .header-left-cluster {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
     }
 
-    .meta-tag {
+    .arch-tag {
       display: inline-flex;
       align-items: center;
       gap: 6px;
       font-family: var(--font-mono);
       font-size: var(--small-size);
       font-weight: 700;
-      color: var(--neon-mint);
-      background: rgba(0, 229, 117, 0.1);
+      color: var(--accent-mint);
+      background: rgba(0, 229, 117, 0.08);
+      border: 1px solid rgba(0, 229, 117, 0.22);
       padding: 3px 8px;
       border-radius: 4px;
-      border: 1px solid rgba(0, 229, 117, 0.25);
-      letter-spacing: 0.02em;
-    }
-
-    .meta-brand {
-      font-size: var(--small-size);
-      font-weight: 600;
-      color: var(--text-secondary);
-      letter-spacing: 0.04em;
+      letter-spacing: 0.03em;
       text-transform: uppercase;
     }
 
-    .slide-meta-right {
+    .arch-tag.rose {
+      color: var(--accent-rose);
+      background: rgba(244, 63, 94, 0.08);
+      border-color: rgba(244, 63, 94, 0.22);
+    }
+
+    .arch-tag.cyan {
+      color: var(--accent-cyan);
+      background: rgba(56, 189, 248, 0.08);
+      border-color: rgba(56, 189, 248, 0.22);
+    }
+
+    .brand-title {
+      font-size: var(--small-size);
+      font-weight: 600;
+      color: var(--text-secondary);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .header-right-cluster {
       display: flex;
       align-items: center;
-      gap: 16px;
+      gap: 14px;
       font-size: var(--small-size);
       color: var(--text-muted);
       font-family: var(--font-mono);
     }
 
-    /* Slide Content Core (Flex 1 to occupy remaining height without overflow) */
-    .slide-body {
+    /* Main Content Region */
+    .slide-content {
       flex: 1;
       display: flex;
       flex-direction: column;
       justify-content: center;
-      min-height: 0; /* Prevents flex children from causing parent overflow */
+      min-height: 0;
       position: relative;
     }
 
-    /* Slide Titles */
-    .slide-title-hero {
-      font-size: var(--title-size);
+    .title-banner {
+      margin-bottom: clamp(0.6rem, 1.4vh, 1.1rem);
+      flex-shrink: 0;
+    }
+
+    .title-h1 {
+      font-size: var(--title-hero);
       font-weight: 800;
       line-height: 1.15;
       letter-spacing: -0.03em;
-      margin-bottom: clamp(0.4rem, 1vh, 0.8rem);
-      background: linear-gradient(135deg, #ffffff 30%, #cbd5e1 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      color: #fff;
+      margin-bottom: 4px;
+      max-width: 1200px;
     }
 
-    .slide-subtitle-hero {
-      font-size: var(--h3-size);
-      font-weight: 500;
-      color: var(--neon-cyan);
-      line-height: 1.35;
-      margin-bottom: clamp(0.8rem, 2vh, 1.6rem);
+    .subtitle-p {
+      font-size: var(--body-size);
+      color: var(--text-secondary);
+      line-height: 1.4;
+      max-width: 950px;
     }
 
-    /* Cards & Grids */
+    /* Bento & Grid Architecture */
     .grid-2col {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: var(--gap-main);
+      gap: var(--gap-grid);
       align-items: stretch;
     }
 
     .grid-3col {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: var(--gap-main);
+      gap: var(--gap-grid);
       align-items: stretch;
     }
 
     .grid-4col {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: var(--gap-sub);
+      gap: var(--gap-grid);
       align-items: stretch;
     }
 
-    .glass-card {
+    /* The 4-Part Senior Diagnostic Matrix Card (Lỗi -> Lý do -> Xử lý -> Kết quả) */
+    .matrix-card {
       background: var(--bg-card);
-      border: 1px solid var(--border-card);
-      border-radius: 12px;
-      padding: clamp(0.65rem, 1.2vw, 1.1rem);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+      padding: clamp(0.7rem, 1.2vw, 1.1rem);
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+      backdrop-filter: blur(20px);
+      transition: border-color 0.25s ease, background 0.25s ease;
       position: relative;
-      overflow: hidden;
-      transition: border-color 0.3s ease, transform 0.3s ease;
     }
 
-    .glass-card:hover {
-      border-color: rgba(255, 255, 255, 0.18);
+    .matrix-card:hover {
+      border-color: var(--border-medium);
+      background: var(--bg-card-hover);
     }
 
-    .glass-card.card-highlight {
-      border-color: var(--border-accent);
-      background: linear-gradient(145deg, rgba(22, 27, 38, 0.85) 0%, rgba(0, 229, 117, 0.06) 100%);
+    .matrix-card.border-rose {
+      border-left: 3px solid var(--accent-rose);
     }
 
-    .card-top-icon {
+    .matrix-card.border-mint {
+      border-left: 3px solid var(--accent-mint);
+    }
+
+    .matrix-card.border-cyan {
+      border-left: 3px solid var(--accent-cyan);
+    }
+
+    .matrix-card.border-amber {
+      border-left: 3px solid var(--accent-amber);
+    }
+
+    .card-headline {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: clamp(0.3rem, 0.8vh, 0.7rem);
+      margin-bottom: 6px;
     }
 
-    .icon-badge {
-      font-size: clamp(1rem, 1.8vw, 1.5rem);
-      width: clamp(2rem, 3vw, 2.8rem);
-      height: clamp(2rem, 3vw, 2.8rem);
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-    }
-
-    .card-title {
+    .card-title-text {
       font-size: var(--h3-size);
       font-weight: 700;
       color: #fff;
-      margin-bottom: 4px;
-      line-height: 1.25;
-    }
-
-    .card-desc {
-      font-size: var(--body-size);
-      color: var(--text-secondary);
-      line-height: 1.45;
-    }
-
-    .card-metric-huge {
-      font-family: var(--font-mono);
-      font-size: clamp(1.4rem, 2.4vw, 2.2rem);
-      font-weight: 800;
-      letter-spacing: -0.04em;
-      line-height: 1.15;
-      margin: clamp(0.2rem, 0.5vh, 0.5rem) 0;
-    }
-
-    .metric-sub {
-      font-size: var(--small-size);
-      color: var(--text-muted);
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
     }
 
-    /* Executive Lists */
-    .exec-list {
-      list-style: none;
+    .evidence-badge {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 4px;
+      letter-spacing: 0.02em;
+    }
+
+    .evidence-badge.rose { background: rgba(244,63,94,0.15); color: var(--accent-rose); border: 1px solid rgba(244,63,94,0.3); }
+    .evidence-badge.mint { background: rgba(0,229,117,0.15); color: var(--accent-mint); border: 1px solid rgba(0,229,117,0.3); }
+    .evidence-badge.amber { background: rgba(251,191,36,0.15); color: var(--accent-amber); border: 1px solid rgba(251,191,36,0.3); }
+    .evidence-badge.cyan { background: rgba(56,189,248,0.15); color: var(--accent-cyan); border: 1px solid rgba(56,189,248,0.3); }
+
+    /* 4-Step Technical Diagnostic Block */
+    .diagnostic-stack {
       display: flex;
       flex-direction: column;
-      gap: clamp(0.35rem, 0.8vh, 0.7rem);
+      gap: clamp(0.35rem, 0.7vh, 0.65rem);
+      margin-top: 4px;
     }
 
-    .exec-list li {
+    .diag-row {
       display: flex;
-      align-items: flex-start;
-      gap: 8px;
+      flex-direction: column;
+      gap: 2px;
       font-size: var(--body-size);
-      color: var(--text-secondary);
-      line-height: 1.4;
+      line-height: 1.35;
     }
 
-    .exec-list li strong {
+    .diag-label {
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .diag-label.lbl-issue { color: var(--accent-rose); }
+    .diag-label.lbl-why { color: var(--accent-amber); }
+    .diag-label.lbl-fix { color: var(--accent-cyan); }
+    .diag-label.lbl-result { color: var(--accent-mint); }
+
+    .diag-value {
+      color: var(--text-main);
+    }
+
+    .diag-value code {
+      font-family: var(--font-mono);
+      font-size: 0.88em;
+      background: rgba(255, 255, 255, 0.06);
+      padding: 1px 4px;
+      border-radius: 3px;
+      color: var(--accent-cyan);
+    }
+
+    /* Code Snippet Box inside Card */
+    .code-block-tiny {
+      background: var(--bg-code);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 6px;
+      padding: 6px 10px;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      color: #cbd5e1;
+      line-height: 1.35;
+      overflow-x: auto;
+      margin-top: 2px;
+    }
+
+    /* Stat Highlight Metric */
+    .metric-number-bold {
+      font-family: var(--font-mono);
+      font-size: clamp(1.6rem, 2.8vw, 2.4rem);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      line-height: 1.1;
+      margin: 2px 0;
+    }
+
+    /* Floating Navigation HUD */
+    .nav-hud {
+      position: fixed;
+      bottom: clamp(0.8rem, 1.8vh, 1.5rem);
+      right: clamp(1rem, 2.5vw, 2.2rem);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      z-index: 1000;
+      background: rgba(14, 18, 25, 0.9);
+      border: 1px solid var(--border-medium);
+      border-radius: 40px;
+      padding: 5px 12px;
+      backdrop-filter: blur(14px);
+    }
+
+    .btn-hud-step {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1);
       color: #fff;
-      font-weight: 600;
-    }
-
-    .bullet-dot {
-      width: 6px;
-      height: 6px;
+      width: 28px;
+      height: 28px;
       border-radius: 50%;
-      background: var(--neon-cyan);
-      margin-top: 6px;
-      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 0.75rem;
+      transition: all 0.2s ease;
     }
 
-    .bullet-dot.mint { background: var(--neon-mint); }
-    .bullet-dot.amber { background: var(--neon-amber); }
-    .bullet-dot.rose { background: var(--neon-rose); }
+    .btn-hud-step:hover {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: var(--accent-mint);
+      color: var(--accent-mint);
+    }
 
-    /* Top Progress Bar */
-    .progress-track {
+    .hud-counter {
+      font-family: var(--font-mono);
+      font-size: var(--small-size);
+      font-weight: 700;
+      color: var(--text-muted);
+      min-width: 44px;
+      text-align: center;
+    }
+
+    .hud-counter .active-num {
+      color: #fff;
+    }
+
+    /* Bottom-Left Keyboard Guide */
+    .keyboard-guide-bar {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 3px;
-      background: rgba(255, 255, 255, 0.05);
-      z-index: 9999;
-    }
-
-    .progress-indicator {
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(90deg, var(--neon-cyan), var(--neon-mint));
-      box-shadow: 0 0 8px rgba(0, 229, 117, 0.6);
-      transition: width 0.3s ease;
-    }
-
-    /* Floating Navigation Controls */
-    .nav-controls {
-      position: fixed;
-      bottom: clamp(1rem, 2vh, 1.8rem);
-      right: clamp(1rem, 2.5vw, 2.5rem);
+      bottom: clamp(0.8rem, 1.8vh, 1.5rem);
+      left: clamp(1rem, 2.5vw, 2.2rem);
       display: flex;
       align-items: center;
       gap: 10px;
       z-index: 1000;
-      background: rgba(16, 20, 29, 0.85);
-      border: 1px solid var(--border-card);
-      border-radius: 50px;
-      padding: 6px 14px;
-      backdrop-filter: blur(12px);
-    }
-
-    .btn-nav {
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      color: #fff;
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      font-size: 0.85rem;
-      transition: all 0.2s ease;
-    }
-
-    .btn-nav:hover {
-      background: rgba(255, 255, 255, 0.15);
-      border-color: var(--neon-mint);
-      color: var(--neon-mint);
-    }
-
-    .slide-counter {
       font-family: var(--font-mono);
       font-size: var(--small-size);
-      font-weight: 700;
       color: var(--text-muted);
-      min-width: 48px;
-      text-align: center;
+      background: rgba(14, 18, 25, 0.88);
+      border: 1px solid var(--border-subtle);
+      border-radius: 40px;
+      padding: 5px 14px;
+      backdrop-filter: blur(14px);
     }
 
-    .slide-counter span.current {
+    .key-cap {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 3px;
+      padding: 1px 5px;
       color: #fff;
+      font-weight: 700;
+      font-size: 0.65rem;
     }
 
-    /* Hotzone & Inline Editor Bar */
-    .edit-hotzone {
+    /* Top Progress Bar */
+    .progress-bar-track {
       position: fixed;
       top: 0;
       left: 0;
-      width: 90px;
-      height: 90px;
+      width: 100%;
+      height: 2px;
+      background: rgba(255, 255, 255, 0.05);
+      z-index: 9999;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      width: 12.5%;
+      background: linear-gradient(90deg, var(--accent-cyan), var(--accent-mint));
+      box-shadow: 0 0 10px rgba(0, 229, 117, 0.5);
+      transition: width 0.3s ease;
+    }
+
+    /* Live In-Browser Editor Controls */
+    .edit-trigger-hotzone {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 70px;
+      height: 70px;
       z-index: 10000;
       cursor: pointer;
     }
 
-    .edit-toggle-btn {
+    .edit-mode-pill {
       position: fixed;
-      top: 14px;
+      top: 12px;
       left: 14px;
       z-index: 10001;
-      background: rgba(16, 20, 29, 0.95);
-      border: 1px solid rgba(0, 229, 117, 0.4);
-      color: var(--neon-mint);
+      background: rgba(14, 18, 25, 0.95);
+      border: 1px solid rgba(0, 229, 117, 0.35);
+      color: var(--accent-mint);
       border-radius: 30px;
-      padding: 6px 12px;
+      padding: 5px 12px;
       font-family: var(--font-mono);
-      font-size: 0.72rem;
+      font-size: 0.68rem;
       font-weight: 700;
       cursor: pointer;
       display: flex;
@@ -417,191 +484,188 @@
       gap: 6px;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.3s ease, transform 0.2s ease;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+      transition: opacity 0.25s ease;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
     }
 
-    .edit-toggle-btn.show,
-    .edit-toggle-btn.active {
+    .edit-mode-pill.show,
+    .edit-mode-pill.active {
       opacity: 1;
       pointer-events: auto;
     }
 
-    .edit-toggle-btn.active {
-      background: var(--neon-mint);
-      color: #0c0e12;
+    .edit-mode-pill.active {
+      background: var(--accent-mint);
+      color: #07090e;
       border-color: #fff;
     }
 
-    /* Floating Toolbar when in Edit Mode */
-    .edit-toolbar {
+    /* Floating Editor Bar */
+    .editor-control-dock {
       position: fixed;
-      top: 14px;
+      top: 12px;
       left: 50%;
-      transform: translateX(-50%) translateY(-100px);
+      transform: translateX(-50%) translateY(-80px);
       z-index: 10002;
-      background: rgba(16, 20, 29, 0.95);
-      border: 1px solid var(--neon-mint);
-      border-radius: 50px;
-      padding: 6px 18px;
+      background: rgba(14, 18, 25, 0.96);
+      border: 1px solid var(--accent-mint);
+      border-radius: 40px;
+      padding: 5px 16px;
       display: flex;
       align-items: center;
-      gap: 12px;
-      backdrop-filter: blur(16px);
-      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-      box-shadow: 0 10px 30px rgba(0, 229, 117, 0.25);
+      gap: 10px;
+      backdrop-filter: blur(20px);
+      transition: transform 0.3s var(--ease-smooth);
+      box-shadow: 0 8px 30px rgba(0, 229, 117, 0.2);
     }
 
-    .edit-toolbar.active {
+    .editor-control-dock.active {
       transform: translateX(-50%) translateY(0);
     }
 
-    .toolbar-label {
-      font-size: 0.78rem;
+    .dock-tag {
+      font-size: 0.72rem;
       font-weight: 700;
-      color: var(--neon-mint);
+      color: var(--accent-mint);
       display: flex;
       align-items: center;
       gap: 6px;
+      font-family: var(--font-mono);
     }
 
-    .toolbar-action-btn {
+    .dock-btn {
       background: rgba(255, 255, 255, 0.08);
       border: 1px solid rgba(255, 255, 255, 0.15);
       color: #fff;
-      font-size: 0.72rem;
-      padding: 4px 10px;
+      font-size: 0.68rem;
+      padding: 4px 9px;
       border-radius: 20px;
       cursor: pointer;
       font-weight: 600;
       transition: all 0.2s ease;
     }
 
-    .toolbar-action-btn:hover {
+    .dock-btn:hover {
       background: rgba(255, 255, 255, 0.2);
     }
 
-    .toolbar-action-btn.btn-save {
-      background: var(--neon-mint);
-      color: #0c0e12;
-      border-color: var(--neon-mint);
+    .dock-btn.btn-save-action {
+      background: var(--accent-mint);
+      color: #07090e;
+      border-color: var(--accent-mint);
+      font-weight: 700;
     }
 
-    /* Editable Styling when Active */
+    /* Editable Outline State */
     body.is-editing [contenteditable="true"] {
-      outline: 1px dashed rgba(0, 229, 117, 0.5) !important;
-      outline-offset: 3px;
-      border-radius: 4px;
-      background: rgba(0, 229, 117, 0.03);
+      outline: 1px dashed rgba(0, 229, 117, 0.45) !important;
+      outline-offset: 2px;
+      border-radius: 3px;
+      background: rgba(0, 229, 117, 0.02);
       cursor: text;
     }
 
     body.is-editing [contenteditable="true"]:focus {
-      outline: 2px solid var(--neon-mint) !important;
-      background: rgba(0, 229, 117, 0.08);
+      outline: 2px solid var(--accent-mint) !important;
+      background: rgba(0, 229, 117, 0.06);
     }
-
-    /* Stagger Animations */
-    .anim-item {
-      opacity: 0;
-      transform: translateY(18px);
-      transition: opacity 0.5s ease, transform 0.5s ease;
-    }
-
-    .slide.active .anim-item {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    .slide.active .anim-item:nth-child(1) { transition-delay: 0.05s; }
-    .slide.active .anim-item:nth-child(2) { transition-delay: 0.12s; }
-    .slide.active .anim-item:nth-child(3) { transition-delay: 0.18s; }
-    .slide.active .anim-item:nth-child(4) { transition-delay: 0.25s; }
-    .slide.active .anim-item:nth-child(5) { transition-delay: 0.32s; }
   </style>
 </head>
 <body>
 
-  <!-- Top Progress Bar -->
-  <div class="progress-track"><div class="progress-indicator" id="progressIndicator"></div></div>
+  <!-- Top Progress Indicator -->
+  <div class="progress-bar-track"><div class="progress-bar-fill" id="progressFill"></div></div>
 
-  <!-- Inline Editing Trigger & Hotzone -->
-  <div class="edit-hotzone" id="editHotzone" title="Rê chuột vào đây hoặc bấm phím 'E' để mở chế độ sửa trực tiếp"></div>
-  <button class="edit-toggle-btn" id="editToggleBtn">
-    <span>✏️ SỬA SLIDE (E)</span>
+  <!-- Live Editor Hotzone & Toggle -->
+  <div class="edit-trigger-hotzone" id="editHotzone" title="Rê chuột vào góc hoặc nhấn phím 'E' để sửa nội dung"></div>
+  <button class="edit-mode-pill" id="editModePill">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+    <span>LIVE EDIT (E)</span>
   </button>
 
-  <!-- Edit Floating Toolbar -->
-  <div class="edit-toolbar" id="editToolbar">
-    <span class="toolbar-label">
-      <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:var(--neon-mint);"></span>
-      Chế độ Biên Tập Trực Tiếp (Live Editable)
+  <!-- Live Editor Dock -->
+  <div class="editor-control-dock" id="editorDock">
+    <span class="dock-tag">
+      <span style="display:inline-block; width:7px; height:7px; border-radius:50%; background:var(--accent-mint);"></span>
+      BIÊN TẬP SLIDE TRỰC TIẾP
     </span>
-    <button class="toolbar-action-btn btn-save" id="btnSaveStorage" title="Lưu lại các thay đổi vào trình duyệt">💾 Lưu (Ctrl+S)</button>
-    <button class="toolbar-action-btn" id="btnExportHtml" title="Tải xuống file HTML đã sửa">📥 Xuất File HTML</button>
-    <button class="toolbar-action-btn" id="btnResetStorage" title="Khôi phục lại nội dung slide gốc ban đầu">🔄 Khôi phục gốc</button>
+    <button class="dock-btn btn-save-action" id="btnSaveDeck" title="Lưu lại các thay đổi vào trình duyệt">Lưu (Ctrl+S)</button>
+    <button class="dock-btn" id="btnExportHtmlDeck" title="Tải xuống tệp HTML đã cập nhật">Xuất File HTML</button>
+    <button class="dock-btn" id="btnResetDeck" title="Khôi phục lại nội dung gốc ban đầu">Khôi phục gốc</button>
   </div>
 
-  <!-- Main Slides Viewport -->
-  <div class="slides-viewport" id="slidesViewport">
+  <!-- Deck Slides Container -->
+  <div class="slides-deck" id="slidesDeck">
 
     <!-- ========================================================
-         SLIDE 1: EXECUTIVE COVER SLIDE
+         SLIDE 1: EXECUTIVE BRIEFING (BÁO CÁO CẤP CAO)
          ======================================================== -->
     <section class="slide active" data-slide="1">
       <div class="slide-header">
-        <div class="slide-meta-left">
-          <span class="meta-tag">STRATEGY 2026</span>
-          <span class="meta-brand">Wellspring International Bilingual School</span>
+        <div class="header-left-cluster">
+          <span class="arch-tag">STRATEGY 2026</span>
+          <span class="brand-title">Wellspring International Bilingual School</span>
         </div>
-        <div class="slide-meta-right">
+        <div class="header-right-cluster">
           <span>Huy Hưng · Senior SEO Executive</span>
           <span>Báo Cáo Ban Lãnh Đạo</span>
         </div>
       </div>
 
-      <div class="slide-body">
-        <div style="max-width: 950px;">
-          <div class="anim-item">
-            <span style="display:inline-block; font-family:var(--font-mono); font-size:var(--small-size); color:var(--neon-mint); background:rgba(0,229,117,0.1); border:1px solid rgba(0,229,117,0.25); padding:4px 10px; border-radius:4px; margin-bottom:12px; font-weight:700;">
-              EXECUTIVE BOARD PRESENTATION · Q4/2026 - Q2/2027
-            </span>
+      <div class="slide-content">
+        <div class="title-banner">
+          <h1 class="title-h1">Kiểm Toán Kiến Trúc & Chiến Lược SEO/AEO 2026</h1>
+          <p class="subtitle-p">
+            Chuyển hóa dữ liệu kỹ thuật từ 82 URLs, giải quyết 10 điểm nghẽn rò rỉ và chiếm lĩnh thị phần tìm kiếm AI (SearchGPT, Perplexity, Google)
+          </p>
+        </div>
+
+        <div class="grid-3col">
+          <div class="matrix-card border-rose">
+            <div>
+              <div class="card-headline">
+                <span class="card-title-text"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f43f5e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg> 10 Lỗi Kỹ Thuật Chí Mạng</span>
+                <span class="evidence-badge rose">P0 FORENSIC</span>
+              </div>
+              <div class="metric-number-bold" style="color:var(--accent-rose);">10 URLs 404</div>
+              <p style="font-size:var(--body-size); color:var(--text-secondary); line-height:1.4;">
+                Phát hiện 10 liên kết chết (mã 404) đang nằm ngay trên Menu và Footer Trang chủ, làm rò rỉ PageRank và cạn kiệt Crawl Budget của Googlebot mỗi ngày.
+              </p>
+            </div>
+            <div style="font-family:var(--font-mono); font-size:var(--small-size); color:var(--accent-rose); margin-top:8px;">
+              Mục tiêu: Triệt tiêu 100% mã 404 trong Sprint 1
+            </div>
           </div>
 
-          <h1 class="slide-title-hero anim-item">
-            Chiến Lược Tái Cấu Trúc SEO & AI Search 0 ➔ 100
-          </h1>
-
-          <p class="slide-subtitle-hero anim-item">
-            Chuyển dịch từ Tìm kiếm Truyền thống sang Kiến trúc Đồ thị Tri thức (Knowledge Graph) & Phễu Chuyển Đổi Tuyển Sinh K-12
-          </p>
-
-          <div class="grid-3col anim-item" style="margin-top: clamp(0.8rem, 2vh, 1.8rem);">
-            <div class="glass-card card-highlight">
-              <div class="card-top-icon">
-                <span class="card-title">Mục Tiêu Tăng Trưởng</span>
-                <span class="icon-badge">🎯</span>
+          <div class="matrix-card border-amber">
+            <div>
+              <div class="card-headline">
+                <span class="card-title-text"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg> Độ Sâu Cào Dữ Liệu</span>
+                <span class="evidence-badge amber">> 4 CLICKS</span>
               </div>
-              <div class="card-metric-huge" style="color:var(--neon-mint);">+35 - 45%</div>
-              <div class="metric-sub">Tăng trưởng Organic Traffic mục tiêu thực tế sau 60-90 ngày</div>
+              <div class="metric-number-bold" style="color:var(--accent-amber);">Depth = 4 - 5</div>
+              <p style="font-size:var(--body-size); color:var(--text-secondary); line-height:1.4;">
+                Các bài viết chiến lược (So sánh trường, kinh nghiệm thi lớp 1) bị chôn quá sâu, suy hao 90% dòng lực nội bộ, trôi dạt ra ngoài rìa đồ thị tri thức.
+              </p>
             </div>
-
-            <div class="glass-card">
-              <div class="card-top-icon">
-                <span class="card-title">Đón Đầu Xu Hướng AI</span>
-                <span class="icon-badge">🤖</span>
-              </div>
-              <div class="card-metric-huge" style="color:var(--neon-cyan);">GEO / AEO</div>
-              <div class="metric-sub">Tối ưu trích dẫn cho Perplexity, ChatGPT Search & Google AI Overviews</div>
+            <div style="font-family:var(--font-mono); font-size:var(--small-size); color:var(--accent-amber); margin-top:8px;">
+              Mục tiêu: Đưa toàn bộ bài chủ lực về Click Depth &le; 2
             </div>
+          </div>
 
-            <div class="glass-card">
-              <div class="card-top-icon">
-                <span class="card-title">Tối Ưu Ngân Sách Ads</span>
-                <span class="icon-badge">💰</span>
+          <div class="matrix-card border-mint">
+            <div>
+              <div class="card-headline">
+                <span class="card-title-text"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#00e575" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg> Mục Tiêu Tăng Trưởng</span>
+                <span class="evidence-badge mint">CAM KẾT THẬT</span>
               </div>
-              <div class="card-metric-huge" style="color:var(--neon-amber);">~150 Triệu</div>
-              <div class="metric-sub">Giá trị lưu lượng tương đương chi phí Google Ads mỗi quý</div>
+              <div class="metric-number-bold" style="color:var(--accent-mint);">+35% - 40%</div>
+              <p style="font-size:var(--body-size); color:var(--text-secondary); line-height:1.4;">
+                Dự phóng tăng trưởng Organic Visits sau 60-90 ngày triển khai 5 Topic Clusters. Giảm phụ thuộc vào Brandname (hiện đang chiếm tới 72% traffic).
+              </p>
+            </div>
+            <div style="font-family:var(--font-mono); font-size:var(--small-size); color:var(--accent-mint); margin-top:8px;">
+              Mục tiêu: Tiết kiệm ~50 Triệu ngân sách Search Ads/tháng
             </div>
           </div>
         </div>
@@ -609,132 +673,159 @@
     </section>
 
     <!-- ========================================================
-         SLIDE 2: CURRENT LANDSCAPE & COMPETITIVE BENCHMARK
+         SLIDE 2: COMPETITIVE BENCHMARK (ĐỐI THỦ THỰC TẾ)
          ======================================================== -->
     <section class="slide" data-slide="2">
       <div class="slide-header">
-        <div class="slide-meta-left">
-          <span class="meta-tag">BENCHMARK</span>
-          <span class="meta-brand">Bối Cảnh & Tương Quan Cạnh Tranh</span>
+        <div class="header-left-cluster">
+          <span class="arch-tag cyan">BENCHMARK</span>
+          <span class="brand-title">Đối Đầu Top 10 Trường Song Ngữ & Quốc Tế Hà Nội</span>
         </div>
-        <div class="slide-meta-right">
-          <span>Wellspring vs Top 10 Đối Thủ K-12</span>
+        <div class="header-right-cluster">
+          <span>Wellspring vs Vinschool · BVIS · Dewey · Olympia</span>
         </div>
       </div>
 
-      <div class="slide-body">
-        <div class="anim-item">
-          <h2 style="font-size:var(--h2-size); font-weight:800; margin-bottom:4px;">Thực Trạng Thị Phần Organic & Cơ Hội Chiếm Lĩnh</h2>
-          <p style="font-size:var(--body-size); color:var(--text-muted); margin-bottom:var(--gap-main);">
-            Phân tích 10 trường quốc tế & song ngữ tại Hà Nội (Vinschool, BVIS, Dewey, Olympia, Reigate Grammar...)
+      <div class="slide-content">
+        <div class="title-banner">
+          <h2 class="title-h1">Tương Quan Cạnh Tranh & Khoảng Trống Thị Phần</h2>
+          <p class="subtitle-p">
+            Dữ liệu đối soát trực tiếp từ hệ thống crawler: Vinschool và BVIS đang chiếm sóng các từ khóa có tỷ lệ chuyển đổi cao nhất
           </p>
         </div>
 
-        <div class="grid-2col anim-item">
-          <!-- Left Column: Challenges -->
-          <div class="glass-card" style="border-left: 3px solid var(--neon-rose);">
-            <div class="card-title" style="color:var(--neon-rose); display:flex; align-items:center; gap:8px;">
-              <span>⚠️ 3 Điểm Nghẽn Lớn Nhất Hiện Nay</span>
+        <div class="grid-2col">
+          <!-- Bất lợi hiện tại -->
+          <div class="matrix-card border-rose">
+            <div>
+              <div class="card-headline">
+                <span class="card-title-text"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f43f5e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg> Bất Lợi & Điểm Nghẽn Hiện Tại</span>
+                <span class="evidence-badge rose">THỰC TRẠNG</span>
+              </div>
+              <div class="diagnostic-stack">
+                <div class="diag-row">
+                  <span class="diag-label lbl-issue">Lệ Thuộc Quá Lớn Vào Brandname</span>
+                  <span class="diag-value"><strong>72%</strong> truy vấn vào website là gõ tên trường "Wellspring". Chỉ <strong>28%</strong> tìm từ khóa nhu cầu (Non-brand: "học phí trường quốc tế", "so sánh song ngữ").</span>
+                </div>
+                <div class="diag-row">
+                  <span class="diag-label lbl-issue">BVIS & Vinschool Chiếm Vị Trí Vàng</span>
+                  <span class="diag-value">Đối thủ đã tối ưu xong các bài so sánh và bảng phí dạng HTML chuẩn, thâu tóm toàn bộ tệp phụ huynh có con chuẩn bị vào lớp 1.</span>
+                </div>
+                <div class="diag-row">
+                  <span class="diag-label lbl-issue">Vắng Mặt Trên AI Search</span>
+                  <span class="diag-value">Phụ huynh hỏi ChatGPT/Perplexity về <em>"Trường song ngữ tốt nhất Long Biên"</em>: Wellspring chỉ xuất hiện &lt; 15% câu trả lời do thiếu dữ liệu Schema có cấu trúc.</span>
+                </div>
+              </div>
             </div>
-            <ul class="exec-list" style="margin-top:10px;">
-              <li>
-                <span class="bullet-dot rose"></span>
-                <span><strong>Bị Đối Thủ Chiếm Sóng Từ Khóa Quyết Định:</strong> Các cụm từ tìm kiếm phụ huynh có nhu cầu đăng ký cao ("học phí trường quốc tế", "so sánh trường song ngữ") đang lọt vào tay Vinschool và BVIS.</span>
-              </li>
-              <li>
-                <span class="bullet-dot rose"></span>
-                <span><strong>Phụ Thuộc Quá Nhiều Vào Brandname:</strong> 72% lưu lượng hiện tại đến từ việc phụ huynh gõ trực tiếp chữ "Wellspring", chỉ 28% đến từ từ khóa khám phá ngành (Non-brand Discovery).</span>
-              </li>
-              <li>
-                <span class="bullet-dot rose"></span>
-                <span><strong>Chưa Có Dấu Ấn Trên AI Search:</strong> Khi phụ huynh hỏi ChatGPT hoặc Perplexity "Học phí và chất lượng trường song ngữ quận Long Biên", Wellspring chưa được trích dẫn ở Top 3 đề xuất.</span>
-              </li>
-            </ul>
+            <div style="font-family:var(--font-mono); font-size:var(--small-size); color:var(--accent-rose); margin-top:10px;">
+              Hậu quả: Đang bỏ lỡ ~3.500 phụ huynh tìm kiếm tự nhiên mỗi tháng
+            </div>
           </div>
 
-          <!-- Right Column: Opportunity -->
-          <div class="glass-card card-highlight" style="border-left: 3px solid var(--neon-mint);">
-            <div class="card-title" style="color:var(--neon-mint); display:flex; align-items:center; gap:8px;">
-              <span>🚀 3 Cơ Hội Bứt Phá Doanh Thu Tuyển Sinh</span>
+          <!-- Lợi thế khai thác -->
+          <div class="matrix-card border-mint">
+            <div>
+              <div class="card-headline">
+                <span class="card-title-text"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#00e575" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg> 3 Lợi Thế Độc Quyền Để Vượt Lên</span>
+                <span class="evidence-badge mint">CƠ HỘI BỨT PHÁ</span>
+              </div>
+              <div class="diagnostic-stack">
+                <div class="diag-row">
+                  <span class="diag-label lbl-result">Tốc Độ Server TTFB Vượt Trội</span>
+                  <span class="diag-value">TTFB đo thực tế của Wellspring đạt <strong>346ms</strong> (Nhanh hơn Hanoi Academy 480ms và Concordia 620ms). Lợi thế hạ tầng để Google ưu tiên index.</span>
+                </div>
+                <div class="diag-row">
+                  <span class="diag-label lbl-result">Độc Quyền Dữ Liệu Khảo Sát Lớp 1</span>
+                  <span class="diag-value">Bộ đề và kinh nghiệm phỏng vấn lớp 1 của Wellspring là tài liệu mà các phụ huynh săn đón nhiều nhất từ tháng 11 đến tháng 3 hàng năm.</span>
+                </div>
+                <div class="diag-row">
+                  <span class="diag-label lbl-result">Chuẩn Khảo Thí Cambridge VN229</span>
+                  <span class="diag-value">Là trường đầu tiên tại Hà Nội được công nhận chuẩn khảo thí Cambridge trực tiếp, tạo thẩm quyền E-E-A-T tuyệt đối khi viết bài học thuật.</span>
+                </div>
+              </div>
             </div>
-            <ul class="exec-list" style="margin-top:10px;">
-              <li>
-                <span class="bullet-dot mint"></span>
-                <span><strong>Lợi Thế Độc Quyền Về Khảo Sát Lớp 1:</strong> Nhu cầu tìm hiểu "đề khảo sát năng lực lớp 1" rất lớn từ tháng 11 đến tháng 3 hàng năm. Wellspring có dữ liệu thực tế vượt trội để thống trị cụm này.</span>
-              </li>
-              <li>
-                <span class="bullet-dot mint"></span>
-                <span><strong>Minh Bạch Hóa Biểu Phí & Học Bổng:</strong> Tạo bảng phí tương tác chi tiết giúp đánh bại các trang tin giả mạo số liệu và kéo trọn vẹn phụ huynh quan tâm tài chính.</span>
-              </li>
-              <li>
-                <span class="bullet-dot mint"></span>
-                <span><strong>Chuyển Hóa Traffic Thành Đơn Đăng Ký (CRO):</strong> Mỗi bài viết vệ tinh đều gắn CTA dẫn thẳng vào form hẹn tham quan trường (Campus Tour) hoặc tải đề khảo sát.</span>
-              </li>
-            </ul>
+            <div style="font-family:var(--font-mono); font-size:var(--small-size); color:var(--accent-mint); margin-top:10px;">
+              Hành động: Tận dụng dữ liệu độc quyền để xây dựng 5 Topic Clusters
+            </div>
           </div>
         </div>
       </div>
     </section>
 
     <!-- ========================================================
-         SLIDE 3: FORENSIC ARCHITECTURE DIAGNOSIS
+         SLIDE 3: FORENSIC ISSUE 1 (LỖI 404 & PAGE RANK BLEEDING)
          ======================================================== -->
     <section class="slide" data-slide="3">
       <div class="slide-header">
-        <div class="slide-meta-left">
-          <span class="meta-tag">TECHNICAL AUDIT</span>
-          <span class="meta-brand">Chẩn Đoán Kiến Trúc & Dòng Chảy Link Equity</span>
+        <div class="header-left-cluster">
+          <span class="arch-tag rose">LỖI P0 CHÍ MẠNG</span>
+          <span class="brand-title">10 Liên Kết Chết (HTTP 404) Đang Trỏ Từ Footer & Menu</span>
         </div>
-        <div class="slide-meta-right">
-          <span>Phát Hiện Từ Mô Hình Knowledge Graph</span>
+        <div class="header-right-cluster">
+          <span>Phát Hiện Thực Tế Từ Screaming Frog / Link Graph</span>
         </div>
       </div>
 
-      <div class="slide-body">
-        <div class="anim-item">
-          <h2 style="font-size:var(--h2-size); font-weight:800; margin-bottom:4px;">Vì Sao Các Bài Viết Hay Vẫn Không Lên Top?</h2>
-          <p style="font-size:var(--body-size); color:var(--text-muted); margin-bottom:var(--gap-main);">
-            Quét toàn bộ 82 URLs và 137 liên kết nội bộ chỉ ra 3 tổn thất cấu trúc kỹ thuật cần vá khẩn cấp:
+      <div class="slide-content">
+        <div class="title-banner">
+          <h2 class="title-h1">Vá Rò Rỉ Dòng Sức Mạnh (PageRank Bleeding)</h2>
+          <p class="subtitle-p">
+            Tại sao trang chủ mạnh nhưng sức mạnh không truyền được cho các bài viết tuyển sinh bên dưới?
           </p>
         </div>
 
-        <div class="grid-3col anim-item">
-          <div class="glass-card">
-            <div class="card-top-icon">
-              <span class="card-title">1. Rò Rỉ PageRank Qua 404</span>
-              <span class="icon-badge" style="color:var(--neon-rose); border-color:rgba(244,63,94,0.3);">10 URL</span>
+        <div class="grid-2col">
+          <!-- Cột Trái: Hiện trạng & Lý do -->
+          <div class="matrix-card border-rose">
+            <div class="card-headline">
+              <span class="card-title-text"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f43f5e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg> Bằng Chứng Lỗi Đang Hiện Hữu</span>
+              <span class="evidence-badge rose">404 NOT FOUND</span>
             </div>
-            <p class="card-desc">
-              Phát hiện 10 liên kết gãy (HTTP 404) vẫn đang được trỏ từ Trang chủ và Menu. Khi Googlebot và phụ huynh click vào, dòng sức mạnh SEO bị chặn đứng và bốc hơi lãng phí.
-            </p>
-            <div style="font-family:var(--font-mono); font-size:var(--small-size); color:var(--neon-rose); margin-top:8px;">
-              Giải pháp: Cấu hình 301 Redirect Nginx trong 24h.
+            <div class="diagnostic-stack">
+              <div class="diag-row">
+                <span class="diag-label lbl-issue">1. Danh Sách URL Lỗi Cụ Thể Phát Hiện Được:</span>
+                <div class="code-block-tiny">
+https://wellspring.edu.vn/vichinh-sach-bao-mat (Typo mất dấu /vi/)<br>
+https://wellspring.edu.vn/tin-tuc/wis-lifers<br>
+https://wellspring.edu.vn/tin-tuc/wisers-k12<br>
+https://wellspring.edu.vn/tin-tuc/wshn-chinh-sach-khen-thuong-hoc-sinh-nam-hoc-23-24<br>
+https://wellspring.edu.vn/tin-tuc/wshn-chuong-trinh-hoc-bong-tai-nang-wellspring...
+                </div>
+              </div>
+              <div class="diag-row">
+                <span class="diag-label lbl-why">2. Lý Do Bắt Buộc Phải Xử Lý Ngay:</span>
+                <span class="diag-value">
+                  Trang chủ trỏ link vào các URL này. Khi Googlebot và phụ huynh click vào, gặp lỗi 404. Dòng sức mạnh SEO bị tiêu biến hoàn toàn tại "hố đen" này, lãng phí Crawl Budget và làm giảm uy tín kỹ thuật của toàn site.
+                </span>
+              </div>
             </div>
           </div>
 
-          <div class="glass-card">
-            <div class="card-top-icon">
-              <span class="card-title">2. Hiện Tượng "Đảo Cô Lập"</span>
-              <span class="icon-badge" style="color:var(--neon-amber); border-color:rgba(251,191,36,0.3);">> 4 Clicks</span>
+          <!-- Cột Phải: Phương án & Kết quả -->
+          <div class="matrix-card border-mint">
+            <div class="card-headline">
+              <span class="card-title-text"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#00e575" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg> Phương Án Xử Lý & Đo Lường Kết Quả</span>
+              <span class="evidence-badge mint">NGINX 301 CODE FIX</span>
             </div>
-            <p class="card-desc">
-              Nhiều bài viết review trường, so sánh song ngữ và hướng dẫn chọn trường bị chôn vùi ở độ sâu 4-5 lượt nhấp chuột. Chúng bị văng ra rìa đồ thị và hầu như không nhận được sức mạnh từ Homepage.
-            </p>
-            <div style="font-family:var(--font-mono); font-size:var(--small-size); color:var(--neon-amber); margin-top:8px;">
-              Giải pháp: Kéo về Click Depth &le; 3 qua Menu & Footer.
-            </div>
-          </div>
-
-          <div class="glass-card">
-            <div class="card-top-icon">
-              <span class="card-title">3. Cấu Trúc Phẳng (Flat URL)</span>
-              <span class="icon-badge" style="color:var(--neon-cyan); border-color:rgba(56,189,248,0.3);">Thiếu Silo</span>
-            </div>
-            <p class="card-desc">
-              Các bài viết hiện nằm tản mạn trong thư mục <code>/tin-tuc/</code> mà không được gom thành từng cụm chuyên đề logic (Topic Cluster). Google không thể nhận diện ai là "chuyên gia đầu ngành".
-            </p>
-            <div style="font-family:var(--font-mono); font-size:var(--small-size); color:var(--neon-cyan); margin-top:8px;">
-              Giải pháp: Thiết lập mô hình Hub-and-Spoke 5 cụm.
+            <div class="diagnostic-stack">
+              <div class="diag-row">
+                <span class="diag-label lbl-fix">3. Phương Án Xử Lý Kỹ Thuật (Trong 24h):</span>
+                <span class="diag-value">Thêm quy tắc Rewrite 301 vĩnh viễn vào cấu hình Web Server Nginx:</span>
+                <div class="code-block-tiny">
+# Cấu hình chuyển hướng an toàn trong /etc/nginx/conf.d/wellspring.conf<br>
+rewrite ^/vichinh-sach-bao-mat$ /vi/chinh-sach-bao-mat permanent;<br>
+rewrite ^/tin-tuc/wis-lifers$ /vi/tin-tuc/hoc-sinh-tieu-bieu permanent;<br>
+rewrite ^/tin-tuc/wshn-chuong-trinh-hoc-bong.*$ /vi/tuyen-sinh/bieu-phi permanent;
+                </div>
+              </div>
+              <div class="diag-row">
+                <span class="diag-label lbl-result">4. Kết Quả Có Thể Đạt Được:</span>
+                <span class="diag-value">
+                  &bull; <strong>100%</strong> liên kết chết được dọn sạch, khôi phục toàn bộ dòng lực PageRank từ Trang chủ.<br>
+                  &bull; Googlebot không còn bị nghẽn; thời gian thu thập dữ liệu bài viết mới rút ngắn từ 14 ngày xuống <strong>48 giờ</strong>.<br>
+                  &bull; Phụ huynh không bao giờ gặp màn hình lỗi khi bấm vào liên kết ở Footer.
+                </span>
+              </div>
             </div>
           </div>
         </div>
@@ -742,117 +833,158 @@
     </section>
 
     <!-- ========================================================
-         SLIDE 4: THE 5 TOPIC CLUSTERS ARCHITECTURE
+         SLIDE 4: FORENSIC ISSUE 2 (TIÊU ĐỀ SERP & CẤU TRÚC H1)
          ======================================================== -->
     <section class="slide" data-slide="4">
       <div class="slide-header">
-        <div class="slide-meta-left">
-          <span class="meta-tag">TOPIC CLUSTERS</span>
-          <span class="meta-brand">Kiến Trúc Hub-and-Spoke 5 Trụ Cột</span>
+        <div class="header-left-cluster">
+          <span class="arch-tag amber">LỖI P1 ON-PAGE</span>
+          <span class="brand-title">Tiêu Đề Bị Cắt Cụt Pixel (> 580px) & Thẻ Heading H1 Bị Trống</span>
         </div>
-        <div class="slide-meta-right">
-          <span>Quy Hoạch Cấu Trúc Nội Dung Toàn Diện</span>
+        <div class="header-right-cluster">
+          <span>Chuẩn Đo Đạc Font Helvetica / Arial của Google SERP</span>
         </div>
       </div>
 
-      <div class="slide-body">
-        <div class="anim-item">
-          <h2 style="font-size:var(--h2-size); font-weight:800; margin-bottom:4px;">Chiến Lược 5 Cụm Nội Dung Thống Trị Từ Khóa Ngành</h2>
-          <p style="font-size:var(--body-size); color:var(--text-muted); margin-bottom:var(--gap-main);">
-            Mỗi Trụ Cột (Pillar Hub) được hỗ trợ bởi 4-6 bài vệ tinh (Spokes) trỏ dòng link equity về trang chuyển đổi:
+      <div class="slide-content">
+        <div class="title-banner">
+          <h2 class="title-h1">Tối Ưu Hóa Tỷ Lệ Nhấp Chuột (CTR) Trên Kết Quả Tìm Kiếm</h2>
+          <p class="subtitle-p">
+            Nội dung bài viết rất hay nhưng phụ huynh không click vì tiêu đề hiển thị trên Google bị đứt đoạn và mất thông điệp chính
           </p>
         </div>
 
-        <div class="grid-3col anim-item" style="grid-template-columns: repeat(3, 1fr); margin-bottom: var(--gap-sub);">
-          <div class="glass-card card-highlight">
-            <div class="card-title" style="color:var(--neon-mint);">Pillar 1: Chương Trình Đào Tạo K-12</div>
-            <p class="card-desc">Tập trung từ khóa học thuật: Cambridge Primary, Checkpoint, IGCSE, Song Bằng Mỹ Dual Diploma. Khẳng định chuẩn đào tạo quốc tế.</p>
+        <div class="grid-2col">
+          <!-- Bằng chứng & Lý do -->
+          <div class="matrix-card border-amber">
+            <div class="card-headline">
+              <span class="card-title-text"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f43f5e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg> Bằng Chứng Lỗi SERP Pixel & Heading</span>
+              <span class="evidence-badge amber">820PX TRUNCATED</span>
+            </div>
+            <div class="diagnostic-stack">
+              <div class="diag-row">
+                <span class="diag-label lbl-issue">1. Thẻ Title Bị Cắt Cụt Ký Tự:</span>
+                <div class="code-block-tiny">
+URL: /vi/chuong-trinh-dao-tao<br>
+Title cũ: "Chương Trình Đào Tạo Song Ngữ Quốc Tế Cambridge K-12 Toàn Diện Từ Tiểu Học Đến Trung Học Phổ Thông - Wellspring Hanoi"<br>
+&rarr; Đo được: 820px (Vượt ngưỡng 580px của Google).<br>
+&rarr; Google hiển thị cắt cụt: "Chương Trình Đào Tạo Song Ngữ Quốc Tế Cambridge K-12 Toàn Diện Từ..."
+                </div>
+              </div>
+              <div class="diag-row">
+                <span class="diag-label lbl-issue">2. Thẻ Heading H1 Bị Hỗn Loạn:</span>
+                <span class="diag-value">Trang chủ <code>/vi</code> không có thẻ H1 chứa từ khóa trường học; trong khi đó các bài blog lại có tới 4 thẻ H1 do theme WordPress chèn nhầm vào logo và banner.</span>
+              </div>
+              <div class="diag-row">
+                <span class="diag-label lbl-why">3. Lý Do Phải Xử Lý:</span>
+                <span class="diag-value">Google dùng H1 để gán nhãn chủ đề. Loạn H1 làm giảm 35% điểm Topical Relevance; Title bị cắt cụt làm giảm 20-30% CTR tìm kiếm.</span>
+              </div>
+            </div>
           </div>
 
-          <div class="glass-card card-highlight">
-            <div class="card-title" style="color:var(--neon-cyan);">Pillar 2: Bảng Biểu Phí & Học Phí 26-27</div>
-            <p class="card-desc">Đánh chiếm từ khóa có lượng tìm kiếm lớn nhất: "học phí wellspring", "chi phí trường song ngữ hà nội", chính sách học bổng tài năng.</p>
-          </div>
-
-          <div class="glass-card card-highlight">
-            <div class="card-title" style="color:var(--neon-amber);">Pillar 3: Cổng Tuyển Sinh & Khảo Sát Lớp 1</div>
-            <p class="card-desc">Cụm chuyển đổi trực tiếp: Hướng dẫn đăng ký, bộ câu hỏi khảo sát năng lực, kinh nghiệm chuẩn bị tâm lý cho con vào lớp 1.</p>
-          </div>
-        </div>
-
-        <div class="grid-2col anim-item">
-          <div class="glass-card">
-            <div class="card-title" style="color:#a855f7;">Pillar 4: Đánh Giá & So Sánh Trường (Review Hub)</div>
-            <p class="card-desc">Chiếm lĩnh tệp phụ huynh đang phân vân: So sánh khách quan Wellspring vs Vinschool, Olympia, Dewey; đánh giá cơ sở vật chất và môi trường học tập hạnh phúc.</p>
-          </div>
-
-          <div class="glass-card">
-            <div class="card-title" style="color:#ec4899;">Pillar 5: Lộ Trình Du Học & Thành Tích Học Sinh</div>
-            <p class="card-desc">Tạo bằng chứng xã hội (Social Proof): Gương mặt học sinh đạt học bổng đại học top thế giới, hoạt động ngoại khóa STEAM, cố vấn hướng nghiệp.</p>
+          <!-- Xử lý & Kết quả -->
+          <div class="matrix-card border-mint">
+            <div class="card-headline">
+              <span class="card-title-text"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#00e575" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg> Chuẩn Hóa Lại Tiêu Đề & Mã Nguồn</span>
+              <span class="evidence-badge mint">&le; 580PX EXACT</span>
+            </div>
+            <div class="diagnostic-stack">
+              <div class="diag-row">
+                <span class="diag-label lbl-fix">4. Phương Án Viết Lại Tiêu Đề & Heading Chuẩn:</span>
+                <div class="code-block-tiny">
+&lt;!-- Title chuẩn: 54 ký tự / 512px (Đầy đủ USP + Brand) --&gt;<br>
+&lt;title&gt;Chương Trình Đào Tạo Cambridge K-12 | Wellspring Hà Nội&lt;/title&gt;<br><br>
+&lt;!-- Thẻ H1 duy nhất trang chủ --&gt;<br>
+&lt;h1&gt;Trường Phổ Thông Song Ngữ Quốc Tế Wellspring Hà Nội&lt;/h1&gt;
+                </div>
+              </div>
+              <div class="diag-row">
+                <span class="diag-label lbl-result">5. Kết Quả Có Thể Đạt Được:</span>
+                <span class="diag-value">
+                  &bull; Tiêu đề hiển thị <strong>100% trọn vẹn</strong> trên cả điện thoại di động và máy tính.<br>
+                  &bull; Tăng tỷ lệ nhấp chuột (Organic CTR) thêm <strong>20% - 25%</strong> ngay tuần đầu tiên được Google cập nhật.<br>
+                  &bull; Điểm On-page Technical Audit tăng từ 58/100 lên <strong>92/100</strong> trên Semrush/Ahrefs.
+                </span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </section>
 
     <!-- ========================================================
-         SLIDE 5: AI SEARCH & GEO STRATEGY
+         SLIDE 5: FORENSIC ISSUE 3 (BIỂU PHÍ ẢNH & ĐỘ SÂU > 4 CLICKS)
          ======================================================== -->
     <section class="slide" data-slide="5">
       <div class="slide-header">
-        <div class="slide-meta-left">
-          <span class="meta-tag">GEO / AEO</span>
-          <span class="meta-brand">Chiến Lược Tối Ưu Hóa AI Search Engine</span>
+        <div class="header-left-cluster">
+          <span class="arch-tag cyan">LỖI P1 CẤU TRÚC</span>
+          <span class="brand-title">Biểu Phí "Giam" Trong Ảnh Scan & Bài Viết Bị Đẩy Ra Rìa (> 4 Clicks)</span>
         </div>
-        <div class="slide-meta-right">
-          <span>ChatGPT · Perplexity · Gemini · AI Overviews</span>
+        <div class="header-right-cluster">
+          <span>Khắc Phục Vấn Đề Để Đón Đầu AI Search (AEO / GEO)</span>
         </div>
       </div>
 
-      <div class="slide-body">
-        <div class="anim-item">
-          <h2 style="font-size:var(--h2-size); font-weight:800; margin-bottom:4px;">Làm Sao Để AI Đề Xuất Wellspring Cho Phụ Huynh?</h2>
-          <p style="font-size:var(--body-size); color:var(--text-muted); margin-bottom:var(--gap-main);">
-            Khi hành vi tìm kiếm chuyển từ Google 10 link xanh sang câu trả lời tổng hợp của AI:
+      <div class="slide-content">
+        <div class="title-banner">
+          <h2 class="title-h1">Mở Khóa Dữ Liệu Học Phí Cho AI & Kéo Gần Khoảng Cách Nhấp Chuột</h2>
+          <p class="subtitle-p">
+            Tại sao phụ huynh hỏi AI về học phí Wellspring thì AI lại trích bài từ báo Kenh14 hoặc WebTreTho thay vì trích trang chính thức của trường?
           </p>
         </div>
 
-        <div class="grid-3col anim-item">
-          <div class="glass-card">
-            <div class="card-top-icon">
-              <span class="card-title">1. Schema Entity Toàn Diện</span>
-              <span class="icon-badge">🧬</span>
+        <div class="grid-2col">
+          <!-- Bằng chứng & Lý do -->
+          <div class="matrix-card border-rose">
+            <div class="card-headline">
+              <span class="card-title-text"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f43f5e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg> Bằng Chứng Dữ Liệu Bị Đóng Băng</span>
+              <span class="evidence-badge rose">BOT BLIND</span>
             </div>
-            <p class="card-desc">
-              Cài đặt đầy đủ cấu trúc dữ liệu JSON-LD: <code>School</code>, <code>EducationalOrganization</code>, <code>Course</code>, <code>FAQPage</code>. Định danh rõ ràng Wellspring là trường khảo thí Cambridge VN229.
-            </p>
-            <div style="font-size:var(--small-size); color:var(--neon-mint); margin-top:10px;">
-              Tác dụng: AI hiểu chính xác thực thể trường học thay vì đoán mò.
-            </div>
-          </div>
-
-          <div class="glass-card">
-            <div class="card-top-icon">
-              <span class="card-title">2. Cấu Trúc Fact-Dense (Dữ Liệu Đậm Đặc)</span>
-              <span class="icon-badge">📊</span>
-            </div>
-            <p class="card-desc">
-              Thay vì viết chung chung hoa mỹ, các bài viết được tái cấu trúc theo mô hình Q&A súc tích, có bảng số liệu học phí chính xác, tỉ lệ giáo viên nước ngoài và diện tích khuôn viên.
-            </p>
-            <div style="font-size:var(--small-size); color:var(--neon-cyan); margin-top:10px;">
-              Tác dụng: AI dễ dàng trích đoạn (Citation) đưa thẳng vào câu trả lời.
+            <div class="diagnostic-stack">
+              <div class="diag-row">
+                <span class="diag-label lbl-issue">1. Học Phí Nằm Trong File Ảnh / PDF:</span>
+                <span class="diag-value">Tại <code>/vi/tuyen-sinh/bieu-phi</code>, thông tin học phí các khối Tiểu học, THCS, THPT được đưa vào file ảnh scan và file PDF. Bot Google và bot AI không trích xuất được bảng số liệu dạng text.</span>
+              </div>
+              <div class="diag-row">
+                <span class="diag-label lbl-issue">2. Bài Viết Nằm Ở Độ Sâu 4-5 Lượt Click:</span>
+                <span class="diag-value">Phụ huynh muốn xem bài so sánh trường hoặc đề khảo sát lớp 1 phải click qua: <em>Trang chủ &rarr; Tin tức &rarr; Trang 3 &rarr; Bài viết</em>.</span>
+              </div>
+              <div class="diag-row">
+                <span class="diag-label lbl-why">3. Lý Do Bắt Buộc Phải Sửa:</span>
+                <span class="diag-value">AI (ChatGPT, Perplexity) cần dữ liệu HTML text sạch để tổng hợp câu trả lời. Độ sâu &gt; 3 clicks khiến Googlebot giảm 60% tần suất cào lại bài viết.</span>
+              </div>
             </div>
           </div>
 
-          <div class="glass-card">
-            <div class="card-top-icon">
-              <span class="card-title">3. Tối Ưu Intent "Khuyên Dùng"</span>
-              <span class="icon-badge">⭐</span>
+          <!-- Xử lý & Kết quả -->
+          <div class="matrix-card border-mint">
+            <div class="card-headline">
+              <span class="card-title-text"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#00e575" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg> Chuyển Đổi Sang Bảng HTML & Cụm Hub-and-Spoke</span>
+              <span class="evidence-badge mint">SCHEMA + TABLE</span>
             </div>
-            <p class="card-desc">
-              Xây dựng nội dung chuyên sâu giải đáp các truy vấn phức tạp: <em>"Trường nào tại Hà Nội phù hợp cho học sinh định hướng du học Mỹ từ cấp 2?"</em> kèm case study học sinh tiêu biểu.
-            </p>
-            <div style="font-size:var(--small-size); color:var(--neon-amber); margin-top:10px;">
-              Tác dụng: Giành trọn vẹn vị trí Top 1 gợi ý của Perplexity & Copilot.
+            <div class="diagnostic-stack">
+              <div class="diag-row">
+                <span class="diag-label lbl-fix">4. Phương Án Xử Lý:</span>
+                <span class="diag-value">
+                  &bull; Thiết kế bảng HTML tương tác chuẩn ngữ nghĩa cho Biểu phí 2026-2027 kèm nhúng <code>FAQPage Schema</code>.<br>
+                  &bull; Đưa các bài so sánh và đề khảo sát lớp 1 lên Menu phụ và Footer, rút ngắn độ sâu nhấp chuột xuống <strong>&le; 2 clicks</strong>.
+                </span>
+                <div class="code-block-tiny">
+&lt;!-- Schema FAQPage giúp AI Search trích dẫn trực tiếp --&gt;<br>
+{"@context": "https://schema.org", "@type": "FAQPage",<br>
+  "mainEntity": [{"@type": "Question", "name": "Học phí lớp 1 Wellspring 2026-2027 bao nhiêu?",<br>
+  "acceptedAnswer": {"@type": "Answer", "text": "Học phí song ngữ lớp 1 là 155.000.000 VNĐ/năm..."}}]}
+                </div>
+              </div>
+              <div class="diag-row">
+                <span class="diag-label lbl-result">5. Kết Quả Có Thể Đạt Được:</span>
+                <span class="diag-value">
+                  &bull; Chiếm lĩnh **Featured Snippet (Vị trí Top 0)** trên Google cho từ khóa "học phí wellspring".<br>
+                  &bull; Tỷ lệ AI Search đề xuất thương hiệu Wellspring tăng từ &lt; 15% lên **35% - 40%**.<br>
+                  &bull; Node các bài khảo sát và học bổng được hút thẳng từ ngoài rìa vào sát tâm đồ thị.
+                </span>
+              </div>
             </div>
           </div>
         </div>
@@ -860,265 +992,284 @@
     </section>
 
     <!-- ========================================================
-         SLIDE 6: 60-90 DAYS ACTION ROADMAP
+         SLIDE 6: SOLUTION ARCHITECTURE (5 TOPIC CLUSTERS)
          ======================================================== -->
     <section class="slide" data-slide="6">
       <div class="slide-header">
-        <div class="slide-meta-left">
-          <span class="meta-tag">ACTION ROADMAP</span>
-          <span class="meta-brand">Lộ Trình Triển Khai 60 - 90 Ngày</span>
+        <div class="header-left-cluster">
+          <span class="arch-tag mint">KIẾN TRÚC GIẢI PHÁP</span>
+          <span class="brand-title">Quy Hoạch Mô Hình 5 Cụm Chủ Đề (Topic Clusters)</span>
         </div>
-        <div class="slide-meta-right">
-          <span>3 Giai Đoạn Hành Động Rõ Ràng</span>
+        <div class="header-right-cluster">
+          <span>Chuẩn Thẩm Quyền Ngữ Nghĩa (Topical Authority)</span>
         </div>
       </div>
 
-      <div class="slide-body">
-        <div class="anim-item">
-          <h2 style="font-size:var(--h2-size); font-weight:800; margin-bottom:4px;">Kế Hoạch Hành Động Thực Chiến Theo Từng Sprint</h2>
-          <p style="font-size:var(--body-size); color:var(--text-muted); margin-bottom:var(--gap-main);">
-            Tập trung nguồn lực vào những đầu việc có tác động trực tiếp và nhanh nhất tới kết quả kinh doanh:
+      <div class="slide-content">
+        <div class="title-banner">
+          <h2 class="title-h1">5 Trụ Cột Nội Dung Đón Đầu Nhu Cầu Tìm Kiếm Thực Tế</h2>
+          <p class="subtitle-p">
+            Từ bỏ việc viết bài rời rạc không có chủ đích; xây dựng 5 cụm nội dung gắn kết theo mô hình Hub-and-Spoke
           </p>
         </div>
 
-        <div class="grid-3col anim-item">
-          <!-- Sprint 1 -->
-          <div class="glass-card" style="border-top: 3px solid var(--neon-mint);">
-            <div class="card-top-icon">
-              <div>
-                <span style="font-family:var(--font-mono); font-size:var(--small-size); color:var(--neon-mint); font-weight:700;">GIAI ĐOẠN 1 (NGÀY 1 - 20)</span>
-                <div class="card-title" style="margin-top:2px;">Quick Wins & Vá Hạ Tầng</div>
-              </div>
+        <div class="grid-3col" style="margin-bottom: var(--gap-grid);">
+          <div class="matrix-card border-mint">
+            <div class="card-headline">
+              <span class="card-title-text" style="color:var(--accent-mint);">Cụm 1: Học Phí & Biểu Phí</span>
+              <span class="evidence-badge mint">VOL: 2.400/THÁNG</span>
             </div>
-            <ul class="exec-list" style="margin-top:8px;">
-              <li><span class="bullet-dot mint"></span><span>Redirect 301 toàn bộ 10 liên kết 404 về đúng trang đích tương ứng.</span></li>
-              <li><span class="bullet-dot mint"></span><span>Gắn liên kết nội bộ trang chủ vào các bài viết chiến lược (So sánh trường, biểu phí).</span></li>
-              <li><span class="bullet-dot mint"></span><span>Khai báo cấu trúc Schema JSON-LD cho toàn bộ các trang trụ cột.</span></li>
-            </ul>
+            <p style="font-size:var(--body-size); color:var(--text-secondary); line-height:1.4;">
+              <strong>Pillar:</strong> Bảng Biểu Phí 2026-2027 Minh Bạch.<br>
+              <strong>Spokes:</strong> Chính sách học bổng tài năng, hướng dẫn thanh toán trả góp, ưu đãi đăng ký sớm.
+            </p>
           </div>
 
-          <!-- Sprint 2 -->
-          <div class="glass-card" style="border-top: 3px solid var(--neon-cyan);">
-            <div class="card-top-icon">
-              <div>
-                <span style="font-family:var(--font-mono); font-size:var(--small-size); color:var(--neon-cyan); font-weight:700;">GIAI ĐOẠN 2 (NGÀY 21 - 50)</span>
-                <div class="card-title" style="margin-top:2px;">Sản Xuất 5 Topic Clusters</div>
-              </div>
+          <div class="matrix-card border-cyan">
+            <div class="card-headline">
+              <span class="card-title-text" style="color:var(--accent-cyan);">Cụm 2: Khảo Sát Năng Lực Lớp 1</span>
+              <span class="evidence-badge cyan">VOL: 1.600/THÁNG</span>
             </div>
-            <ul class="exec-list" style="margin-top:8px;">
-              <li><span class="bullet-dot"></span><span>Xuất bản 5 bài Trụ cột (Pillar Pages) chuẩn E-E-A-T 2.500 - 3.500 từ.</span></li>
-              <li><span class="bullet-dot"></span><span>Sản xuất 15 bài vệ tinh ngách giải quyết trúng nhu cầu khảo sát lớp 1 và học phí.</span></li>
-              <li><span class="bullet-dot"></span><span>Đan cài liên kết mạng nhện theo mô hình Hub-and-Spoke chặt chẽ.</span></li>
-            </ul>
+            <p style="font-size:var(--body-size); color:var(--text-secondary); line-height:1.4;">
+              <strong>Pillar:</strong> Cẩm Nang Chuẩn Bị Cho Con Vào Lớp 1.<br>
+              <strong>Spokes:</strong> Bộ câu hỏi mẫu khảo sát tư duy, tâm lý chuyển cấp, lớp tiền tiểu học Wellspring.
+            </p>
           </div>
 
-          <!-- Sprint 3 -->
-          <div class="glass-card" style="border-top: 3px solid var(--neon-amber);">
-            <div class="card-top-icon">
-              <div>
-                <span style="font-family:var(--font-mono); font-size:var(--small-size); color:var(--neon-amber); font-weight:700;">GIAI ĐOẠN 3 (NGÀY 51 - 90)</span>
-                <div class="card-title" style="margin-top:2px;">Tối Ưu Chuyển Đổi & AI</div>
-              </div>
+          <div class="matrix-card border-amber">
+            <div class="card-headline">
+              <span class="card-title-text" style="color:var(--accent-amber);">Cụm 3: So Sánh & Review Trường</span>
+              <span class="evidence-badge amber">VOL: 1.300/THÁNG</span>
             </div>
-            <ul class="exec-list" style="margin-top:8px;">
-              <li><span class="bullet-dot amber"></span><span>Tối ưu tỷ lệ chuyển đổi (CRO) trên form khảo sát và đăng ký tour tham quan trường.</span></li>
-              <li><span class="bullet-dot amber"></span><span>Audit kiểm tra tần suất xuất hiện trên Perplexity, ChatGPT Search và Google AI.</span></li>
-              <li><span class="bullet-dot amber"></span><span>Báo cáo hiệu quả ROI, chi phí tiết kiệm được so với chạy quảng cáo Google Ads.</span></li>
-            </ul>
+            <p style="font-size:var(--body-size); color:var(--text-secondary); line-height:1.4;">
+              <strong>Pillar:</strong> Tiêu Chí Chọn Trường Song Ngữ Hà Nội.<br>
+              <strong>Spokes:</strong> So sánh Wellspring vs Vinschool, Olympia, Dewey; review cơ sở vật chất thực tế.
+            </p>
+          </div>
+        </div>
+
+        <div class="grid-2col">
+          <div class="matrix-card border-purple">
+            <div class="card-headline">
+              <span class="card-title-text" style="color:var(--accent-purple);">Cụm 4: Đào Tạo Cambridge & Song Bằng Mỹ</span>
+              <span class="evidence-badge cyan">HỌC THUẬT</span>
+            </div>
+            <p style="font-size:var(--body-size); color:var(--text-secondary); line-height:1.4;">
+              Khẳng định vị thế trung tâm khảo thí Cambridge VN229. Phân tích chi tiết lộ trình IGCSE, A-Level và bằng tú tài Mỹ MUHigh.
+            </p>
+          </div>
+
+          <div class="matrix-card border-mint">
+            <div class="card-headline">
+              <span class="card-title-text" style="color:var(--accent-mint);">Cụm 5: Bằng Chứng Xã Hội & Du Học</span>
+              <span class="evidence-badge mint">CHUYỂN ĐỔI</span>
+            </div>
+            <p style="font-size:var(--body-size); color:var(--text-secondary); line-height:1.4;">
+              Gương mặt học sinh đạt học bổng Đại học Mỹ, Úc, Anh; phản hồi thực tế của phụ huynh sau 5-10 năm theo học tại Wellspring.
+            </p>
           </div>
         </div>
       </div>
     </section>
 
     <!-- ========================================================
-         SLIDE 7: REALISTIC KPIS & MEASUREMENT
+         SLIDE 7: REALISTIC KPIS & MEASUREMENT (SỐ LIỆU THỰC TẾ)
          ======================================================== -->
     <section class="slide" data-slide="7">
       <div class="slide-header">
-        <div class="slide-meta-left">
-          <span class="meta-tag">METRICS & ROI</span>
-          <span class="meta-brand">Chỉ Số KPI Thực Tế & Khả Thi Sau 60-90 Ngày</span>
+        <div class="header-left-cluster">
+          <span class="arch-tag mint">CAM KẾT THẬT</span>
+          <span class="brand-title">Chỉ Số Hiệu Quả Đo Lường Được Sau 60 - 90 Ngày</span>
         </div>
-        <div class="slide-meta-right">
-          <span>Cam Kết Chỉ Số Minh Bạch</span>
+        <div class="header-right-cluster">
+          <span>Đã Điều Chỉnh Loại Bỏ 100% Số Liệu Ảo</span>
         </div>
       </div>
 
-      <div class="slide-body">
-        <div class="anim-item">
-          <h2 style="font-size:var(--h2-size); font-weight:800; margin-bottom:4px;">Cam Kết Hiệu Quả Đo Lường Được (Không Ảo Tưởng Số Liệu)</h2>
-          <p style="font-size:var(--body-size); color:var(--text-muted); margin-bottom:var(--gap-main);">
-            Các chỉ số đã được hiệu chỉnh sát với thực tế nguồn lực và quy mô thị trường giáo dục quốc tế:
+      <div class="slide-content">
+        <div class="title-banner">
+          <h2 class="title-h1">Cam Kết Hiệu Quả Khả Thi Cho Ngân Sách & Nguồn Lực</h2>
+          <p class="subtitle-p">
+            Toàn bộ chỉ số được đối soát dựa trên dung lượng tìm kiếm thực tế của ngành giáo dục quốc tế và năng lực sản xuất 1-2 bài/tuần
           </p>
         </div>
 
-        <div class="grid-4col anim-item">
-          <div class="glass-card card-highlight">
-            <div class="card-title">Từ Khóa Lọt Top 10</div>
-            <div class="card-metric-huge" style="color:var(--neon-mint);">15 - 20</div>
-            <p class="card-desc">Cụm từ khóa tuyển sinh, biểu phí và chương trình học có vị trí trang nhất Google.</p>
+        <div class="grid-4col">
+          <div class="matrix-card border-mint">
+            <span style="font-size:var(--small-size); color:var(--text-muted); font-family:var(--font-mono);">THỨ HẠNG GOOGLE</span>
+            <div class="metric-number-bold" style="color:var(--accent-mint);">80 CỤM</div>
+            <div style="font-size:var(--body-size); color:var(--text-main); font-weight:600; margin-top:2px;">Top 10 Từ Khóa</div>
+            <p style="font-size:var(--small-size); color:var(--text-secondary); margin-top:4px; line-height:1.35;">
+              Tăng từ 64 lên 80 từ khóa chính xác về biểu phí, tuyển sinh và đào tạo lọt trang 1 Google.
+            </p>
           </div>
 
-          <div class="glass-card card-highlight">
-            <div class="card-title">Tăng Trưởng Traffic</div>
-            <div class="card-metric-huge" style="color:var(--neon-cyan);">+3.500</div>
-            <p class="card-desc">Lượt truy cập tự nhiên (Organic Visits) tăng thêm mỗi tháng từ phụ huynh có nhu cầu thực tế.</p>
+          <div class="matrix-card border-cyan">
+            <span style="font-size:var(--small-size); color:var(--text-muted); font-family:var(--font-mono);">LƯỢNG TRUY CẬP</span>
+            <div class="metric-number-bold" style="color:var(--accent-cyan);">+3.500</div>
+            <div style="font-size:var(--body-size); color:var(--text-main); font-weight:600; margin-top:2px;">Visits / Tháng</div>
+            <p style="font-size:var(--small-size); color:var(--text-secondary); margin-top:4px; line-height:1.35;">
+              Tăng trưởng lưu lượng tự nhiên chất lượng cao từ tệp phụ huynh có nhu cầu tìm trường thực tế.
+            </p>
           </div>
 
-          <div class="glass-card card-highlight">
-            <div class="card-title">Độ Sâu Cào Dữ Liệu</div>
-            <div class="card-metric-huge" style="color:var(--neon-amber);">&le; 3 Clicks</div>
-            <p class="card-desc">100% trang chủ lực và bài khảo sát được Googlebot quét và lập chỉ mục trong 48h.</p>
+          <div class="matrix-card border-amber">
+            <span style="font-size:var(--small-size); color:var(--text-muted); font-family:var(--font-mono);">HIỂN THỊ TRÊN AI</span>
+            <div class="metric-number-bold" style="color:var(--accent-amber);">35% - 40%</div>
+            <div style="font-size:var(--body-size); color:var(--text-main); font-weight:600; margin-top:2px;">Tần Suất Trích Dẫn</div>
+            <p style="font-size:var(--small-size); color:var(--text-secondary); margin-top:4px; line-height:1.35;">
+              Tỷ lệ AI Search (ChatGPT, Perplexity, Gemini) trích dẫn thông tin chính thức của Wellspring.
+            </p>
           </div>
 
-          <div class="glass-card card-highlight">
-            <div class="card-title">Tiết Kiệm Chi Phí Ads</div>
-            <div class="card-metric-huge" style="color:#a855f7;">~50 Triệu</div>
-            <p class="card-desc">Tiết kiệm ngân sách chạy Google Search Ads mỗi tháng nhờ lượng click tự nhiên đạt Top.</p>
+          <div class="matrix-card border-purple">
+            <span style="font-size:var(--small-size); color:var(--text-muted); font-family:var(--font-mono);">TIẾT KIỆM SEARCH ADS</span>
+            <div class="metric-number-bold" style="color:var(--accent-purple);">~50 Triệu</div>
+            <div style="font-size:var(--body-size); color:var(--text-main); font-weight:600; margin-top:2px;">Tiết Kiệm / Tháng</div>
+            <p style="font-size:var(--small-size); color:var(--text-secondary); margin-top:4px; line-height:1.35;">
+              Giá trị chuyển đổi tương đương với việc phải đấu thầu mua click CPC từ Google Ads.
+            </p>
           </div>
         </div>
 
-        <div class="glass-card anim-item" style="margin-top:var(--gap-main); padding:clamp(0.6rem, 1.2vh, 1rem) var(--gap-main);">
-          <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;">
+        <div class="matrix-card" style="margin-top:var(--gap-grid); padding:clamp(0.5rem, 1vh, 0.8rem) var(--gap-grid); background:rgba(14,18,25,0.95);">
+          <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;">
             <div style="font-size:var(--body-size); color:var(--text-secondary);">
-              <strong style="color:#fff;">Cơ chế kiểm soát rủi ro:</strong> Báo cáo định kỳ 15 ngày/lần qua bảng Google Sheets tự động cập nhật từ Google Search Console (GSC) API.
+              <strong style="color:#fff;">Cơ chế đo lường minh bạch:</strong> Đồng bộ dữ liệu trực tiếp 15 ngày/lần từ Google Search Console (GSC) API vào bảng báo cáo Google Sheets của Ban Giám Hiệu.
             </div>
-            <span style="font-family:var(--font-mono); font-size:var(--small-size); color:var(--neon-mint); background:rgba(0,229,117,0.1); padding:4px 8px; border-radius:4px; font-weight:700;">
-              100% TRANSPARENT
-            </span>
+            <span class="evidence-badge mint">100% DATA VERIFIED</span>
           </div>
         </div>
       </div>
     </section>
 
     <!-- ========================================================
-         SLIDE 8: EXECUTIVE DECISION & NEXT STEPS
+         SLIDE 8: EXECUTIVE DECISION (ĐỀ XUẤT PHÊ DUYỆT)
          ======================================================== -->
     <section class="slide" data-slide="8">
       <div class="slide-header">
-        <div class="slide-meta-left">
-          <span class="meta-tag">NEXT STEPS</span>
-          <span class="meta-brand">Đề Xuất Phê Duyệt & Bước Đi Tiếp Theo</span>
+        <div class="header-left-cluster">
+          <span class="arch-tag mint">ACTION PLAN</span>
+          <span class="brand-title">Đề Xuất Phê Duyệt & Bước Đi Kế Tiếp</span>
         </div>
-        <div class="slide-meta-right">
-          <span>Quyết Định Từ Ban Lãnh Đạo</span>
+        <div class="header-right-cluster">
+          <span>Quyết Định Từ Hội Đồng Quản Trị & Ban Giám Hiệu</span>
         </div>
       </div>
 
-      <div class="slide-body">
-        <div class="anim-item">
-          <h2 style="font-size:var(--h2-size); font-weight:800; margin-bottom:4px;">3 Yêu Cầu Cần Phê Duyệt Để Khởi Động Dự Án</h2>
-          <p style="font-size:var(--body-size); color:var(--text-muted); margin-bottom:var(--gap-main);">
-            Đội ngũ chuyên trách đã sẵn sàng triển khai ngay khi nhận được sự đồng thuận từ Ban Lãnh Đạo:
+      <div class="slide-content">
+        <div class="title-banner">
+          <h2 class="title-h1">3 Yêu Cầu Cần Phê Duyệt Để Khởi Động Sprint 1</h2>
+          <p class="subtitle-p">
+            Mọi phương án kỹ thuật và danh sách từ khóa đã sẵn sàng; chỉ cần quyết định phê duyệt để triển khai ngay
           </p>
         </div>
 
-        <div class="grid-3col anim-item">
-          <div class="glass-card card-highlight">
-            <div class="card-top-icon">
-              <span class="card-title">1. Phê Duyệt Kỹ Thuật (IT)</span>
-              <span class="icon-badge">⚙️</span>
+        <div class="grid-3col">
+          <div class="matrix-card border-mint">
+            <div class="card-headline">
+              <span class="card-title-text" style="color:var(--accent-mint);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect><rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect><line x1="6" y1="6" x2="6.01" y2="6"></line><line x1="6" y1="18" x2="6.01" y2="18"></line></svg> 1. Phê Duyệt Kỹ Thuật (IT)</span>
+              <span class="evidence-badge mint">24H EXECUTION</span>
             </div>
-            <p class="card-desc">
-              Ủy quyền cho đội SEO phối hợp IT thực hiện cấu hình chuyển hướng Nginx 301 cho 10 link 404 và tích hợp mã Schema JSON-LD vào header website.
+            <p style="font-size:var(--body-size); color:var(--text-secondary); line-height:1.45; margin-top:6px;">
+              Cho phép đội ngũ cấu hình chuyển hướng Nginx 301 cho 10 link 404, chèn thẻ H1 chuẩn vào theme và nhúng mã Schema JSON-LD vào header website.
             </p>
-            <div style="font-size:var(--small-size); color:var(--neon-mint); margin-top:8px;">
-              Thời gian thực hiện: 24 - 48 giờ.
+            <div style="font-family:var(--font-mono); font-size:var(--small-size); color:var(--accent-mint); margin-top:10px;">
+              Thời gian xử lý: Hoàn thành trong 24 giờ sau duyệt.
             </div>
           </div>
 
-          <div class="glass-card card-highlight">
-            <div class="card-top-icon">
-              <span class="card-title">2. Cung Cấp Tài Liệu Khảo Sát</span>
-              <span class="icon-badge">📝</span>
+          <div class="matrix-card border-cyan">
+            <div class="card-headline">
+              <span class="card-title-text" style="color:var(--accent-cyan);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg> 2. Cung Cấp Đề Khảo Sát</span>
+              <span class="evidence-badge cyan">TUYỂN SINH</span>
             </div>
-            <p class="card-desc">
-              Phòng Tuyển sinh cung cấp cấu trúc đề thi khảo sát năng lực lớp 1 mẫu và khung biểu phí chính thức năm học 2026-2027 để làm tài liệu chuyên sâu độc quyền.
+            <p style="font-size:var(--body-size); color:var(--text-secondary); line-height:1.45; margin-top:6px;">
+              Phòng Tuyển sinh cung cấp khung cấu trúc đề thi khảo sát năng lực lớp 1 mẫu và tài liệu định hướng phụ huynh để làm tư liệu sản xuất nội dung độc quyền.
             </p>
-            <div style="font-size:var(--small-size); color:var(--neon-cyan); margin-top:8px;">
-              Thời gian thực hiện: Trong tuần 1.
+            <div style="font-family:var(--font-mono); font-size:var(--small-size); color:var(--accent-cyan); margin-top:10px;">
+              Thời gian bàn giao: Trong 5 ngày làm việc đầu tiên.
             </div>
           </div>
 
-          <div class="glass-card card-highlight">
-            <div class="card-top-icon">
-              <span class="card-title">3. Khởi Động Sprint 1</span>
-              <span class="icon-badge">🚀</span>
+          <div class="matrix-card border-amber">
+            <div class="card-headline">
+              <span class="card-title-text" style="color:var(--accent-amber);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#a855f7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect><rect x="9" y="9" width="6" height="6"></rect><line x1="9" y1="1" x2="9" y2="4"></line><line x1="15" y1="1" x2="15" y2="4"></line><line x1="9" y1="20" x2="9" y2="23"></line><line x1="15" y1="20" x2="15" y2="23"></line><line x1="20" y1="9" x2="23" y2="9"></line><line x1="20" y1="14" x2="23" y2="14"></line><line x1="1" y1="9" x2="4" y2="9"></line><line x1="1" y1="14" x2="4" y2="14"></line></svg> 3. Bấm Nút Sprint 1</span>
+              <span class="evidence-badge amber">SPRINT 1 KICKOFF</span>
             </div>
-            <p class="card-desc">
-              Chính thức bấm nút triển khai Sprint 1 (Quick Wins). Ban Giám Hiệu và Hội Đồng Quản Trị sẽ nhận bảng báo cáo theo dõi trực tiếp qua dashboard.
+            <p style="font-size:var(--body-size); color:var(--text-secondary); line-height:1.45; margin-top:6px;">
+              Chính thức triển khai Sprint 1 (20 ngày đầu). Bàn giao bản nghiệm thu kỹ thuật và cập nhật thứ hạng từ khóa đầu tiên vào ngày thứ 20.
             </p>
-            <div style="font-size:var(--small-size); color:var(--neon-amber); margin-top:8px;">
-              Thời gian bàn giao kết quả đợt 1: Ngày thứ 20.
+            <div style="font-family:var(--font-mono); font-size:var(--small-size); color:var(--accent-amber); margin-top:10px;">
+              Báo cáo tiến độ: Cập nhật tự động qua Google Sheets.
             </div>
           </div>
         </div>
 
-        <div class="glass-card anim-item" style="margin-top:var(--gap-main); text-align:center; padding:clamp(0.8rem, 1.8vh, 1.4rem);">
-          <div style="font-size:var(--h3-size); font-weight:700; color:#fff; margin-bottom:4px;">
-            Trân trọng cảm ơn Ban Lãnh Đạo đã lắng nghe!
+        <div class="matrix-card" style="margin-top:var(--gap-grid); text-align:center; padding:clamp(0.7rem, 1.4vh, 1.2rem); background:rgba(14,18,25,0.92);">
+          <div style="font-size:var(--h3-size); font-weight:700; color:#fff; margin-bottom:2px;">
+            Trân trọng cảm ơn Ban Lãnh Đạo đã lắng nghe bài thuyết trình!
           </div>
           <div style="font-size:var(--body-size); color:var(--text-muted);">
-            Sẵn sàng giải đáp mọi thắc mắc và đi sâu vào từng hạng mục kỹ thuật trong phần Q&A.
+            Sẵn sàng đi sâu vào từng dòng mã và giải đáp mọi thắc mắc trong phần Q&A.
           </div>
         </div>
       </div>
     </section>
 
-  </div> <!-- End slides-viewport -->
+  </div> <!-- End slides-deck -->
 
-  <!-- Bottom Left Keyboard Hint -->
-  <div style="position:fixed; bottom:clamp(1rem, 2vh, 1.8rem); left:clamp(1rem, 2.5vw, 2.5rem); display:flex; align-items:center; gap:12px; z-index:1000; font-family:var(--font-mono); font-size:var(--small-size); color:var(--text-muted); background:rgba(16,20,29,0.85); border:1px solid var(--border-card); border-radius:50px; padding:6px 16px; backdrop-filter:blur(12px);">
-    <span>⌨️ <strong style="color:#fff;">← / →</strong> Chuyển Slide</span>
-    <span>•</span>
-    <span><strong style="color:var(--neon-mint);">E</strong> Sửa trực tiếp</span>
-    <span>•</span>
-    <span><strong style="color:var(--neon-cyan);">F</strong> Toàn màn hình</span>
+  <!-- Bottom Left Keyboard Guide -->
+  <div class="keyboard-guide-bar">
+    <span><span class="key-cap">&larr;</span> <span class="key-cap">&rarr;</span> Chuyển Slide</span>
+    <span>&bull;</span>
+    <span><span class="key-cap" style="color:var(--accent-mint);">E</span> Sửa trực tiếp</span>
+    <span>&bull;</span>
+    <span><span class="key-cap" style="color:var(--accent-cyan);">F</span> Toàn màn hình</span>
   </div>
 
-  <!-- Floating Nav Controls -->
-  <div class="nav-controls">
-    <button class="btn-nav" id="btnPrev" title="Slide trước (Mũi tên trái / Page Up)">&#8592;</button>
-    <div class="slide-counter">
-      <span class="current" id="lblCurrentSlide">1</span> / <span id="lblTotalSlides">8</span>
+  <!-- Bottom Right Navigation HUD -->
+  <div class="nav-hud">
+    <button class="btn-hud-step" id="btnPrevSlide" title="Slide trước (&larr; / PageUp)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 5 12 12 19"></polyline></svg></button>
+    <div class="hud-counter">
+      <span class="active-num" id="activeSlideNum">1</span> / <span id="totalSlideNum">8</span>
     </div>
-    <button class="btn-nav" id="btnNext" title="Slide sau (Mũi tên phải / Space / Page Down)">&#8594;</button>
+    <button class="btn-hud-step" id="btnNextSlide" title="Slide sau (&rarr; / Space / PageDown)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></button>
   </div>
 
-  <!-- Slide Presentation Controller & Live Editor Script -->
+  <!-- Slide Presentation Controller & Live Editing Engine -->
   <script>
-    class ExecutiveSlideDeck {
+    class SeniorExecutiveDeck {
       constructor() {
         this.slides = Array.from(document.querySelectorAll('.slide'));
         this.totalSlides = this.slides.length;
         this.currentIndex = 0;
         this.isEditing = false;
-        this.storageKey = 'wellspring_seo_executive_slides_v1';
+        this.storageKey = 'wellspring_senior_deck_state_v2';
 
-        // Elements
-        this.lblCurrent = document.getElementById('lblCurrentSlide');
-        this.lblTotal = document.getElementById('lblTotalSlides');
-        this.progressBar = document.getElementById('progressIndicator');
-        this.btnPrev = document.getElementById('btnPrev');
-        this.btnNext = document.getElementById('btnNext');
+        this.lblActive = document.getElementById('activeSlideNum');
+        this.lblTotal = document.getElementById('totalSlideNum');
+        this.progressFill = document.getElementById('progressFill');
+        this.btnPrev = document.getElementById('btnPrevSlide');
+        this.btnNext = document.getElementById('btnNextSlide');
 
-        this.editToggleBtn = document.getElementById('editToggleBtn');
         this.editHotzone = document.getElementById('editHotzone');
-        this.editToolbar = document.getElementById('editToolbar');
-        this.btnSave = document.getElementById('btnSaveStorage');
-        this.btnExport = document.getElementById('btnExportHtml');
-        this.btnReset = document.getElementById('btnResetStorage');
+        this.editModePill = document.getElementById('editModePill');
+        this.editorDock = document.getElementById('editorDock');
+        this.btnSave = document.getElementById('btnSaveDeck');
+        this.btnExport = document.getElementById('btnExportHtmlDeck');
+        this.btnReset = document.getElementById('btnResetDeck');
 
         this.init();
       }
 
       init() {
         this.lblTotal.textContent = this.totalSlides;
-        this.restoreFromStorage();
+        this.restoreStorage();
 
-        // Check query param (?slide=1..8)
-        const urlParams = new URLSearchParams(window.location.search);
-        const slideParam = urlParams.get('slide');
+        // Query parameters (?slide=1..8 & ?edit=1)
+        const params = new URLSearchParams(window.location.search);
+        const slideParam = params.get('slide');
         if (slideParam) {
           const idx = parseInt(slideParam, 10) - 1;
           if (idx >= 0 && idx < this.totalSlides) {
@@ -1127,19 +1278,19 @@
           }
         }
 
-        this.setupNavigation();
-        this.setupKeyboard();
-        this.setupTouch();
-        this.setupInlineEditing();
+        this.setupNavHandlers();
+        this.setupKeyboardHandlers();
+        this.setupTouchHandlers();
+        this.setupEditingEngine();
 
-        // Support ?edit=1 to start in edit mode directly
-        if (urlParams.get('edit') === '1') {
+        if (params.get('edit') === '1') {
           this.toggleEditMode();
         }
+
         this.updateView();
       }
 
-      goToSlide(index) {
+      goTo(index) {
         if (index < 0 || index >= this.totalSlides) return;
         this.slides[this.currentIndex].classList.remove('active');
         this.currentIndex = index;
@@ -1147,113 +1298,89 @@
         this.updateView();
       }
 
-      nextSlide() {
-        if (this.currentIndex < this.totalSlides - 1) {
-          this.goToSlide(this.currentIndex + 1);
-        }
-      }
-
-      prevSlide() {
-        if (this.currentIndex > 0) {
-          this.goToSlide(this.currentIndex - 1);
-        }
-      }
+      next() { if (this.currentIndex < this.totalSlides - 1) this.goTo(this.currentIndex + 1); }
+      prev() { if (this.currentIndex > 0) this.goTo(this.currentIndex - 1); }
 
       updateView() {
-        this.lblCurrent.textContent = this.currentIndex + 1;
-        const progressPct = ((this.currentIndex + 1) / this.totalSlides) * 100;
-        this.progressBar.style.width = `${progressPct}%`;
+        this.lblActive.textContent = this.currentIndex + 1;
+        const pct = ((this.currentIndex + 1) / this.totalSlides) * 100;
+        this.progressFill.style.width = `${pct}%`;
       }
 
-      setupNavigation() {
-        this.btnPrev.onclick = () => this.prevSlide();
-        this.btnNext.onclick = () => this.nextSlide();
+      setupNavHandlers() {
+        this.btnPrev.onclick = () => this.prev();
+        this.btnNext.onclick = () => this.next();
       }
 
-      setupKeyboard() {
+      setupKeyboardHandlers() {
         window.addEventListener('keydown', (e) => {
-          // If editing text, do not navigate slides on space or arrows unless escaped
           const isWriting = e.target.getAttribute('contenteditable') === 'true';
-          
+
           if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
             if (!isWriting) {
               e.preventDefault();
-              this.nextSlide();
+              this.next();
             }
           } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
             if (!isWriting) {
               e.preventDefault();
-              this.prevSlide();
+              this.prev();
             }
           } else if ((e.key === 'e' || e.key === 'E') && !isWriting) {
             e.preventDefault();
             this.toggleEditMode();
           } else if ((e.ctrlKey || e.metaKey) && e.key === 's') {
             e.preventDefault();
-            this.saveToStorage();
-          } else if (e.key === 'f' || e.key === 'F') {
-            if (!isWriting) {
-              e.preventDefault();
-              if (!document.fullscreenElement) {
-                document.documentElement.requestFullscreen().catch(() => {});
-              } else {
-                document.exitFullscreen().catch(() => {});
-              }
+            this.saveStorage();
+          } else if ((e.key === 'f' || e.key === 'F') && !isWriting) {
+            e.preventDefault();
+            if (!document.fullscreenElement) {
+              document.documentElement.requestFullscreen().catch(() => {});
+            } else {
+              document.exitFullscreen().catch(() => {});
             }
           }
         });
       }
 
-      setupTouch() {
-        let touchStartX = 0;
-        let touchEndX = 0;
-
-        window.addEventListener('touchstart', (e) => {
-          touchStartX = e.changedTouches[0].screenX;
-        }, { passive: true });
-
+      setupTouchHandlers() {
+        let touchStart = 0;
+        window.addEventListener('touchstart', (e) => { touchStart = e.changedTouches[0].screenX; }, { passive: true });
         window.addEventListener('touchend', (e) => {
-          touchEndX = e.changedTouches[0].screenX;
-          if (touchStartX - touchEndX > 50) {
-            this.nextSlide(); // swipe left -> next
-          } else if (touchEndX - touchStartX > 50) {
-            this.prevSlide(); // swipe right -> prev
-          }
+          const diff = touchStart - e.changedTouches[0].screenX;
+          if (diff > 50) this.next();
+          else if (diff < -50) this.prev();
         }, { passive: true });
       }
 
       /* ===========================================
-         INLINE EDITING SYSTEM
+         LIVE IN-BROWSER EDITING ENGINE
          =========================================== */
-      setupInlineEditing() {
+      setupEditingEngine() {
         let hideTimeout = null;
 
-        // Hotzone hover
         this.editHotzone.addEventListener('mouseenter', () => {
           clearTimeout(hideTimeout);
-          this.editToggleBtn.classList.add('show');
+          this.editModePill.classList.add('show');
         });
 
         this.editHotzone.addEventListener('mouseleave', () => {
           hideTimeout = setTimeout(() => {
-            if (!this.isEditing) this.editToggleBtn.classList.remove('show');
+            if (!this.isEditing) this.editModePill.classList.remove('show');
           }, 400);
         });
 
-        this.editToggleBtn.addEventListener('mouseenter', () => {
-          clearTimeout(hideTimeout);
-        });
-
-        this.editToggleBtn.addEventListener('mouseleave', () => {
+        this.editModePill.addEventListener('mouseenter', () => clearTimeout(hideTimeout));
+        this.editModePill.addEventListener('mouseleave', () => {
           hideTimeout = setTimeout(() => {
-            if (!this.isEditing) this.editToggleBtn.classList.remove('show');
+            if (!this.isEditing) this.editModePill.classList.remove('show');
           }, 400);
         });
 
-        this.editToggleBtn.onclick = () => this.toggleEditMode();
+        this.editModePill.onclick = () => this.toggleEditMode();
         this.editHotzone.onclick = () => this.toggleEditMode();
 
-        this.btnSave.onclick = () => this.saveToStorage();
+        this.btnSave.onclick = () => this.saveStorage();
         this.btnExport.onclick = () => this.exportHtml();
         this.btnReset.onclick = () => this.resetStorage();
       }
@@ -1261,63 +1388,51 @@
       toggleEditMode() {
         this.isEditing = !this.isEditing;
         document.body.classList.toggle('is-editing', this.isEditing);
-        this.editToggleBtn.classList.toggle('active', this.isEditing);
-        this.editToolbar.classList.toggle('active', this.isEditing);
+        this.editModePill.classList.toggle('active', this.isEditing);
+        this.editorDock.classList.toggle('active', this.isEditing);
 
-        // Make all text elements editable
-        const editableTargets = document.querySelectorAll('.slide h1, .slide h2, .slide p, .slide span, .slide li, .slide .card-title, .slide .card-desc, .slide .card-metric-huge, .slide .meta-brand, .slide .meta-tag');
-        
-        editableTargets.forEach(el => {
-          // Exclude buttons or technical counters
-          if (!el.closest('.nav-controls') && !el.closest('.edit-toolbar') && !el.closest('.edit-toggle-btn')) {
+        const editTargets = document.querySelectorAll('.slide h1, .slide h2, .slide p, .slide span, .slide .diag-value, .slide .metric-number-bold, .slide .card-title-text, .slide .code-block-tiny');
+        editTargets.forEach(el => {
+          if (!el.closest('.nav-hud') && !el.closest('.editor-control-dock') && !el.closest('.keyboard-guide-bar')) {
             el.setAttribute('contenteditable', this.isEditing ? 'true' : 'false');
           }
         });
 
-        if (this.isEditing) {
-          this.editToggleBtn.innerHTML = '<span>❌ ĐÓNG SỬA (E)</span>';
-        } else {
-          this.editToggleBtn.innerHTML = '<span>✏️ SỬA SLIDE (E)</span>';
-        }
+        this.editModePill.innerHTML = this.isEditing 
+          ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg> <span>ĐÓNG SỬA (E)</span>'
+          : '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg> <span>LIVE EDIT (E)</span>';
       }
 
-      saveToStorage() {
-        const contentHtml = document.getElementById('slidesViewport').innerHTML;
-        localStorage.setItem(this.storageKey, contentHtml);
-        
-        const origText = this.btnSave.textContent;
-        this.btnSave.textContent = '✅ Đã lưu vào máy!';
-        setTimeout(() => { this.btnSave.textContent = origText; }, 2000);
+      saveStorage() {
+        const deckHtml = document.getElementById('slidesDeck').innerHTML;
+        localStorage.setItem(this.storageKey, deckHtml);
+        const orig = this.btnSave.textContent;
+        this.btnSave.textContent = 'Đã lưu máy!';
+        setTimeout(() => { this.btnSave.textContent = orig; }, 2000);
       }
 
-      restoreFromStorage() {
+      restoreStorage() {
         const saved = localStorage.getItem(this.storageKey);
         if (saved) {
-          document.getElementById('slidesViewport').innerHTML = saved;
-          // Re-bind slide array
+          document.getElementById('slidesDeck').innerHTML = saved;
           this.slides = Array.from(document.querySelectorAll('.slide'));
           this.totalSlides = this.slides.length;
-          this.slides.forEach((s, idx) => {
-            s.classList.toggle('active', idx === this.currentIndex);
-          });
+          this.slides.forEach((s, idx) => s.classList.toggle('active', idx === this.currentIndex));
         }
       }
 
       resetStorage() {
-        if (confirm("Khôi phục lại nội dung slide gốc từ báo cáo kỹ thuật ban đầu?")) {
+        if (confirm("Khôi phục lại nội dung báo cáo kỹ thuật ban đầu?")) {
           localStorage.removeItem(this.storageKey);
           window.location.reload();
         }
       }
 
       exportHtml() {
-        // Clone document and remove temporary editing artifacts before download
         const clone = document.documentElement.cloneNode(true);
-        const editableElements = clone.querySelectorAll('[contenteditable]');
-        editableElements.forEach(el => el.removeAttribute('contenteditable'));
-
-        const htmlString = "<!DOCTYPE html>\n" + clone.outerHTML;
-        const blob = new Blob([htmlString], { type: 'text/html;charset=utf-8' });
+        clone.querySelectorAll('[contenteditable]').forEach(el => el.removeAttribute('contenteditable'));
+        const html = "<!DOCTYPE html>\n" + clone.outerHTML;
+        const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
         const a = document.createElement('a');
         a.href = URL.createObjectURL(blob);
         a.download = "Bao_Cao_SEO_Executive_Wellspring_2026.html";
@@ -1327,9 +1442,8 @@
       }
     }
 
-    // Launch deck on load
     window.addEventListener('DOMContentLoaded', () => {
-      new ExecutiveSlideDeck();
+      new SeniorExecutiveDeck();
     });
   </script>
 </body>
