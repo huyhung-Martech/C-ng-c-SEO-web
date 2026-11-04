@@ -2787,6 +2787,10 @@ class AuditHTTPHandler(http.server.SimpleHTTPRequestHandler):
                 self.send_response(500)
                 self.end_headers()
                 self.wfile.write(str(e).encode("utf-8"))
+        elif parsed_path.path in ["/grapuco", "/architecture", "/architecture-graph"]:
+            self.send_response(302)
+            self.send_header("Location", "/grapuco.html")
+            self.end_headers()
         elif parsed_path.path in ["/3d", "/3d-graph"]:
             self.send_response(302)
             self.send_header("Location", "/3d-graph.html")

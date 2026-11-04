@@ -1,0 +1,1936 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grapuco Architecture Graph · wellspring.edu.vn | Huy Hưng SEO Executive</title>
+  <meta name="description" content="Đồ thị Kiến trúc và Tri thức (Architecture Graph) tương tác 1:1 theo chuẩn Grapuco.com: Phân tích toàn bộ mạng lưới logic, cụm Topic Clusters, luồng điều hướng (Flows) và liên kết nội bộ website wellspring.edu.vn." />
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Standalone Force Graph Engine -->
+  <script src="js/force-graph.min.js"></script>
+
+  <style>
+    :root {
+      --bg-dark: #0c0e12;
+      --bg-surface: #12151b;
+      --bg-panel: #161922;
+      --bg-hover: #1e222e;
+      --border-color: rgba(255, 255, 255, 0.08);
+      --border-subtle: rgba(255, 255, 255, 0.05);
+      --grapuco-green: #00e575;
+      --grapuco-green-glow: rgba(0, 229, 117, 0.25);
+      --grapuco-green-subtle: rgba(0, 229, 117, 0.12);
+      --text-primary: #f2faeb;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      
+      /* Grapuco Node & Edge Colors */
+      --c-method: #3b82f6;      /* Blue */
+      --c-class: #eab308;       /* Yellow */
+      --c-file: #f97316;        /* Orange / Red */
+      --c-api: #00e575;         /* Mint Green */
+      --c-model: #d97706;       /* Tan / Amber */
+      --c-interface: #10b981;   /* Emerald */
+      --c-function: #06b6d4;    /* Cyan */
+      --c-broken: #ef4444;      /* Red */
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-primary);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      overflow: hidden;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      user-select: none;
+    }
+
+    /* TOP HEADER BAR (52px) */
+    .grapuco-header {
+      height: 52px;
+      background: var(--bg-surface);
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      z-index: 50;
+      flex-shrink: 0;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      color: #fff;
+    }
+
+    .brand-logo-icon {
+      width: 22px;
+      height: 22px;
+      background: var(--grapuco-green);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 10px var(--grapuco-green-glow);
+    }
+
+    .brand-logo-text {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.05rem;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      color: #fff;
+    }
+
+    .repo-breadcrumb-btn {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 4px 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.78rem;
+      color: #cbd5e1;
+      text-decoration: none;
+      transition: all 0.15s ease;
+      cursor: pointer;
+    }
+    .repo-breadcrumb-btn:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+    .breadcrumb-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--grapuco-green);
+      box-shadow: 0 0 8px var(--grapuco-green);
+    }
+
+    /* CENTER SEARCH */
+    .header-center {
+      position: relative;
+      width: 440px;
+    }
+
+    .grapuco-search-box {
+      width: 100%;
+      height: 34px;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      padding: 0 10px;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+    .grapuco-search-box:focus-within {
+      border-color: var(--grapuco-green);
+      box-shadow: 0 0 12px var(--grapuco-green-glow);
+    }
+
+    .search-input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: #fff;
+      font-size: 0.8rem;
+    }
+    .search-input::placeholder {
+      color: var(--text-muted);
+    }
+
+    .search-kbd {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    .search-dropdown {
+      position: absolute;
+      top: 42px;
+      left: 0;
+      right: 0;
+      max-height: 320px;
+      overflow-y: auto;
+      background: var(--bg-panel);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      box-shadow: 0 12px 32px rgba(0,0,0,0.8);
+      display: none;
+      z-index: 100;
+    }
+
+    .search-dropdown-item {
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      font-size: 0.78rem;
+    }
+    .search-dropdown-item:hover {
+      background: var(--bg-hover);
+    }
+    .search-item-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      overflow: hidden;
+    }
+    .search-item-name {
+      color: #fff;
+      font-weight: 500;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .search-item-type {
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* Selected Filter Chip below search */
+    .active-selected-chip-bar {
+      position: absolute;
+      top: 56px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 40;
+      display: none;
+    }
+    .active-chip-pill {
+      background: rgba(18, 21, 27, 0.95);
+      border: 1px solid var(--grapuco-green);
+      border-radius: 20px;
+      padding: 4px 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.76rem;
+      box-shadow: 0 4px 20px rgba(0, 229, 117, 0.2);
+    }
+    .chip-clear-btn {
+      background: transparent;
+      border: none;
+      color: var(--grapuco-green);
+      font-weight: 700;
+      cursor: pointer;
+      margin-left: 6px;
+      font-size: 0.75rem;
+    }
+    .chip-clear-btn:hover { color: #fff; }
+
+    /* HEADER RIGHT */
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .stats-info-pill {
+      font-size: 0.76rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .stats-green-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--grapuco-green);
+      box-shadow: 0 0 6px var(--grapuco-green);
+    }
+
+    .credits-badge {
+      background: rgba(0, 229, 117, 0.08);
+      border: 1px solid rgba(0, 229, 117, 0.3);
+      color: var(--grapuco-green);
+      border-radius: 8px;
+      padding: 4px 10px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* MAIN APP BODY */
+    .grapuco-workspace {
+      display: flex;
+      flex: 1;
+      height: calc(100vh - 52px);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* 1. SLIM LEFT ICON RAIL (60px) */
+    .slim-nav-rail {
+      width: 60px;
+      background: var(--bg-surface);
+      border-right: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 0;
+      flex-shrink: 0;
+      z-index: 30;
+    }
+
+    .rail-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+    }
+
+    .rail-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      position: relative;
+      text-decoration: none;
+    }
+    .rail-btn:hover {
+      background: var(--bg-hover);
+      color: var(--text-primary);
+    }
+    .rail-btn.active {
+      background: var(--grapuco-green-subtle);
+      color: var(--grapuco-green);
+    }
+
+    /* 2. SECONDARY SIDEBAR (280px) */
+    .secondary-sidebar {
+      width: 280px;
+      background: var(--bg-surface);
+      border-right: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      z-index: 25;
+      transition: width 0.2s ease;
+    }
+
+    .secondary-tabs-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .tabs-btn-group {
+      display: flex;
+      gap: 6px;
+    }
+
+    .sec-tab-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 0.76rem;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .sec-tab-btn:hover { color: #fff; }
+    .sec-tab-btn.active {
+      background: var(--grapuco-green-subtle);
+      color: var(--grapuco-green);
+    }
+
+    .collapse-sidebar-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 4px;
+      font-size: 0.8rem;
+    }
+    .collapse-sidebar-btn:hover { color: #fff; }
+
+    .sec-tab-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 14px;
+    }
+
+    .sidebar-section-title {
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+
+    /* Filter Checkbox Item */
+    .filter-item-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 5px 0;
+      font-size: 0.78rem;
+      cursor: pointer;
+    }
+    .filter-item-row:hover {
+      color: #fff;
+    }
+    .filter-label-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .filter-color-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+    }
+    .filter-color-line {
+      width: 12px;
+      height: 3px;
+      border-radius: 2px;
+    }
+    .filter-count-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--text-muted);
+    }
+
+    /* FLOWS TAB */
+    .flow-card-item {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 10px 12px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .flow-card-item:hover {
+      background: var(--bg-hover);
+      border-color: rgba(255, 255, 255, 0.18);
+    }
+    .flow-card-item.active {
+      background: rgba(0, 229, 117, 0.08);
+      border-color: var(--grapuco-green);
+      box-shadow: 0 0 15px rgba(0, 229, 117, 0.15);
+    }
+    .flow-card-header {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 4px;
+    }
+    .flow-method-badge {
+      font-size: 0.65rem;
+      font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
+      padding: 1px 5px;
+      border-radius: 4px;
+    }
+    .method-get { background: rgba(0, 229, 117, 0.15); color: var(--grapuco-green); }
+    .method-compare { background: rgba(249, 115, 22, 0.15); color: #f97316; }
+    .method-program { background: rgba(59, 130, 246, 0.15); color: #3b82f6; }
+    .method-alert { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
+
+    .flow-name {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #fff;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .flow-sub {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    /* 3. CENTER GRAPH CANVAS */
+    .graph-canvas-container {
+      flex: 1;
+      height: 100%;
+      position: relative;
+      background: radial-gradient(circle at center, #141820 0%, #0c0e12 70%);
+      overflow: hidden;
+    }
+
+    #force-graph-viewport {
+      width: 100%;
+      height: 100%;
+    }
+
+    /* FLOATING CONTROLS (TOP RIGHT) */
+    .floating-controls-card {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      background: rgba(18, 21, 27, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 10px 14px;
+      z-index: 20;
+      font-size: 0.72rem;
+      color: var(--text-secondary);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+    }
+    .controls-title {
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .control-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+    .control-row:last-child { margin-bottom: 0; }
+    .ctrl-key {
+      color: #fff;
+      font-weight: 600;
+    }
+
+    /* FLOATING LEGEND (BOTTOM LEFT) */
+    .floating-legend-card {
+      position: absolute;
+      bottom: 24px;
+      left: 20px;
+      background: rgba(18, 21, 27, 0.85);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 10px 14px;
+      z-index: 20;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+    }
+    .legend-title {
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+    .legend-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      column-gap: 16px;
+      row-gap: 5px;
+      font-size: 0.74rem;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #cbd5e1;
+    }
+
+    /* FLOATING STATUS BAR (BOTTOM) */
+    .floating-status-bar {
+      position: absolute;
+      bottom: 4px;
+      left: 14px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      z-index: 10;
+    }
+    .status-ready-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--grapuco-green);
+      box-shadow: 0 0 6px var(--grapuco-green);
+    }
+
+    /* FLOATING FAB BUTTON (BOTTOM RIGHT) */
+    .floating-fab-btn {
+      position: absolute;
+      bottom: 24px;
+      right: 24px;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: var(--grapuco-green);
+      border: none;
+      color: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 0 24px var(--grapuco-green-glow), 0 8px 16px rgba(0,0,0,0.5);
+      z-index: 20;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .floating-fab-btn:hover {
+      transform: scale(1.08);
+      box-shadow: 0 0 32px var(--grapuco-green);
+    }
+
+    /* 4. RIGHT DRAWER: NODE DETAIL & DATA FLOW (360px) */
+    .right-drawer-panel {
+      width: 360px;
+      background: var(--bg-surface);
+      border-left: 1px solid var(--border-color);
+      display: none;
+      flex-direction: column;
+      flex-shrink: 0;
+      z-index: 30;
+      overflow-y: auto;
+      animation: slideInRight 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes slideInRight {
+      from { transform: translateX(30px); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    .drawer-header {
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .drawer-title-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .drawer-close-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 1.1rem;
+    }
+    .drawer-close-btn:hover { color: #fff; }
+
+    .drawer-body {
+      padding: 18px;
+      flex: 1;
+    }
+
+    .node-hero-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 6px;
+      word-break: break-word;
+    }
+
+    .node-type-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--grapuco-green);
+      margin-bottom: 12px;
+    }
+
+    .path-copy-box {
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 8px 10px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      color: #cbd5e1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 16px;
+      word-break: break-all;
+    }
+
+    .btn-copy-icon {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+    .btn-copy-icon:hover { color: #fff; }
+
+    /* Code Snippet Box */
+    .code-preview-block {
+      background: #08090c;
+      border: 1px solid var(--border-subtle);
+      border-radius: 6px;
+      padding: 10px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      color: #38bdf8;
+      line-height: 1.5;
+      margin-bottom: 18px;
+      overflow-x: auto;
+    }
+
+    /* INCOMING / OUTGOING LISTS (Grapuco Frame 1 / 85) */
+    .relation-section-header {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .header-incoming { color: var(--grapuco-green); }
+    .header-outgoing { color: #f97316; }
+
+    .relation-list {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-bottom: 18px;
+    }
+
+    .relation-item {
+      padding: 6px 8px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border-subtle);
+      border-radius: 6px;
+      font-size: 0.74rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: background 0.15s ease;
+    }
+    .relation-item:hover {
+      background: var(--bg-hover);
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+    .rel-name-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      overflow: hidden;
+    }
+    .rel-name {
+      color: #fff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .rel-edge-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* FLOW STEPS (In Data Flow Mode - Frame 55) */
+    .flow-steps-timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 14px;
+      margin-bottom: 18px;
+    }
+
+    .flow-step-box {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 10px;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .flow-step-box:hover {
+      background: var(--bg-hover);
+      border-color: var(--grapuco-green);
+    }
+    .flow-step-num {
+      width: 22px;
+      height: 22px;
+      border-radius: 5px;
+      background: rgba(0, 229, 117, 0.15);
+      color: var(--grapuco-green);
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      font-size: 0.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .flow-step-content {
+      flex: 1;
+      overflow: hidden;
+    }
+    .flow-step-title {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .flow-step-path {
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      font-family: 'JetBrains Mono', monospace;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP HEADER BAR -->
+  <header class="grapuco-header">
+    <div class="header-left">
+      <a href="/" class="brand-logo" title="Huy Hưng SEO Executive">
+        <div class="brand-logo-icon">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0c0e12" stroke-width="3"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+        </div>
+        <span class="brand-logo-text">GRAPUCO</span>
+      </a>
+
+      <!-- Repo Breadcrumb Pill -->
+      <a href="https://wellspring.edu.vn" target="_blank" class="repo-breadcrumb-btn" title="Xem trang web đích">
+        <span>←</span>
+        <span class="breadcrumb-dot"></span>
+        <span style="font-weight: 600; font-family: 'JetBrains Mono', monospace;">wellspring.edu.vn</span>
+      </a>
+    </div>
+
+    <!-- Center Search Bar -->
+    <div class="header-center">
+      <div class="grapuco-search-box">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--text-muted);"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        <input type="text" id="grapSearchInput" class="search-input" placeholder="Search nodes..." />
+        <span class="search-kbd">⌘ + K / Ctrl + K</span>
+      </div>
+
+      <!-- Autocomplete Dropdown -->
+      <div id="grapSearchDropdown" class="search-dropdown"></div>
+
+      <!-- Active Selection Chip Pill -->
+      <div id="activeChipBar" class="active-selected-chip-bar">
+        <div class="active-chip-pill">
+          <span class="breadcrumb-dot"></span>
+          <span id="activeChipText" style="color: #fff; font-weight: 600;">appointment.service.ts (File)</span>
+          <button id="btnClearChip" class="chip-clear-btn" title="Bỏ chọn">Clear</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Stats & Credits -->
+    <div class="header-right">
+      <div class="stats-info-pill">
+        <span id="headerNodeCount">82</span> nodes
+        <span>·</span>
+        <span id="headerEdgeCount">137</span> edges
+        <span>·</span>
+        <span class="stats-green-dot"></span>
+        <span>Embedded Live</span>
+      </div>
+
+      <div class="credits-badge" title="Grapuco Credits Plan Active">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+        <span>1,313 Credits</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN WORKSPACE -->
+  <div class="grapuco-workspace">
+
+    <!-- 1. SLIM LEFT ICON RAIL -->
+    <nav class="slim-nav-rail">
+      <div class="rail-group">
+        <a href="/" class="rail-btn" title="Overview">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+        </a>
+        <a href="javascript:void(0)" class="rail-btn active" title="Repositories / Architecture Graph">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+        </a>
+        <a href="javascript:void(0)" class="rail-btn" title="API Keys">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"></path></svg>
+        </a>
+        <a href="javascript:void(0)" class="rail-btn" title="Usage">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+        </a>
+        <a href="/api/export/0-to-100-audit" class="rail-btn" title="Get Extension / Export Excel">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+        </a>
+        <a href="/3d" class="rail-btn" title="3D WebGL Mode">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polygon points="12 8 8 12 12 16 16 12 12 8"></polygon></svg>
+        </a>
+      </div>
+
+      <div class="rail-group">
+        <a href="javascript:void(0)" class="rail-btn" title="Settings">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+        </a>
+      </div>
+    </nav>
+
+    <!-- 2. SECONDARY SIDEBAR (FILTERS / EXPLORER / FLOWS) -->
+    <aside class="secondary-sidebar" id="secSidebar">
+      <div class="secondary-tabs-row">
+        <div class="tabs-btn-group">
+          <button class="sec-tab-btn active" data-tab="tabFilters">Filters</button>
+          <button class="sec-tab-btn" data-tab="tabExplorer">Explorer</button>
+          <button class="sec-tab-btn" data-tab="tabFlows">Flows</button>
+        </div>
+        <button class="collapse-sidebar-btn" id="btnToggleSidebar" title="Thu gọn bảng">‹</button>
+      </div>
+
+      <!-- TAB 1: FILTERS -->
+      <div id="tabFilters" class="sec-tab-content">
+        <div class="sidebar-section-title">NODE TYPES</div>
+        <div id="filterNodeTypesList">
+          <!-- Populated dynamically -->
+        </div>
+
+        <div class="sidebar-section-title" style="margin-top: 18px;">EDGE TYPES</div>
+        <div id="filterEdgeTypesList">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+
+      <!-- TAB 2: EXPLORER (TREE VIEW) -->
+      <div id="tabExplorer" class="sec-tab-content" style="display: none;">
+        <div class="sidebar-section-title">REPOSITORY DIRECTORY TREE</div>
+        <div id="explorerTreeList" style="font-size: 0.78rem; font-family: 'JetBrains Mono', monospace;">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+
+      <!-- TAB 3: FLOWS (Grapuco Frame 3 / 55) -->
+      <div id="tabFlows" class="sec-tab-content" style="display: none;">
+        <div class="sidebar-section-title" style="display: flex; align-items: center; gap: 6px;">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--grapuco-green)" stroke-width="2.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+          <span style="color: var(--grapuco-green);">5 ARCHITECTURE FLOWS</span>
+        </div>
+        <div id="flowsListContainer">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+    </aside>
+
+    <!-- 3. CENTER GRAPH CANVAS CONTAINER -->
+    <main class="graph-canvas-container" id="graphCanvasWrap">
+      <div id="force-graph-viewport"></div>
+
+      <!-- FLOATING CONTROLS (TOP RIGHT) -->
+      <div class="floating-controls-card">
+        <div class="controls-title">
+          <span>⚙ CONTROLS</span>
+          <button id="btnToggleFullscreen" style="background:transparent; border:none; color:var(--text-muted); cursor:pointer; font-size:0.75rem;" title="Toàn màn hình">⛶</button>
+        </div>
+        <div class="control-row">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="2" width="12" height="20" rx="6"></rect><line x1="12" y1="2" x2="12" y2="8"></line></svg>
+          <span><span class="ctrl-key">Left Click:</span> Select / Drag</span>
+        </div>
+        <div class="control-row">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="2" width="12" height="20" rx="6"></rect><line x1="12" y1="2" x2="12" y2="8"></line></svg>
+          <span><span class="ctrl-key">Right Click / Mid:</span> Pan Canvas</span>
+        </div>
+        <div class="control-row">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg>
+          <span><span class="ctrl-key">Scroll Wheel:</span> Zoom In / Out</span>
+        </div>
+      </div>
+
+      <!-- FLOATING LEGEND (BOTTOM LEFT) -->
+      <div class="floating-legend-card">
+        <div class="legend-title">LEGEND</div>
+        <div class="legend-grid">
+          <div class="legend-item"><span class="filter-color-dot" style="background: var(--c-method);"></span> Method</div>
+          <div class="legend-item"><span class="filter-color-dot" style="background: var(--c-class);"></span> Class</div>
+          <div class="legend-item"><span class="filter-color-dot" style="background: var(--c-file);"></span> File</div>
+          <div class="legend-item"><span class="filter-color-dot" style="background: var(--c-api);"></span> APIEndpoint</div>
+          <div class="legend-item"><span class="filter-color-dot" style="background: var(--c-model);"></span> DBModel</div>
+          <div class="legend-item"><span class="filter-color-dot" style="background: var(--c-broken);"></span> 404 Broken</div>
+        </div>
+      </div>
+
+      <!-- FLOATING STATUS BAR -->
+      <div class="floating-status-bar">
+        <span id="botNodesCount">82 nodes</span>
+        <span>·</span>
+        <span id="botEdgesCount">137 edges</span>
+        <span>·</span>
+        <span class="status-ready-dot"></span>
+        <span style="color: #cbd5e1;">Ready</span>
+      </div>
+
+      <!-- FLOATING ACTION BUTTON (BOTTOM RIGHT) -->
+      <button class="floating-fab-btn" id="btnFabAi" title="Grapuco AI Spec & Architecture Assistant">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 3l1.912 5.885L20 10.8l-4.706 4.588L16.4 21 12 17.5 7.6 21l1.106-5.612L4 10.8l6.088-1.915L12 3z"></path></svg>
+      </button>
+    </main>
+
+    <!-- 4. RIGHT DRAWER: NODE DETAIL & DATA FLOW -->
+    <aside class="right-drawer-panel" id="rightDrawer">
+      <div class="drawer-header">
+        <div class="drawer-title-label" id="drawerModeTitle">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+          <span id="drawerTitleText">NODE DETAIL</span>
+        </div>
+        <button class="drawer-close-btn" id="btnDrawerClose">✕</button>
+      </div>
+
+      <!-- NODE DETAIL VIEW -->
+      <div class="drawer-body" id="nodeDetailView">
+        <h3 class="node-hero-title" id="dNodeTitle">appointment.service.ts</h3>
+        <div class="node-type-pill" id="dNodeTypePill">
+          <span class="filter-color-dot" style="background: var(--c-file);"></span>
+          <span id="dNodeTypeName">File</span>
+        </div>
+
+        <div class="path-copy-box">
+          <span id="dNodePath" style="overflow:hidden; text-overflow:ellipsis;">wellspring.edu.vn/vi/chuong-trinh-dao-tao</span>
+          <button class="btn-copy-icon" id="btnCopyPath" title="Sao chép">📋</button>
+        </div>
+
+        <!-- Code / Schema block -->
+        <div class="code-preview-block" id="dNodeCodeBlock">
+@Module({
+  imports: [CambridgeModule, BilingualModule],
+  controllers: [TuitionController],
+  providers: [AdmissionService]
+})
+        </div>
+
+        <!-- Incoming Connections -->
+        <div class="relation-section-header header-incoming">
+          <span>← INCOMING</span>
+          <span id="dIncomingCount">(8)</span>
+        </div>
+        <div class="relation-list" id="dIncomingList">
+          <!-- Dynamically populated -->
+        </div>
+
+        <!-- Outgoing Connections -->
+        <div class="relation-section-header header-outgoing">
+          <span>→ OUTGOING</span>
+          <span id="dOutgoingCount">(24)</span>
+        </div>
+        <div class="relation-list" id="dOutgoingList">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+
+      <!-- DATA FLOW VIEW (When a Flow is selected) -->
+      <div class="drawer-body" id="flowDetailView" style="display: none;">
+        <h3 class="node-hero-title" id="dFlowTitle">GET /tuyen-sinh/tieu-hoc → khao-sat-lop-1</h3>
+        <div class="node-type-pill">
+          <span class="filter-color-dot" style="background: var(--grapuco-green);"></span>
+          <span id="dFlowCategory">Tuyển Sinh & Khảo Sát</span>
+        </div>
+
+        <p id="dFlowDesc" style="font-size: 0.78rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: 14px;">
+          Hành trình phụ huynh tìm hiểu cấp 1 từ cổng tuyển sinh tới bài cẩm nang hướng dẫn kỳ thi khảo sát năng lực.
+        </p>
+
+        <div class="relation-section-header header-incoming">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+          <span>FLOW STEPS</span>
+          <span id="dFlowStepCount">(4)</span>
+        </div>
+
+        <div class="flow-steps-timeline" id="dFlowStepsList">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+    </aside>
+
+  </div>
+
+  <script>
+    // State
+    let rawGraph = null;
+    let Graph = null;
+    let selectedNode = null;
+    let activeFlow = null;
+    let hoveredNode = null;
+    let visibleNodeTypes = new Set(['Method', 'Class', 'File', 'APIEndpoint', 'DBModel', '404 Broken']);
+    let visibleEdgeTypes = new Set(['DEFINES', 'IMPORTS', 'HAS_METHOD', 'STEP_IN_FLOW', 'CALLS', '404_BROKEN']);
+
+    // Flow definitions mapping to Wellspring architecture
+    const ARCHITECTURE_FLOWS = [
+      {
+        id: "flow-lop1",
+        method: "GET",
+        methodClass: "method-get",
+        title: "GET /tuyen-sinh/tieu-hoc → khao-sat-lop-1",
+        category: "Tuyển Sinh Lớp 1",
+        stepsCount: 4,
+        desc: "Chuỗi liên kết điều hướng phụ huynh từ trang chủ, qua cổng tiểu học tới cẩm nang khảo sát năng lực đầu vào lớp 1.",
+        nodeIds: [
+          "https://wellspring.edu.vn/vi",
+          "https://wellspring.edu.vn/vi/tuyen-sinh",
+          "https://wellspring.edu.vn/vi/tin-tuc/kinh-nghiem-giup-con-vuot-qua-ky-thi-khao-sat-nang-luc-lop-1-song-ngu",
+          "https://wellspring.edu.vn/vi/tin-tuc/khao-sat-nang-luc-lop-1-wellspring"
+        ],
+        steps: [
+          { num: 1, title: "Trang Chủ Tiếng Việt", path: "wellspring.edu.vn/vi" },
+          { num: 2, title: "Cổng Tuyển Sinh Chung", path: "wellspring.edu.vn/vi/tuyen-sinh" },
+          { num: 3, title: "Cẩm Nang Khảo Sát Lớp 1", path: "wellspring.edu.vn/vi/tin-tuc/kinh-nghiem-giup-con-vuot-qua..." },
+          { num: 4, title: "Mẫu Đề Đánh Giá Lớp 1", path: "wellspring.edu.vn/vi/tin-tuc/khao-sat-nang-luc-lop-1..." }
+        ]
+      },
+      {
+        id: "flow-hocphi",
+        method: "GET",
+        methodClass: "method-get",
+        title: "GET /tuyen-sinh/bieu-phi → hoc-phi-wellspring",
+        category: "Biểu Phí & Học Bổng",
+        stepsCount: 3,
+        desc: "Phễu chuyển đổi phụ huynh tìm kiếm học phí, tham khảo biểu phí chính thức và chính sách học bổng tài năng.",
+        nodeIds: [
+          "https://wellspring.edu.vn/vi",
+          "https://wellspring.edu.vn/vi/tuyen-sinh/bieu-phi",
+          "https://wellspring.edu.vn/vi/tin-tuc/hoc-phi-wellspring"
+        ],
+        steps: [
+          { num: 1, title: "Trang Chủ Tiếng Việt", path: "wellspring.edu.vn/vi" },
+          { num: 2, title: "Bảng Biểu Phí Chính Thức 2026-2027", path: "wellspring.edu.vn/vi/tuyen-sinh/bieu-phi" },
+          { num: 3, title: "Phân Tích Dự Toán Học Phí", path: "wellspring.edu.vn/vi/tin-tuc/hoc-phi-wellspring" }
+        ]
+      },
+      {
+        id: "flow-compare",
+        method: "COMPARE",
+        methodClass: "method-compare",
+        title: "COMPARE /vinschool-vs-wellspring → campus-tour",
+        category: "So Sánh Đối Thủ",
+        stepsCount: 3,
+        desc: "Luồng tiếp nhận phụ huynh từ Google/AI Overview so sánh Vinschool và Wellspring, điều hướng sang đặt lịch Campus Tour.",
+        nodeIds: [
+          "https://wellspring.edu.vn/vi/tin-tuc/so-sanh-chi-tiet-vinschool-hay-wellspring-phu-hop-hon-voi-con-ban-",
+          "https://wellspring.edu.vn/vi/tin-tuc/danh-gia-truong-wellspring",
+          "https://wellspring.edu.vn/vi/lien-he"
+        ],
+        steps: [
+          { num: 1, title: "So Sánh Vinschool vs Wellspring", path: "wellspring.edu.vn/vi/tin-tuc/so-sanh-chi-tiet-vinschool..." },
+          { num: 2, title: "Review Môi Trường Học Tập", path: "wellspring.edu.vn/vi/tin-tuc/danh-gia-truong-wellspring" },
+          { num: 3, title: "Đăng Ký Campus Tour 1-1", path: "wellspring.edu.vn/vi/lien-he" }
+        ]
+      },
+      {
+        id: "flow-songbang",
+        method: "PROGRAM",
+        methodClass: "method-program",
+        title: "PROGRAM /song-bang-hoa-ky → bang-tu-tai-my",
+        category: "Học Thuật Cambridge & AP",
+        stepsCount: 4,
+        desc: "Chuỗi đào tạo học thuật chuẩn quốc tế Cambridge K-12 kết nối trực tiếp với chương trình Song bằng Tú tài Hoa Kỳ (AP).",
+        nodeIds: [
+          "https://wellspring.edu.vn/vi/chuong-trinh-dao-tao",
+          "https://wellspring.edu.vn/vi/tin-tuc/chương-trình-cambridge",
+          "https://wellspring.edu.vn/vi/chuong-trinh-dao-tao/song-bang-hoa-ky",
+          "https://wellspring.edu.vn/vi/tin-tuc/lộ-trình-du-học-cấp-3"
+        ],
+        steps: [
+          { num: 1, title: "Trụ Cột Cambridge K-12", path: "wellspring.edu.vn/vi/chuong-trinh-dao-tao" },
+          { num: 2, title: "Lộ Trình Cambridge Quốc Tế", path: "wellspring.edu.vn/vi/tin-tuc/chuong-trinh-cambridge" },
+          { num: 3, title: "Trụ Cột Song Bằng Tú Tài Mỹ", path: "wellspring.edu.vn/vi/chuong-trinh-dao-tao/song-bang-hoa-ky" },
+          { num: 4, title: "Cẩm Nang Lộ Trình Du Học", path: "wellspring.edu.vn/vi/tin-tuc/lo-trinh-du-hoc-cap-3" }
+        ]
+      },
+      {
+        id: "flow-broken404",
+        method: "ALERT",
+        methodClass: "method-alert",
+        title: "ALERT /vichinh-sach-bao-mat → redirect-301",
+        category: "Kỹ Thuật & Vá Code",
+        stepsCount: 2,
+        desc: "Chuỗi phát hiện liên kết dính ký tự lỗi 404 từ thanh điều hướng chân trang và chỉ định mã vá Nginx 301.",
+        nodeIds: [
+          "https://wellspring.edu.vn/vi",
+          "https://wellspring.edu.vn/vichinh-sach-bao-mat"
+        ],
+        steps: [
+          { num: 1, title: "Trang Nguồn Gây Lỗi (Footer)", path: "wellspring.edu.vn/vi" },
+          { num: 2, title: "🚨 Link Gãy HTTP 404", path: "wellspring.edu.vn/vichinh-sach-bao-mat" }
+        ]
+      }
+    ];
+
+    // Node Type Config matching Grapuco
+    function getNodeType(node) {
+      if (node.status === 404 || (node.group && node.group === 'broken')) return '404 Broken';
+      if (node.type && node.type.includes('Pillar')) return 'Class';
+      if (node.group === 'hub') return 'APIEndpoint';
+      if (node.group === 'cluster2' || node.group === 'cluster3') return 'DBModel';
+      if (node.group === 'cluster1' || node.group === 'cluster5') return 'Method';
+      return 'File';
+    }
+
+    function getNodeColor(node) {
+      const t = getNodeType(node);
+      switch(t) {
+        case 'APIEndpoint': return '#00e575';
+        case 'Class': return '#eab308';
+        case 'Method': return '#3b82f6';
+        case 'DBModel': return '#d97706';
+        case '404 Broken': return '#ef4444';
+        default: return '#f97316';
+      }
+    }
+
+    function getEdgeType(link) {
+      if (link.type && link.type.includes('404')) return '404_BROKEN';
+      if (link.type && link.type.includes('Navigation')) return 'DEFINES';
+      if (link.type && link.type.includes('Pillar')) return 'IMPORTS';
+      if (link.type && link.type.includes('Deep Link')) return 'HAS_METHOD';
+      if (link.type && link.type.includes('Cluster')) return 'STEP_IN_FLOW';
+      return 'CALLS';
+    }
+
+    function getEdgeColor(edgeType) {
+      switch(edgeType) {
+        case 'DEFINES': return '#00e575';
+        case 'IMPORTS': return '#3b82f6';
+        case 'HAS_METHOD': return '#06b6d4';
+        case 'STEP_IN_FLOW': return '#10b981';
+        case 'CALLS': return '#f97316';
+        case '404_BROKEN': return '#ef4444';
+        default: return 'rgba(255, 255, 255, 0.2)';
+      }
+    }
+
+    // Initialize Grapuco Architecture Graph
+    async function initGrapucoApp() {
+      try {
+        const res = await fetch('/api/3d-graph/data');
+        rawGraph = await res.json();
+      } catch (e) {
+        const res = await fetch('/data/wellspring_3d_graph.json');
+        rawGraph = await res.json();
+      }
+
+      // Enrich nodes and links with Grapuco schemas
+      rawGraph.nodes.forEach(n => {
+        n.grapType = getNodeType(n);
+        n.grapColor = getNodeColor(n);
+        n.inlinksList = [];
+        n.outlinksList = [];
+      });
+
+      rawGraph.links.forEach(l => {
+        l.grapEdgeType = getEdgeType(l);
+        l.grapColor = getEdgeColor(l.grapEdgeType);
+        
+        const sId = typeof l.source === 'object' ? l.source.id : l.source;
+        const tId = typeof l.target === 'object' ? l.target.id : l.target;
+        const sNode = rawGraph.nodes.find(n => n.id === sId);
+        const tNode = rawGraph.nodes.find(n => n.id === tId);
+        
+        if (sNode) sNode.outlinksList.push({ target: tId, edge: l.grapEdgeType, anchor: l.anchor });
+        if (tNode) tNode.inlinksList.push({ source: sId, edge: l.grapEdgeType, anchor: l.anchor });
+      });
+
+      // Update Header counts
+      document.getElementById('headerNodeCount').textContent = rawGraph.nodes.length;
+      document.getElementById('headerEdgeCount').textContent = rawGraph.links.length;
+      document.getElementById('botNodesCount').textContent = `${rawGraph.nodes.length} nodes`;
+      document.getElementById('botEdgesCount').textContent = `${rawGraph.links.length} edges`;
+
+      // Render Filters list
+      renderFiltersSidebar();
+      renderFlowsSidebar();
+      renderExplorerSidebar();
+
+      // Mount ForceGraph Canvas
+      const elem = document.getElementById('force-graph-viewport');
+      Graph = ForceGraph()(elem)
+        .graphData(rawGraph)
+        .backgroundColor('#0c0e12')
+        .nodeId('id')
+        .nodeVal(n => n.val || 10)
+        .nodeColor(n => n.grapColor)
+        // CUSTOM CANVAS RENDERING 1:1 TO GRAPUCO
+        .nodeCanvasObject((node, ctx, globalScale) => {
+          const isSelected = selectedNode && selectedNode.id === node.id;
+          const isFlowActive = activeFlow && activeFlow.nodeIds.includes(node.id);
+          const isDimmed = (selectedNode && !isNodeConnected(selectedNode, node) && selectedNode.id !== node.id) ||
+                           (activeFlow && !activeFlow.nodeIds.includes(node.id));
+
+          // Radius
+          const baseR = Math.cbrt(node.val || 10) * 2.8;
+          const r = isSelected ? baseR * 1.3 : baseR;
+
+          ctx.save();
+          ctx.globalAlpha = isDimmed ? 0.08 : 1.0;
+
+          // Glowing outer aura if selected or in active flow
+          if (isSelected || isFlowActive) {
+            ctx.beginPath();
+            ctx.arc(node.x, node.y, r + 6, 0, 2 * Math.PI, false);
+            ctx.fillStyle = isSelected ? 'rgba(0, 229, 117, 0.3)' : 'rgba(56, 189, 248, 0.3)';
+            ctx.fill();
+          }
+
+          // Node Circle
+          ctx.beginPath();
+          ctx.arc(node.x, node.y, r, 0, 2 * Math.PI, false);
+          ctx.fillStyle = node.grapColor;
+          ctx.fill();
+
+          // Dark inner border
+          ctx.lineWidth = 1.5;
+          ctx.strokeStyle = '#0c0e12';
+          ctx.stroke();
+
+          // Label below node
+          if (globalScale > 0.6 || isSelected || isFlowActive || (hoveredNode && hoveredNode.id === node.id)) {
+            const label = node.shortName || node.name || 'node';
+            const fontSize = Math.max(10 / globalScale, 3);
+            ctx.font = `600 ${fontSize}px "JetBrains Mono", monospace`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'top';
+            
+            // Label shadow / glow
+            ctx.fillStyle = (isSelected || isFlowActive) ? '#00e575' : '#e2e8f0';
+            ctx.fillText(label.length > 24 ? label.slice(0, 22) + '..' : label, node.x, node.y + r + 3);
+          }
+
+          // Hover pill badge (Grapuco Frame 1 / 85)
+          if (hoveredNode && hoveredNode.id === node.id) {
+            const badgeText = `${node.shortName || node.name} (${node.grapType})`;
+            const bFont = Math.max(11 / globalScale, 4);
+            ctx.font = `700 ${bFont}px "Inter", sans-serif`;
+            const textW = ctx.measureText(badgeText).width;
+            const bPadX = 8 / globalScale;
+            const bPadY = 4 / globalScale;
+            const bH = bFont + bPadY * 2;
+            const bW = textW + bPadX * 2;
+            const bX = node.x - bW / 2;
+            const bY = node.y - r - bH - 4;
+
+            // Pill background
+            ctx.fillStyle = 'rgba(12, 14, 18, 0.95)';
+            ctx.beginPath();
+            if (ctx.roundRect) ctx.roundRect(bX, bY, bW, bH, 4 / globalScale);
+            else ctx.rect(bX, bY, bW, bH);
+            ctx.fill();
+
+            // Border
+            ctx.strokeStyle = node.grapColor;
+            ctx.lineWidth = 1 / globalScale;
+            ctx.stroke();
+
+            // Text
+            ctx.fillStyle = '#ffffff';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(badgeText, node.x, bY + bH / 2);
+          }
+
+          ctx.restore();
+        })
+        .nodePointerAreaPaint((node, color, ctx) => {
+          const r = Math.cbrt(node.val || 10) * 3.5;
+          ctx.beginPath();
+          ctx.arc(node.x, node.y, r, 0, 2 * Math.PI, false);
+          ctx.fillStyle = color;
+          ctx.fill();
+        })
+        // CUSTOM EDGE RENDERING WITH LABELS (DEFINES, IMPORTS, etc.)
+        .linkCanvasObject((link, ctx, globalScale) => {
+          const s = link.source;
+          const t = link.target;
+          if (typeof s !== 'object' || typeof t !== 'object') return;
+
+          const isFlowLink = activeFlow && activeFlow.nodeIds.includes(s.id) && activeFlow.nodeIds.includes(t.id);
+          const isSelectedLink = selectedNode && (s.id === selectedNode.id || t.id === selectedNode.id);
+          const isDimmed = (selectedNode && !isSelectedLink) || (activeFlow && !isFlowLink);
+
+          ctx.save();
+          ctx.globalAlpha = isDimmed ? 0.04 : (isFlowLink || isSelectedLink ? 1.0 : 0.6);
+
+          // Draw line
+          ctx.beginPath();
+          ctx.moveTo(s.x, s.y);
+          ctx.lineTo(t.x, t.y);
+          ctx.strokeStyle = isFlowLink ? '#00e575' : (isSelectedLink ? '#38bdf8' : link.grapColor);
+          ctx.lineWidth = isFlowLink ? 2.8 : (isSelectedLink ? 2.0 : 1.2);
+          ctx.stroke();
+
+          // Render edge type text label on line if zoomed in or active
+          if (globalScale > 1.1 || isFlowLink || isSelectedLink) {
+            const midX = (s.x + t.x) / 2;
+            const midY = (s.y + t.y) / 2;
+            const edgeLabel = link.grapEdgeType || 'CALLS';
+            const fontSize = Math.max(7 / globalScale, 2.5);
+            ctx.font = `700 ${fontSize}px "JetBrains Mono", monospace`;
+            ctx.fillStyle = isFlowLink ? '#00e575' : link.grapColor;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(edgeLabel, midX, midY);
+          }
+
+          ctx.restore();
+        })
+        // DRAGGING SUPPORT (User requirement)
+        .enableNodeDrag(true)
+        .onNodeDrag((node) => {
+          selectNode(node);
+        })
+        .onNodeHover(node => {
+          hoveredNode = node;
+          elem.style.cursor = node ? 'grab' : 'default';
+        })
+        .onNodeClick(node => {
+          selectNode(node);
+          Graph.centerAt(node.x, node.y, 600);
+          Graph.zoom(1.8, 600);
+        })
+        .onBackgroundClick(() => {
+          clearSelection();
+        })
+        // Physics settings for stable aesthetic layout
+        .d3VelocityDecay(0.3)
+        .cooldownTicks(80);
+
+      // Setup window resize
+      window.addEventListener('resize', () => {
+        const wrap = document.getElementById('graphCanvasWrap');
+        Graph.width(wrap.clientWidth).height(wrap.clientHeight);
+      });
+
+      // Keyboard shortcut ⌘K / Ctrl+K
+      window.addEventListener('keydown', (e) => {
+        if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+          e.preventDefault();
+          document.getElementById('grapSearchInput').focus();
+        }
+      });
+
+      setupSearch();
+
+      // Check URL query parameters (?flow=0..4 or ?node=id)
+      const urlParams = new URLSearchParams(window.location.search);
+      const flowParam = urlParams.get('flow');
+      const nodeParam = urlParams.get('node');
+      if (flowParam !== null) {
+        const fIdx = parseInt(flowParam, 10);
+        if (ARCHITECTURE_FLOWS[fIdx]) {
+          setTimeout(() => {
+            switchTab('tabFlows');
+            selectFlow(ARCHITECTURE_FLOWS[fIdx]);
+          }, 400);
+        }
+      } else if (nodeParam) {
+        const targetNode = rawGraph.nodes.find(n => n.id === nodeParam || n.url.includes(nodeParam));
+        if (targetNode) {
+          setTimeout(() => {
+            selectNode(targetNode);
+            Graph.centerAt(targetNode.x, targetNode.y, 600);
+            Graph.zoom(1.8, 600);
+          }, 400);
+        }
+      }
+    }
+
+    // Check if node is directly connected
+    function isNodeConnected(a, b) {
+      return rawGraph.links.some(l => {
+        const sId = typeof l.source === 'object' ? l.source.id : l.source;
+        const tId = typeof l.target === 'object' ? l.target.id : l.target;
+        return (sId === a.id && tId === b.id) || (sId === b.id && tId === a.id);
+      });
+    }
+
+    // Select Node and open right drawer
+    function selectNode(node) {
+      selectedNode = node;
+      activeFlow = null;
+      document.querySelectorAll('.flow-card-item').forEach(c => c.classList.remove('active'));
+
+      // Show selection chip below search
+      const chipBar = document.getElementById('activeChipBar');
+      const chipText = document.getElementById('activeChipText');
+      chipText.textContent = `${node.shortName || node.name} (${node.grapType})`;
+      chipBar.style.display = 'block';
+
+      // Open Right Drawer in Node Detail Mode
+      document.getElementById('drawerTitleText').textContent = 'NODE DETAIL';
+      document.getElementById('nodeDetailView').style.display = 'block';
+      document.getElementById('flowDetailView').style.display = 'none';
+
+      document.getElementById('dNodeTitle').textContent = node.name || node.shortName;
+      document.getElementById('dNodeTypeName').textContent = node.grapType;
+      document.getElementById('dNodeTypePill').querySelector('.filter-color-dot').style.background = node.grapColor;
+      document.getElementById('dNodePath').textContent = node.url;
+
+      // Code Block Preview
+      document.getElementById('dNodeCodeBlock').textContent = `// Target Keyword: ${node.targetKw || 'none'}
+// Intent: ${node.intent || 'Informational'}
+// Words: ${node.words || 0} | Status: ${node.status || 200}
+// Thẻ H1: ${node.h1 || 'None'}
+
+export const ${node.shortName.replace(/[^a-zA-Z0-9]/g, '_')} = {
+  url: "${node.url}",
+  inlinks: ${node.inlinks || 0},
+  outlinks: ${node.outlinks || 0}
+};`;
+
+      // Incoming list
+      const inList = document.getElementById('dIncomingList');
+      inList.innerHTML = '';
+      document.getElementById('dIncomingCount').textContent = `(${node.inlinksList.length})`;
+      if (node.inlinksList.length > 0) {
+        node.inlinksList.slice(0, 10).forEach(item => {
+          const sNode = rawGraph.nodes.find(n => n.id === item.source);
+          const div = document.createElement('div');
+          div.className = 'relation-item';
+          div.innerHTML = `
+            <div class="rel-name-group">
+              <span class="filter-color-dot" style="background: ${sNode ? sNode.grapColor : 'var(--grapuco-green)'};"></span>
+              <span class="rel-name">${escapeHtml(sNode ? (sNode.shortName || sNode.name) : item.source)}</span>
+            </div>
+            <span class="rel-edge-tag">← ${item.edge}</span>
+          `;
+          div.onclick = () => {
+            if (sNode) {
+              selectNode(sNode);
+              Graph.centerAt(sNode.x, sNode.y, 600);
+            }
+          };
+          inList.appendChild(div);
+        });
+      } else {
+        inList.innerHTML = '<span style="font-size:0.72rem; color:var(--text-muted); font-style:italic;">Không có liên kết trỏ tới (Trang mồ côi)</span>';
+      }
+
+      // Outgoing list
+      const outList = document.getElementById('dOutgoingList');
+      outList.innerHTML = '';
+      document.getElementById('dOutgoingCount').textContent = `(${node.outlinksList.length})`;
+      if (node.outlinksList.length > 0) {
+        node.outlinksList.slice(0, 10).forEach(item => {
+          const tNode = rawGraph.nodes.find(n => n.id === item.target);
+          const div = document.createElement('div');
+          div.className = 'relation-item';
+          div.innerHTML = `
+            <div class="rel-name-group">
+              <span class="filter-color-dot" style="background: ${tNode ? tNode.grapColor : 'var(--c-file)'};"></span>
+              <span class="rel-name">${escapeHtml(tNode ? (tNode.shortName || tNode.name) : item.target)}</span>
+            </div>
+            <span class="rel-edge-tag">→ ${item.edge}</span>
+          `;
+          div.onclick = () => {
+            if (tNode) {
+              selectNode(tNode);
+              Graph.centerAt(tNode.x, tNode.y, 600);
+            }
+          };
+          outList.appendChild(div);
+        });
+      } else {
+        outList.innerHTML = '<span style="font-size:0.72rem; color:var(--text-muted); font-style:italic;">Không có liên kết dẫn đi (Trang cụt)</span>';
+      }
+
+      document.getElementById('rightDrawer').style.display = 'flex';
+    }
+
+    // Select Flow (Grapuco Frame 3 / 55)
+    function selectFlow(flow) {
+      activeFlow = flow;
+      selectedNode = null;
+      document.getElementById('activeChipBar').style.display = 'none';
+
+      // Highlight active flow card
+      document.querySelectorAll('.flow-card-item').forEach(c => c.classList.remove('active'));
+      const activeCard = document.querySelector(`[data-flow-id="${flow.id}"]`);
+      if (activeCard) activeCard.classList.add('active');
+
+      // Open Right Drawer in Flow Mode
+      document.getElementById('drawerTitleText').textContent = 'DATA FLOW';
+      document.getElementById('nodeDetailView').style.display = 'none';
+      document.getElementById('flowDetailView').style.display = 'block';
+
+      document.getElementById('dFlowTitle').textContent = flow.title;
+      document.getElementById('dFlowCategory').textContent = flow.category;
+      document.getElementById('dFlowDesc').textContent = flow.desc;
+      document.getElementById('dFlowStepCount').textContent = `(${flow.steps.length})`;
+
+      const stepsList = document.getElementById('dFlowStepsList');
+      stepsList.innerHTML = '';
+      flow.steps.forEach(st => {
+        const div = document.createElement('div');
+        div.className = 'flow-step-box';
+        div.innerHTML = `
+          <div class="flow-step-num">${st.num}</div>
+          <div class="flow-step-content">
+            <div class="flow-step-title">${escapeHtml(st.title)}</div>
+            <div class="flow-step-path">${escapeHtml(st.path)}</div>
+          </div>
+        `;
+        div.onclick = () => {
+          const matchNode = rawGraph.nodes.find(n => n.id.includes(st.path) || (st.path.includes(n.id)));
+          if (matchNode) {
+            Graph.centerAt(matchNode.x, matchNode.y, 600);
+            Graph.zoom(2.0, 600);
+          }
+        };
+        stepsList.appendChild(div);
+      });
+
+      document.getElementById('rightDrawer').style.display = 'flex';
+
+      // Re-center on first node of flow
+      const firstNode = rawGraph.nodes.find(n => n.id === flow.nodeIds[0]);
+      if (firstNode) {
+        Graph.centerAt(firstNode.x, firstNode.y, 800);
+        Graph.zoom(1.4, 800);
+      }
+    }
+
+    function clearSelection() {
+      selectedNode = null;
+      activeFlow = null;
+      document.getElementById('activeChipBar').style.display = 'none';
+      document.getElementById('rightDrawer').style.display = 'none';
+      document.querySelectorAll('.flow-card-item').forEach(c => c.classList.remove('active'));
+    }
+
+    // Filters Sidebar Render
+    function renderFiltersSidebar() {
+      const nodeCounts = {};
+      rawGraph.nodes.forEach(n => {
+        nodeCounts[n.grapType] = (nodeCounts[n.grapType] || 0) + 1;
+      });
+
+      const nodeTypesList = [
+        { type: 'Method', color: 'var(--c-method)' },
+        { type: 'Class', color: 'var(--c-class)' },
+        { type: 'File', color: 'var(--c-file)' },
+        { type: 'APIEndpoint', color: 'var(--c-api)' },
+        { type: 'DBModel', color: 'var(--c-model)' },
+        { type: '404 Broken', color: 'var(--c-broken)' }
+      ];
+
+      const nContainer = document.getElementById('filterNodeTypesList');
+      nContainer.innerHTML = '';
+      nodeTypesList.forEach(item => {
+        const row = document.createElement('div');
+        row.className = 'filter-item-row';
+        row.innerHTML = `
+          <div class="filter-label-group">
+            <input type="checkbox" checked data-type="${item.type}" style="accent-color: var(--grapuco-green); cursor: pointer;" />
+            <span class="filter-color-dot" style="background: ${item.color};"></span>
+            <span>${item.type}</span>
+          </div>
+          <span class="filter-count-badge">${nodeCounts[item.type] || 0}</span>
+        `;
+        row.querySelector('input').addEventListener('change', (e) => {
+          if (e.target.checked) visibleNodeTypes.add(item.type);
+          else visibleNodeTypes.delete(item.type);
+          applyFilters();
+        });
+        nContainer.appendChild(row);
+      });
+
+      // Edge Types
+      const edgeCounts = {};
+      rawGraph.links.forEach(l => {
+        edgeCounts[l.grapEdgeType] = (edgeCounts[l.grapEdgeType] || 0) + 1;
+      });
+
+      const edgeTypesList = [
+        { type: 'DEFINES', color: '#00e575' },
+        { type: 'IMPORTS', color: '#3b82f6' },
+        { type: 'HAS_METHOD', color: '#06b6d4' },
+        { type: 'STEP_IN_FLOW', color: '#10b981' },
+        { type: 'CALLS', color: '#f97316' },
+        { type: '404_BROKEN', color: '#ef4444' }
+      ];
+
+      const eContainer = document.getElementById('filterEdgeTypesList');
+      eContainer.innerHTML = '';
+      edgeTypesList.forEach(item => {
+        const row = document.createElement('div');
+        row.className = 'filter-item-row';
+        row.innerHTML = `
+          <div class="filter-label-group">
+            <input type="checkbox" checked data-edge="${item.type}" style="accent-color: var(--grapuco-green); cursor: pointer;" />
+            <span class="filter-color-line" style="background: ${item.color};"></span>
+            <span>${item.type}</span>
+          </div>
+          <span class="filter-count-badge">${edgeCounts[item.type] || 0}</span>
+        `;
+        row.querySelector('input').addEventListener('change', (e) => {
+          if (e.target.checked) visibleEdgeTypes.add(item.type);
+          else visibleEdgeTypes.delete(item.type);
+          applyFilters();
+        });
+        eContainer.appendChild(row);
+      });
+    }
+
+    function applyFilters() {
+      const filteredNodes = rawGraph.nodes.filter(n => visibleNodeTypes.has(n.grapType));
+      const filteredIds = new Set(filteredNodes.map(n => n.id));
+      const filteredLinks = rawGraph.links.filter(l => {
+        const s = typeof l.source === 'object' ? l.source.id : l.source;
+        const t = typeof l.target === 'object' ? l.target.id : l.target;
+        return filteredIds.has(s) && filteredIds.has(t) && visibleEdgeTypes.has(l.grapEdgeType);
+      });
+
+      Graph.graphData({ nodes: filteredNodes, links: filteredLinks });
+    }
+
+    // Flows Sidebar Render (Frame 3)
+    function renderFlowsSidebar() {
+      const c = document.getElementById('flowsListContainer');
+      c.innerHTML = '';
+      ARCHITECTURE_FLOWS.forEach(flow => {
+        const div = document.createElement('div');
+        div.className = 'flow-card-item';
+        div.dataset.flowId = flow.id;
+        div.innerHTML = `
+          <div class="flow-card-header">
+            <span class="flow-method-badge ${flow.methodClass}">${flow.method}</span>
+            <span class="flow-name" title="${escapeHtml(flow.title)}">${escapeHtml(flow.title)}</span>
+          </div>
+          <div class="flow-sub">
+            <span>${escapeHtml(flow.category)}</span>
+            <span>${flow.stepsCount} steps</span>
+          </div>
+        `;
+        div.onclick = () => selectFlow(flow);
+        c.appendChild(div);
+      });
+    }
+
+    // Explorer Sidebar Render (Tree View)
+    function renderExplorerSidebar() {
+      const c = document.getElementById('explorerTreeList');
+      c.innerHTML = `
+        <div style="padding: 4px 0; color: #fff;">📁 wellspring.edu.vn/</div>
+        <div style="padding-left: 14px;">
+          <div style="padding: 3px 0; color: var(--grapuco-green);">📁 vi/ (Trang chủ Tiếng Việt)</div>
+          <div style="padding-left: 14px;">
+            <div style="padding: 2px 0; cursor:pointer;" onclick="selectNodeById('https://wellspring.edu.vn/vi/chuong-trinh-dao-tao')">📄 chuong-trinh-dao-tao/ (Cambridge)</div>
+            <div style="padding: 2px 0; cursor:pointer;" onclick="selectNodeById('https://wellspring.edu.vn/vi/tuyen-sinh/bieu-phi')">📄 tuyen-sinh/bieu-phi/ (Biểu phí)</div>
+            <div style="padding: 2px 0; cursor:pointer;" onclick="selectNodeById('https://wellspring.edu.vn/vi/tuyen-sinh')">📄 tuyen-sinh/ (Cổng tuyển sinh)</div>
+            <div style="padding: 2px 0; cursor:pointer;" onclick="selectNodeById('https://wellspring.edu.vn/vi/chuong-trinh-dao-tao/song-bang-hoa-ky')">📄 song-bang-hoa-ky/ (AP Mỹ)</div>
+            <div style="padding: 2px 0; color: var(--c-file);">📁 tin-tuc/ (34 bài viết hoạt động)</div>
+          </div>
+          <div style="padding: 3px 0; color: var(--c-broken);">🚨 vichinh-sach-bao-mat (404 Broken)</div>
+        </div>
+      `;
+    }
+
+    function selectNodeById(id) {
+      const n = rawGraph.nodes.find(node => node.id === id);
+      if (n) {
+        selectNode(n);
+        Graph.centerAt(n.x, n.y, 600);
+        Graph.zoom(2.0, 600);
+      }
+    }
+
+    // Search and Autocomplete
+    function setupSearch() {
+      const input = document.getElementById('grapSearchInput');
+      const dd = document.getElementById('grapSearchDropdown');
+
+      input.addEventListener('input', (e) => {
+        const q = e.target.value.toLowerCase().trim();
+        if (!q) {
+          dd.style.display = 'none';
+          return;
+        }
+
+        const matches = rawGraph.nodes.filter(n =>
+          (n.name && n.name.toLowerCase().includes(q)) ||
+          (n.shortName && n.shortName.toLowerCase().includes(q)) ||
+          (n.url && n.url.toLowerCase().includes(q))
+        ).slice(0, 8);
+
+        if (matches.length > 0) {
+          dd.innerHTML = '';
+          matches.forEach(m => {
+            const item = document.createElement('div');
+            item.className = 'search-dropdown-item';
+            item.innerHTML = `
+              <div class="search-item-left">
+                <span class="filter-color-dot" style="background: ${m.grapColor};"></span>
+                <span class="search-item-name">${escapeHtml(m.name || m.shortName)}</span>
+              </div>
+              <span class="search-item-type">${m.grapType}</span>
+            `;
+            item.onclick = () => {
+              input.value = '';
+              dd.style.display = 'none';
+              selectNode(m);
+              Graph.centerAt(m.x, m.y, 600);
+              Graph.zoom(2.0, 600);
+            };
+            dd.appendChild(item);
+          });
+          dd.style.display = 'block';
+        } else {
+          dd.style.display = 'none';
+        }
+      });
+
+      document.addEventListener('click', (e) => {
+        if (!input.contains(e.target) && !dd.contains(e.target)) {
+          dd.style.display = 'none';
+        }
+      });
+
+      // Clear chip button
+      document.getElementById('btnClearChip').onclick = () => {
+        clearSelection();
+      };
+    }
+
+    function switchTab(tabId) {
+      const btn = document.querySelector(`.sec-tab-btn[data-tab="${tabId}"]`);
+      if (btn) btn.click();
+    }
+
+    // Tabs inside Secondary Sidebar
+    document.querySelectorAll('.sec-tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.sec-tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        document.getElementById('tabFilters').style.display = 'none';
+        document.getElementById('tabExplorer').style.display = 'none';
+        document.getElementById('tabFlows').style.display = 'none';
+
+        const tabId = btn.dataset.tab;
+        document.getElementById(tabId).style.display = 'block';
+      });
+    });
+
+    // Toggle Secondary Sidebar collapse
+    const btnToggleSidebar = document.getElementById('btnToggleSidebar');
+    let isSidebarCollapsed = false;
+    btnToggleSidebar.onclick = () => {
+      isSidebarCollapsed = !isSidebarCollapsed;
+      const sec = document.getElementById('secSidebar');
+      sec.style.width = isSidebarCollapsed ? '0px' : '280px';
+      sec.style.overflow = isSidebarCollapsed ? 'hidden' : 'visible';
+      btnToggleSidebar.textContent = isSidebarCollapsed ? '›' : '‹';
+    };
+
+    // Close Right Drawer
+    document.getElementById('btnDrawerClose').onclick = () => {
+      clearSelection();
+    };
+
+    // Copy Path Button
+    document.getElementById('btnCopyPath').onclick = () => {
+      if (selectedNode) {
+        navigator.clipboard.writeText(selectedNode.url).then(() => {
+          document.getElementById('btnCopyPath').textContent = '✅';
+          setTimeout(() => { document.getElementById('btnCopyPath').textContent = '📋'; }, 2000);
+        });
+      }
+    };
+
+    // Toggle Fullscreen
+    document.getElementById('btnToggleFullscreen').onclick = () => {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen();
+      } else {
+        document.exitFullscreen();
+      }
+    };
+
+    // FAB Button (AI Architecture Assistant)
+    document.getElementById('btnFabAi').onclick = () => {
+      alert("✨ Grapuco AI Spec Agent: Đang quét toàn bộ 82 nodes và 137 liên kết của Wellspring. Phát hiện 5 Topic Clusters đạt chuẩn Hub-and-Spoke và 10 liên kết 404 cần Rewrite Nginx 301.");
+    };
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    // Initialize on load
+    window.addEventListener('DOMContentLoaded', initGrapucoApp);
+  </script>
+</body>
+</html>
