@@ -2787,6 +2787,11 @@ class AuditHTTPHandler(http.server.SimpleHTTPRequestHandler):
                 self.send_response(500)
                 self.end_headers()
                 self.wfile.write(str(e).encode("utf-8"))
+        elif parsed_path.path in ["/slides", "/presentation", "/deck"]:
+            self.send_response(302)
+            q_str = ("?" + parsed_path.query) if parsed_path.query else ""
+            self.send_header("Location", "/seo-executive-presentation.html" + q_str)
+            self.end_headers()
         elif parsed_path.path in ["/grapuco", "/architecture", "/architecture-graph"]:
             self.send_response(302)
             self.send_header("Location", "/grapuco.html")

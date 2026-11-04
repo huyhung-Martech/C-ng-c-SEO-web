@@ -1,0 +1,1336 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Báo Cáo Chiến Lược SEO & AI Search 2026 | Wellspring Hanoi (Executive Presentation)</title>
+  
+  <!-- Premium Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* ===========================================
+       CSS CUSTOM PROPERTIES & COLOR SYSTEM (Executive Dark Modern)
+       =========================================== */
+    :root {
+      --bg-dark: #090b10;
+      --bg-surface: #10141d;
+      --bg-card: rgba(22, 27, 38, 0.75);
+      --border-card: rgba(255, 255, 255, 0.08);
+      --border-accent: rgba(0, 229, 117, 0.3);
+
+      --text-main: #f8fafc;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+
+      --neon-mint: #00e575;
+      --neon-cyan: #38bdf8;
+      --neon-orange: #ff642d;
+      --neon-amber: #fbbf24;
+      --neon-rose: #f43f5e;
+
+      --font-display: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+
+      /* Mandatory Viewport Clamps */
+      --title-size: clamp(1.6rem, 3.8vw, 3.2rem);
+      --h2-size: clamp(1.3rem, 2.5vw, 2.2rem);
+      --h3-size: clamp(0.95rem, 1.4vw, 1.35rem);
+      --body-size: clamp(0.72rem, 1.05vw, 0.95rem);
+      --small-size: clamp(0.62rem, 0.85vw, 0.82rem);
+
+      --slide-padding: clamp(1.2rem, 3.2vw, 3.5rem);
+      --gap-main: clamp(0.6rem, 1.4vw, 1.5rem);
+      --gap-sub: clamp(0.4rem, 0.8vw, 0.9rem);
+
+      --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+      --duration-normal: 0.55s;
+    }
+
+    /* ===========================================
+       VIEWPORT FITTING MANDATORY BASE STYLES
+       =========================================== */
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: var(--bg-dark);
+      color: var(--text-main);
+      font-family: var(--font-display);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Slide Deck Container */
+    .slides-viewport {
+      width: 100vw;
+      height: 100vh;
+      height: 100dvh;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Individual Slide */
+    .slide {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      height: 100dvh;
+      overflow: hidden; /* STRICT NO-SCROLL INVARIANT */
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity var(--duration-normal) var(--ease-out-expo),
+                  transform var(--duration-normal) var(--ease-out-expo);
+      transform: translateY(20px) scale(0.99);
+      display: flex;
+      flex-direction: column;
+      padding: var(--slide-padding);
+      background: radial-gradient(circle at 80% 20%, rgba(56, 189, 248, 0.05) 0%, transparent 50%),
+                  radial-gradient(circle at 20% 80%, rgba(0, 229, 117, 0.04) 0%, transparent 40%),
+                  var(--bg-dark);
+    }
+
+    .slide.active {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transform: translateY(0) scale(1);
+      z-index: 10;
+    }
+
+    /* Header Bar within Slide */
+    .slide-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: clamp(0.5rem, 1vh, 1rem);
+      border-bottom: 1px solid var(--border-card);
+      margin-bottom: var(--gap-main);
+      flex-shrink: 0;
+    }
+
+    .slide-meta-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .meta-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-mono);
+      font-size: var(--small-size);
+      font-weight: 700;
+      color: var(--neon-mint);
+      background: rgba(0, 229, 117, 0.1);
+      padding: 3px 8px;
+      border-radius: 4px;
+      border: 1px solid rgba(0, 229, 117, 0.25);
+      letter-spacing: 0.02em;
+    }
+
+    .meta-brand {
+      font-size: var(--small-size);
+      font-weight: 600;
+      color: var(--text-secondary);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .slide-meta-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      font-size: var(--small-size);
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+    }
+
+    /* Slide Content Core (Flex 1 to occupy remaining height without overflow) */
+    .slide-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-height: 0; /* Prevents flex children from causing parent overflow */
+      position: relative;
+    }
+
+    /* Slide Titles */
+    .slide-title-hero {
+      font-size: var(--title-size);
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+      margin-bottom: clamp(0.4rem, 1vh, 0.8rem);
+      background: linear-gradient(135deg, #ffffff 30%, #cbd5e1 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .slide-subtitle-hero {
+      font-size: var(--h3-size);
+      font-weight: 500;
+      color: var(--neon-cyan);
+      line-height: 1.35;
+      margin-bottom: clamp(0.8rem, 2vh, 1.6rem);
+    }
+
+    /* Cards & Grids */
+    .grid-2col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--gap-main);
+      align-items: stretch;
+    }
+
+    .grid-3col {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--gap-main);
+      align-items: stretch;
+    }
+
+    .grid-4col {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--gap-sub);
+      align-items: stretch;
+    }
+
+    .glass-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: 12px;
+      padding: clamp(0.65rem, 1.2vw, 1.1rem);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.3s ease, transform 0.3s ease;
+    }
+
+    .glass-card:hover {
+      border-color: rgba(255, 255, 255, 0.18);
+    }
+
+    .glass-card.card-highlight {
+      border-color: var(--border-accent);
+      background: linear-gradient(145deg, rgba(22, 27, 38, 0.85) 0%, rgba(0, 229, 117, 0.06) 100%);
+    }
+
+    .card-top-icon {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: clamp(0.3rem, 0.8vh, 0.7rem);
+    }
+
+    .icon-badge {
+      font-size: clamp(1rem, 1.8vw, 1.5rem);
+      width: clamp(2rem, 3vw, 2.8rem);
+      height: clamp(2rem, 3vw, 2.8rem);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .card-title {
+      font-size: var(--h3-size);
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 4px;
+      line-height: 1.25;
+    }
+
+    .card-desc {
+      font-size: var(--body-size);
+      color: var(--text-secondary);
+      line-height: 1.45;
+    }
+
+    .card-metric-huge {
+      font-family: var(--font-mono);
+      font-size: clamp(1.4rem, 2.4vw, 2.2rem);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      line-height: 1.15;
+      margin: clamp(0.2rem, 0.5vh, 0.5rem) 0;
+    }
+
+    .metric-sub {
+      font-size: var(--small-size);
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Executive Lists */
+    .exec-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: clamp(0.35rem, 0.8vh, 0.7rem);
+    }
+
+    .exec-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      font-size: var(--body-size);
+      color: var(--text-secondary);
+      line-height: 1.4;
+    }
+
+    .exec-list li strong {
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .bullet-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--neon-cyan);
+      margin-top: 6px;
+      flex-shrink: 0;
+    }
+
+    .bullet-dot.mint { background: var(--neon-mint); }
+    .bullet-dot.amber { background: var(--neon-amber); }
+    .bullet-dot.rose { background: var(--neon-rose); }
+
+    /* Top Progress Bar */
+    .progress-track {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: rgba(255, 255, 255, 0.05);
+      z-index: 9999;
+    }
+
+    .progress-indicator {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--neon-cyan), var(--neon-mint));
+      box-shadow: 0 0 8px rgba(0, 229, 117, 0.6);
+      transition: width 0.3s ease;
+    }
+
+    /* Floating Navigation Controls */
+    .nav-controls {
+      position: fixed;
+      bottom: clamp(1rem, 2vh, 1.8rem);
+      right: clamp(1rem, 2.5vw, 2.5rem);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      z-index: 1000;
+      background: rgba(16, 20, 29, 0.85);
+      border: 1px solid var(--border-card);
+      border-radius: 50px;
+      padding: 6px 14px;
+      backdrop-filter: blur(12px);
+    }
+
+    .btn-nav {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #fff;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: all 0.2s ease;
+    }
+
+    .btn-nav:hover {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: var(--neon-mint);
+      color: var(--neon-mint);
+    }
+
+    .slide-counter {
+      font-family: var(--font-mono);
+      font-size: var(--small-size);
+      font-weight: 700;
+      color: var(--text-muted);
+      min-width: 48px;
+      text-align: center;
+    }
+
+    .slide-counter span.current {
+      color: #fff;
+    }
+
+    /* Hotzone & Inline Editor Bar */
+    .edit-hotzone {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 90px;
+      height: 90px;
+      z-index: 10000;
+      cursor: pointer;
+    }
+
+    .edit-toggle-btn {
+      position: fixed;
+      top: 14px;
+      left: 14px;
+      z-index: 10001;
+      background: rgba(16, 20, 29, 0.95);
+      border: 1px solid rgba(0, 229, 117, 0.4);
+      color: var(--neon-mint);
+      border-radius: 30px;
+      padding: 6px 12px;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease, transform 0.2s ease;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+    }
+
+    .edit-toggle-btn.show,
+    .edit-toggle-btn.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .edit-toggle-btn.active {
+      background: var(--neon-mint);
+      color: #0c0e12;
+      border-color: #fff;
+    }
+
+    /* Floating Toolbar when in Edit Mode */
+    .edit-toolbar {
+      position: fixed;
+      top: 14px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-100px);
+      z-index: 10002;
+      background: rgba(16, 20, 29, 0.95);
+      border: 1px solid var(--neon-mint);
+      border-radius: 50px;
+      padding: 6px 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      backdrop-filter: blur(16px);
+      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 10px 30px rgba(0, 229, 117, 0.25);
+    }
+
+    .edit-toolbar.active {
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .toolbar-label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--neon-mint);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .toolbar-action-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #fff;
+      font-size: 0.72rem;
+      padding: 4px 10px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+
+    .toolbar-action-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .toolbar-action-btn.btn-save {
+      background: var(--neon-mint);
+      color: #0c0e12;
+      border-color: var(--neon-mint);
+    }
+
+    /* Editable Styling when Active */
+    body.is-editing [contenteditable="true"] {
+      outline: 1px dashed rgba(0, 229, 117, 0.5) !important;
+      outline-offset: 3px;
+      border-radius: 4px;
+      background: rgba(0, 229, 117, 0.03);
+      cursor: text;
+    }
+
+    body.is-editing [contenteditable="true"]:focus {
+      outline: 2px solid var(--neon-mint) !important;
+      background: rgba(0, 229, 117, 0.08);
+    }
+
+    /* Stagger Animations */
+    .anim-item {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+
+    .slide.active .anim-item {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .slide.active .anim-item:nth-child(1) { transition-delay: 0.05s; }
+    .slide.active .anim-item:nth-child(2) { transition-delay: 0.12s; }
+    .slide.active .anim-item:nth-child(3) { transition-delay: 0.18s; }
+    .slide.active .anim-item:nth-child(4) { transition-delay: 0.25s; }
+    .slide.active .anim-item:nth-child(5) { transition-delay: 0.32s; }
+  </style>
+</head>
+<body>
+
+  <!-- Top Progress Bar -->
+  <div class="progress-track"><div class="progress-indicator" id="progressIndicator"></div></div>
+
+  <!-- Inline Editing Trigger & Hotzone -->
+  <div class="edit-hotzone" id="editHotzone" title="Rê chuột vào đây hoặc bấm phím 'E' để mở chế độ sửa trực tiếp"></div>
+  <button class="edit-toggle-btn" id="editToggleBtn">
+    <span>✏️ SỬA SLIDE (E)</span>
+  </button>
+
+  <!-- Edit Floating Toolbar -->
+  <div class="edit-toolbar" id="editToolbar">
+    <span class="toolbar-label">
+      <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:var(--neon-mint);"></span>
+      Chế độ Biên Tập Trực Tiếp (Live Editable)
+    </span>
+    <button class="toolbar-action-btn btn-save" id="btnSaveStorage" title="Lưu lại các thay đổi vào trình duyệt">💾 Lưu (Ctrl+S)</button>
+    <button class="toolbar-action-btn" id="btnExportHtml" title="Tải xuống file HTML đã sửa">📥 Xuất File HTML</button>
+    <button class="toolbar-action-btn" id="btnResetStorage" title="Khôi phục lại nội dung slide gốc ban đầu">🔄 Khôi phục gốc</button>
+  </div>
+
+  <!-- Main Slides Viewport -->
+  <div class="slides-viewport" id="slidesViewport">
+
+    <!-- ========================================================
+         SLIDE 1: EXECUTIVE COVER SLIDE
+         ======================================================== -->
+    <section class="slide active" data-slide="1">
+      <div class="slide-header">
+        <div class="slide-meta-left">
+          <span class="meta-tag">STRATEGY 2026</span>
+          <span class="meta-brand">Wellspring International Bilingual School</span>
+        </div>
+        <div class="slide-meta-right">
+          <span>Huy Hưng · Senior SEO Executive</span>
+          <span>Báo Cáo Ban Lãnh Đạo</span>
+        </div>
+      </div>
+
+      <div class="slide-body">
+        <div style="max-width: 950px;">
+          <div class="anim-item">
+            <span style="display:inline-block; font-family:var(--font-mono); font-size:var(--small-size); color:var(--neon-mint); background:rgba(0,229,117,0.1); border:1px solid rgba(0,229,117,0.25); padding:4px 10px; border-radius:4px; margin-bottom:12px; font-weight:700;">
+              EXECUTIVE BOARD PRESENTATION · Q4/2026 - Q2/2027
+            </span>
+          </div>
+
+          <h1 class="slide-title-hero anim-item">
+            Chiến Lược Tái Cấu Trúc SEO & AI Search 0 ➔ 100
+          </h1>
+
+          <p class="slide-subtitle-hero anim-item">
+            Chuyển dịch từ Tìm kiếm Truyền thống sang Kiến trúc Đồ thị Tri thức (Knowledge Graph) & Phễu Chuyển Đổi Tuyển Sinh K-12
+          </p>
+
+          <div class="grid-3col anim-item" style="margin-top: clamp(0.8rem, 2vh, 1.8rem);">
+            <div class="glass-card card-highlight">
+              <div class="card-top-icon">
+                <span class="card-title">Mục Tiêu Tăng Trưởng</span>
+                <span class="icon-badge">🎯</span>
+              </div>
+              <div class="card-metric-huge" style="color:var(--neon-mint);">+35 - 45%</div>
+              <div class="metric-sub">Tăng trưởng Organic Traffic mục tiêu thực tế sau 60-90 ngày</div>
+            </div>
+
+            <div class="glass-card">
+              <div class="card-top-icon">
+                <span class="card-title">Đón Đầu Xu Hướng AI</span>
+                <span class="icon-badge">🤖</span>
+              </div>
+              <div class="card-metric-huge" style="color:var(--neon-cyan);">GEO / AEO</div>
+              <div class="metric-sub">Tối ưu trích dẫn cho Perplexity, ChatGPT Search & Google AI Overviews</div>
+            </div>
+
+            <div class="glass-card">
+              <div class="card-top-icon">
+                <span class="card-title">Tối Ưu Ngân Sách Ads</span>
+                <span class="icon-badge">💰</span>
+              </div>
+              <div class="card-metric-huge" style="color:var(--neon-amber);">~150 Triệu</div>
+              <div class="metric-sub">Giá trị lưu lượng tương đương chi phí Google Ads mỗi quý</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================
+         SLIDE 2: CURRENT LANDSCAPE & COMPETITIVE BENCHMARK
+         ======================================================== -->
+    <section class="slide" data-slide="2">
+      <div class="slide-header">
+        <div class="slide-meta-left">
+          <span class="meta-tag">BENCHMARK</span>
+          <span class="meta-brand">Bối Cảnh & Tương Quan Cạnh Tranh</span>
+        </div>
+        <div class="slide-meta-right">
+          <span>Wellspring vs Top 10 Đối Thủ K-12</span>
+        </div>
+      </div>
+
+      <div class="slide-body">
+        <div class="anim-item">
+          <h2 style="font-size:var(--h2-size); font-weight:800; margin-bottom:4px;">Thực Trạng Thị Phần Organic & Cơ Hội Chiếm Lĩnh</h2>
+          <p style="font-size:var(--body-size); color:var(--text-muted); margin-bottom:var(--gap-main);">
+            Phân tích 10 trường quốc tế & song ngữ tại Hà Nội (Vinschool, BVIS, Dewey, Olympia, Reigate Grammar...)
+          </p>
+        </div>
+
+        <div class="grid-2col anim-item">
+          <!-- Left Column: Challenges -->
+          <div class="glass-card" style="border-left: 3px solid var(--neon-rose);">
+            <div class="card-title" style="color:var(--neon-rose); display:flex; align-items:center; gap:8px;">
+              <span>⚠️ 3 Điểm Nghẽn Lớn Nhất Hiện Nay</span>
+            </div>
+            <ul class="exec-list" style="margin-top:10px;">
+              <li>
+                <span class="bullet-dot rose"></span>
+                <span><strong>Bị Đối Thủ Chiếm Sóng Từ Khóa Quyết Định:</strong> Các cụm từ tìm kiếm phụ huynh có nhu cầu đăng ký cao ("học phí trường quốc tế", "so sánh trường song ngữ") đang lọt vào tay Vinschool và BVIS.</span>
+              </li>
+              <li>
+                <span class="bullet-dot rose"></span>
+                <span><strong>Phụ Thuộc Quá Nhiều Vào Brandname:</strong> 72% lưu lượng hiện tại đến từ việc phụ huynh gõ trực tiếp chữ "Wellspring", chỉ 28% đến từ từ khóa khám phá ngành (Non-brand Discovery).</span>
+              </li>
+              <li>
+                <span class="bullet-dot rose"></span>
+                <span><strong>Chưa Có Dấu Ấn Trên AI Search:</strong> Khi phụ huynh hỏi ChatGPT hoặc Perplexity "Học phí và chất lượng trường song ngữ quận Long Biên", Wellspring chưa được trích dẫn ở Top 3 đề xuất.</span>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Right Column: Opportunity -->
+          <div class="glass-card card-highlight" style="border-left: 3px solid var(--neon-mint);">
+            <div class="card-title" style="color:var(--neon-mint); display:flex; align-items:center; gap:8px;">
+              <span>🚀 3 Cơ Hội Bứt Phá Doanh Thu Tuyển Sinh</span>
+            </div>
+            <ul class="exec-list" style="margin-top:10px;">
+              <li>
+                <span class="bullet-dot mint"></span>
+                <span><strong>Lợi Thế Độc Quyền Về Khảo Sát Lớp 1:</strong> Nhu cầu tìm hiểu "đề khảo sát năng lực lớp 1" rất lớn từ tháng 11 đến tháng 3 hàng năm. Wellspring có dữ liệu thực tế vượt trội để thống trị cụm này.</span>
+              </li>
+              <li>
+                <span class="bullet-dot mint"></span>
+                <span><strong>Minh Bạch Hóa Biểu Phí & Học Bổng:</strong> Tạo bảng phí tương tác chi tiết giúp đánh bại các trang tin giả mạo số liệu và kéo trọn vẹn phụ huynh quan tâm tài chính.</span>
+              </li>
+              <li>
+                <span class="bullet-dot mint"></span>
+                <span><strong>Chuyển Hóa Traffic Thành Đơn Đăng Ký (CRO):</strong> Mỗi bài viết vệ tinh đều gắn CTA dẫn thẳng vào form hẹn tham quan trường (Campus Tour) hoặc tải đề khảo sát.</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================
+         SLIDE 3: FORENSIC ARCHITECTURE DIAGNOSIS
+         ======================================================== -->
+    <section class="slide" data-slide="3">
+      <div class="slide-header">
+        <div class="slide-meta-left">
+          <span class="meta-tag">TECHNICAL AUDIT</span>
+          <span class="meta-brand">Chẩn Đoán Kiến Trúc & Dòng Chảy Link Equity</span>
+        </div>
+        <div class="slide-meta-right">
+          <span>Phát Hiện Từ Mô Hình Knowledge Graph</span>
+        </div>
+      </div>
+
+      <div class="slide-body">
+        <div class="anim-item">
+          <h2 style="font-size:var(--h2-size); font-weight:800; margin-bottom:4px;">Vì Sao Các Bài Viết Hay Vẫn Không Lên Top?</h2>
+          <p style="font-size:var(--body-size); color:var(--text-muted); margin-bottom:var(--gap-main);">
+            Quét toàn bộ 82 URLs và 137 liên kết nội bộ chỉ ra 3 tổn thất cấu trúc kỹ thuật cần vá khẩn cấp:
+          </p>
+        </div>
+
+        <div class="grid-3col anim-item">
+          <div class="glass-card">
+            <div class="card-top-icon">
+              <span class="card-title">1. Rò Rỉ PageRank Qua 404</span>
+              <span class="icon-badge" style="color:var(--neon-rose); border-color:rgba(244,63,94,0.3);">10 URL</span>
+            </div>
+            <p class="card-desc">
+              Phát hiện 10 liên kết gãy (HTTP 404) vẫn đang được trỏ từ Trang chủ và Menu. Khi Googlebot và phụ huynh click vào, dòng sức mạnh SEO bị chặn đứng và bốc hơi lãng phí.
+            </p>
+            <div style="font-family:var(--font-mono); font-size:var(--small-size); color:var(--neon-rose); margin-top:8px;">
+              Giải pháp: Cấu hình 301 Redirect Nginx trong 24h.
+            </div>
+          </div>
+
+          <div class="glass-card">
+            <div class="card-top-icon">
+              <span class="card-title">2. Hiện Tượng "Đảo Cô Lập"</span>
+              <span class="icon-badge" style="color:var(--neon-amber); border-color:rgba(251,191,36,0.3);">> 4 Clicks</span>
+            </div>
+            <p class="card-desc">
+              Nhiều bài viết review trường, so sánh song ngữ và hướng dẫn chọn trường bị chôn vùi ở độ sâu 4-5 lượt nhấp chuột. Chúng bị văng ra rìa đồ thị và hầu như không nhận được sức mạnh từ Homepage.
+            </p>
+            <div style="font-family:var(--font-mono); font-size:var(--small-size); color:var(--neon-amber); margin-top:8px;">
+              Giải pháp: Kéo về Click Depth &le; 3 qua Menu & Footer.
+            </div>
+          </div>
+
+          <div class="glass-card">
+            <div class="card-top-icon">
+              <span class="card-title">3. Cấu Trúc Phẳng (Flat URL)</span>
+              <span class="icon-badge" style="color:var(--neon-cyan); border-color:rgba(56,189,248,0.3);">Thiếu Silo</span>
+            </div>
+            <p class="card-desc">
+              Các bài viết hiện nằm tản mạn trong thư mục <code>/tin-tuc/</code> mà không được gom thành từng cụm chuyên đề logic (Topic Cluster). Google không thể nhận diện ai là "chuyên gia đầu ngành".
+            </p>
+            <div style="font-family:var(--font-mono); font-size:var(--small-size); color:var(--neon-cyan); margin-top:8px;">
+              Giải pháp: Thiết lập mô hình Hub-and-Spoke 5 cụm.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================
+         SLIDE 4: THE 5 TOPIC CLUSTERS ARCHITECTURE
+         ======================================================== -->
+    <section class="slide" data-slide="4">
+      <div class="slide-header">
+        <div class="slide-meta-left">
+          <span class="meta-tag">TOPIC CLUSTERS</span>
+          <span class="meta-brand">Kiến Trúc Hub-and-Spoke 5 Trụ Cột</span>
+        </div>
+        <div class="slide-meta-right">
+          <span>Quy Hoạch Cấu Trúc Nội Dung Toàn Diện</span>
+        </div>
+      </div>
+
+      <div class="slide-body">
+        <div class="anim-item">
+          <h2 style="font-size:var(--h2-size); font-weight:800; margin-bottom:4px;">Chiến Lược 5 Cụm Nội Dung Thống Trị Từ Khóa Ngành</h2>
+          <p style="font-size:var(--body-size); color:var(--text-muted); margin-bottom:var(--gap-main);">
+            Mỗi Trụ Cột (Pillar Hub) được hỗ trợ bởi 4-6 bài vệ tinh (Spokes) trỏ dòng link equity về trang chuyển đổi:
+          </p>
+        </div>
+
+        <div class="grid-3col anim-item" style="grid-template-columns: repeat(3, 1fr); margin-bottom: var(--gap-sub);">
+          <div class="glass-card card-highlight">
+            <div class="card-title" style="color:var(--neon-mint);">Pillar 1: Chương Trình Đào Tạo K-12</div>
+            <p class="card-desc">Tập trung từ khóa học thuật: Cambridge Primary, Checkpoint, IGCSE, Song Bằng Mỹ Dual Diploma. Khẳng định chuẩn đào tạo quốc tế.</p>
+          </div>
+
+          <div class="glass-card card-highlight">
+            <div class="card-title" style="color:var(--neon-cyan);">Pillar 2: Bảng Biểu Phí & Học Phí 26-27</div>
+            <p class="card-desc">Đánh chiếm từ khóa có lượng tìm kiếm lớn nhất: "học phí wellspring", "chi phí trường song ngữ hà nội", chính sách học bổng tài năng.</p>
+          </div>
+
+          <div class="glass-card card-highlight">
+            <div class="card-title" style="color:var(--neon-amber);">Pillar 3: Cổng Tuyển Sinh & Khảo Sát Lớp 1</div>
+            <p class="card-desc">Cụm chuyển đổi trực tiếp: Hướng dẫn đăng ký, bộ câu hỏi khảo sát năng lực, kinh nghiệm chuẩn bị tâm lý cho con vào lớp 1.</p>
+          </div>
+        </div>
+
+        <div class="grid-2col anim-item">
+          <div class="glass-card">
+            <div class="card-title" style="color:#a855f7;">Pillar 4: Đánh Giá & So Sánh Trường (Review Hub)</div>
+            <p class="card-desc">Chiếm lĩnh tệp phụ huynh đang phân vân: So sánh khách quan Wellspring vs Vinschool, Olympia, Dewey; đánh giá cơ sở vật chất và môi trường học tập hạnh phúc.</p>
+          </div>
+
+          <div class="glass-card">
+            <div class="card-title" style="color:#ec4899;">Pillar 5: Lộ Trình Du Học & Thành Tích Học Sinh</div>
+            <p class="card-desc">Tạo bằng chứng xã hội (Social Proof): Gương mặt học sinh đạt học bổng đại học top thế giới, hoạt động ngoại khóa STEAM, cố vấn hướng nghiệp.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================
+         SLIDE 5: AI SEARCH & GEO STRATEGY
+         ======================================================== -->
+    <section class="slide" data-slide="5">
+      <div class="slide-header">
+        <div class="slide-meta-left">
+          <span class="meta-tag">GEO / AEO</span>
+          <span class="meta-brand">Chiến Lược Tối Ưu Hóa AI Search Engine</span>
+        </div>
+        <div class="slide-meta-right">
+          <span>ChatGPT · Perplexity · Gemini · AI Overviews</span>
+        </div>
+      </div>
+
+      <div class="slide-body">
+        <div class="anim-item">
+          <h2 style="font-size:var(--h2-size); font-weight:800; margin-bottom:4px;">Làm Sao Để AI Đề Xuất Wellspring Cho Phụ Huynh?</h2>
+          <p style="font-size:var(--body-size); color:var(--text-muted); margin-bottom:var(--gap-main);">
+            Khi hành vi tìm kiếm chuyển từ Google 10 link xanh sang câu trả lời tổng hợp của AI:
+          </p>
+        </div>
+
+        <div class="grid-3col anim-item">
+          <div class="glass-card">
+            <div class="card-top-icon">
+              <span class="card-title">1. Schema Entity Toàn Diện</span>
+              <span class="icon-badge">🧬</span>
+            </div>
+            <p class="card-desc">
+              Cài đặt đầy đủ cấu trúc dữ liệu JSON-LD: <code>School</code>, <code>EducationalOrganization</code>, <code>Course</code>, <code>FAQPage</code>. Định danh rõ ràng Wellspring là trường khảo thí Cambridge VN229.
+            </p>
+            <div style="font-size:var(--small-size); color:var(--neon-mint); margin-top:10px;">
+              Tác dụng: AI hiểu chính xác thực thể trường học thay vì đoán mò.
+            </div>
+          </div>
+
+          <div class="glass-card">
+            <div class="card-top-icon">
+              <span class="card-title">2. Cấu Trúc Fact-Dense (Dữ Liệu Đậm Đặc)</span>
+              <span class="icon-badge">📊</span>
+            </div>
+            <p class="card-desc">
+              Thay vì viết chung chung hoa mỹ, các bài viết được tái cấu trúc theo mô hình Q&A súc tích, có bảng số liệu học phí chính xác, tỉ lệ giáo viên nước ngoài và diện tích khuôn viên.
+            </p>
+            <div style="font-size:var(--small-size); color:var(--neon-cyan); margin-top:10px;">
+              Tác dụng: AI dễ dàng trích đoạn (Citation) đưa thẳng vào câu trả lời.
+            </div>
+          </div>
+
+          <div class="glass-card">
+            <div class="card-top-icon">
+              <span class="card-title">3. Tối Ưu Intent "Khuyên Dùng"</span>
+              <span class="icon-badge">⭐</span>
+            </div>
+            <p class="card-desc">
+              Xây dựng nội dung chuyên sâu giải đáp các truy vấn phức tạp: <em>"Trường nào tại Hà Nội phù hợp cho học sinh định hướng du học Mỹ từ cấp 2?"</em> kèm case study học sinh tiêu biểu.
+            </p>
+            <div style="font-size:var(--small-size); color:var(--neon-amber); margin-top:10px;">
+              Tác dụng: Giành trọn vẹn vị trí Top 1 gợi ý của Perplexity & Copilot.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================
+         SLIDE 6: 60-90 DAYS ACTION ROADMAP
+         ======================================================== -->
+    <section class="slide" data-slide="6">
+      <div class="slide-header">
+        <div class="slide-meta-left">
+          <span class="meta-tag">ACTION ROADMAP</span>
+          <span class="meta-brand">Lộ Trình Triển Khai 60 - 90 Ngày</span>
+        </div>
+        <div class="slide-meta-right">
+          <span>3 Giai Đoạn Hành Động Rõ Ràng</span>
+        </div>
+      </div>
+
+      <div class="slide-body">
+        <div class="anim-item">
+          <h2 style="font-size:var(--h2-size); font-weight:800; margin-bottom:4px;">Kế Hoạch Hành Động Thực Chiến Theo Từng Sprint</h2>
+          <p style="font-size:var(--body-size); color:var(--text-muted); margin-bottom:var(--gap-main);">
+            Tập trung nguồn lực vào những đầu việc có tác động trực tiếp và nhanh nhất tới kết quả kinh doanh:
+          </p>
+        </div>
+
+        <div class="grid-3col anim-item">
+          <!-- Sprint 1 -->
+          <div class="glass-card" style="border-top: 3px solid var(--neon-mint);">
+            <div class="card-top-icon">
+              <div>
+                <span style="font-family:var(--font-mono); font-size:var(--small-size); color:var(--neon-mint); font-weight:700;">GIAI ĐOẠN 1 (NGÀY 1 - 20)</span>
+                <div class="card-title" style="margin-top:2px;">Quick Wins & Vá Hạ Tầng</div>
+              </div>
+            </div>
+            <ul class="exec-list" style="margin-top:8px;">
+              <li><span class="bullet-dot mint"></span><span>Redirect 301 toàn bộ 10 liên kết 404 về đúng trang đích tương ứng.</span></li>
+              <li><span class="bullet-dot mint"></span><span>Gắn liên kết nội bộ trang chủ vào các bài viết chiến lược (So sánh trường, biểu phí).</span></li>
+              <li><span class="bullet-dot mint"></span><span>Khai báo cấu trúc Schema JSON-LD cho toàn bộ các trang trụ cột.</span></li>
+            </ul>
+          </div>
+
+          <!-- Sprint 2 -->
+          <div class="glass-card" style="border-top: 3px solid var(--neon-cyan);">
+            <div class="card-top-icon">
+              <div>
+                <span style="font-family:var(--font-mono); font-size:var(--small-size); color:var(--neon-cyan); font-weight:700;">GIAI ĐOẠN 2 (NGÀY 21 - 50)</span>
+                <div class="card-title" style="margin-top:2px;">Sản Xuất 5 Topic Clusters</div>
+              </div>
+            </div>
+            <ul class="exec-list" style="margin-top:8px;">
+              <li><span class="bullet-dot"></span><span>Xuất bản 5 bài Trụ cột (Pillar Pages) chuẩn E-E-A-T 2.500 - 3.500 từ.</span></li>
+              <li><span class="bullet-dot"></span><span>Sản xuất 15 bài vệ tinh ngách giải quyết trúng nhu cầu khảo sát lớp 1 và học phí.</span></li>
+              <li><span class="bullet-dot"></span><span>Đan cài liên kết mạng nhện theo mô hình Hub-and-Spoke chặt chẽ.</span></li>
+            </ul>
+          </div>
+
+          <!-- Sprint 3 -->
+          <div class="glass-card" style="border-top: 3px solid var(--neon-amber);">
+            <div class="card-top-icon">
+              <div>
+                <span style="font-family:var(--font-mono); font-size:var(--small-size); color:var(--neon-amber); font-weight:700;">GIAI ĐOẠN 3 (NGÀY 51 - 90)</span>
+                <div class="card-title" style="margin-top:2px;">Tối Ưu Chuyển Đổi & AI</div>
+              </div>
+            </div>
+            <ul class="exec-list" style="margin-top:8px;">
+              <li><span class="bullet-dot amber"></span><span>Tối ưu tỷ lệ chuyển đổi (CRO) trên form khảo sát và đăng ký tour tham quan trường.</span></li>
+              <li><span class="bullet-dot amber"></span><span>Audit kiểm tra tần suất xuất hiện trên Perplexity, ChatGPT Search và Google AI.</span></li>
+              <li><span class="bullet-dot amber"></span><span>Báo cáo hiệu quả ROI, chi phí tiết kiệm được so với chạy quảng cáo Google Ads.</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================
+         SLIDE 7: REALISTIC KPIS & MEASUREMENT
+         ======================================================== -->
+    <section class="slide" data-slide="7">
+      <div class="slide-header">
+        <div class="slide-meta-left">
+          <span class="meta-tag">METRICS & ROI</span>
+          <span class="meta-brand">Chỉ Số KPI Thực Tế & Khả Thi Sau 60-90 Ngày</span>
+        </div>
+        <div class="slide-meta-right">
+          <span>Cam Kết Chỉ Số Minh Bạch</span>
+        </div>
+      </div>
+
+      <div class="slide-body">
+        <div class="anim-item">
+          <h2 style="font-size:var(--h2-size); font-weight:800; margin-bottom:4px;">Cam Kết Hiệu Quả Đo Lường Được (Không Ảo Tưởng Số Liệu)</h2>
+          <p style="font-size:var(--body-size); color:var(--text-muted); margin-bottom:var(--gap-main);">
+            Các chỉ số đã được hiệu chỉnh sát với thực tế nguồn lực và quy mô thị trường giáo dục quốc tế:
+          </p>
+        </div>
+
+        <div class="grid-4col anim-item">
+          <div class="glass-card card-highlight">
+            <div class="card-title">Từ Khóa Lọt Top 10</div>
+            <div class="card-metric-huge" style="color:var(--neon-mint);">15 - 20</div>
+            <p class="card-desc">Cụm từ khóa tuyển sinh, biểu phí và chương trình học có vị trí trang nhất Google.</p>
+          </div>
+
+          <div class="glass-card card-highlight">
+            <div class="card-title">Tăng Trưởng Traffic</div>
+            <div class="card-metric-huge" style="color:var(--neon-cyan);">+3.500</div>
+            <p class="card-desc">Lượt truy cập tự nhiên (Organic Visits) tăng thêm mỗi tháng từ phụ huynh có nhu cầu thực tế.</p>
+          </div>
+
+          <div class="glass-card card-highlight">
+            <div class="card-title">Độ Sâu Cào Dữ Liệu</div>
+            <div class="card-metric-huge" style="color:var(--neon-amber);">&le; 3 Clicks</div>
+            <p class="card-desc">100% trang chủ lực và bài khảo sát được Googlebot quét và lập chỉ mục trong 48h.</p>
+          </div>
+
+          <div class="glass-card card-highlight">
+            <div class="card-title">Tiết Kiệm Chi Phí Ads</div>
+            <div class="card-metric-huge" style="color:#a855f7;">~50 Triệu</div>
+            <p class="card-desc">Tiết kiệm ngân sách chạy Google Search Ads mỗi tháng nhờ lượng click tự nhiên đạt Top.</p>
+          </div>
+        </div>
+
+        <div class="glass-card anim-item" style="margin-top:var(--gap-main); padding:clamp(0.6rem, 1.2vh, 1rem) var(--gap-main);">
+          <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;">
+            <div style="font-size:var(--body-size); color:var(--text-secondary);">
+              <strong style="color:#fff;">Cơ chế kiểm soát rủi ro:</strong> Báo cáo định kỳ 15 ngày/lần qua bảng Google Sheets tự động cập nhật từ Google Search Console (GSC) API.
+            </div>
+            <span style="font-family:var(--font-mono); font-size:var(--small-size); color:var(--neon-mint); background:rgba(0,229,117,0.1); padding:4px 8px; border-radius:4px; font-weight:700;">
+              100% TRANSPARENT
+            </span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================
+         SLIDE 8: EXECUTIVE DECISION & NEXT STEPS
+         ======================================================== -->
+    <section class="slide" data-slide="8">
+      <div class="slide-header">
+        <div class="slide-meta-left">
+          <span class="meta-tag">NEXT STEPS</span>
+          <span class="meta-brand">Đề Xuất Phê Duyệt & Bước Đi Tiếp Theo</span>
+        </div>
+        <div class="slide-meta-right">
+          <span>Quyết Định Từ Ban Lãnh Đạo</span>
+        </div>
+      </div>
+
+      <div class="slide-body">
+        <div class="anim-item">
+          <h2 style="font-size:var(--h2-size); font-weight:800; margin-bottom:4px;">3 Yêu Cầu Cần Phê Duyệt Để Khởi Động Dự Án</h2>
+          <p style="font-size:var(--body-size); color:var(--text-muted); margin-bottom:var(--gap-main);">
+            Đội ngũ chuyên trách đã sẵn sàng triển khai ngay khi nhận được sự đồng thuận từ Ban Lãnh Đạo:
+          </p>
+        </div>
+
+        <div class="grid-3col anim-item">
+          <div class="glass-card card-highlight">
+            <div class="card-top-icon">
+              <span class="card-title">1. Phê Duyệt Kỹ Thuật (IT)</span>
+              <span class="icon-badge">⚙️</span>
+            </div>
+            <p class="card-desc">
+              Ủy quyền cho đội SEO phối hợp IT thực hiện cấu hình chuyển hướng Nginx 301 cho 10 link 404 và tích hợp mã Schema JSON-LD vào header website.
+            </p>
+            <div style="font-size:var(--small-size); color:var(--neon-mint); margin-top:8px;">
+              Thời gian thực hiện: 24 - 48 giờ.
+            </div>
+          </div>
+
+          <div class="glass-card card-highlight">
+            <div class="card-top-icon">
+              <span class="card-title">2. Cung Cấp Tài Liệu Khảo Sát</span>
+              <span class="icon-badge">📝</span>
+            </div>
+            <p class="card-desc">
+              Phòng Tuyển sinh cung cấp cấu trúc đề thi khảo sát năng lực lớp 1 mẫu và khung biểu phí chính thức năm học 2026-2027 để làm tài liệu chuyên sâu độc quyền.
+            </p>
+            <div style="font-size:var(--small-size); color:var(--neon-cyan); margin-top:8px;">
+              Thời gian thực hiện: Trong tuần 1.
+            </div>
+          </div>
+
+          <div class="glass-card card-highlight">
+            <div class="card-top-icon">
+              <span class="card-title">3. Khởi Động Sprint 1</span>
+              <span class="icon-badge">🚀</span>
+            </div>
+            <p class="card-desc">
+              Chính thức bấm nút triển khai Sprint 1 (Quick Wins). Ban Giám Hiệu và Hội Đồng Quản Trị sẽ nhận bảng báo cáo theo dõi trực tiếp qua dashboard.
+            </p>
+            <div style="font-size:var(--small-size); color:var(--neon-amber); margin-top:8px;">
+              Thời gian bàn giao kết quả đợt 1: Ngày thứ 20.
+            </div>
+          </div>
+        </div>
+
+        <div class="glass-card anim-item" style="margin-top:var(--gap-main); text-align:center; padding:clamp(0.8rem, 1.8vh, 1.4rem);">
+          <div style="font-size:var(--h3-size); font-weight:700; color:#fff; margin-bottom:4px;">
+            Trân trọng cảm ơn Ban Lãnh Đạo đã lắng nghe!
+          </div>
+          <div style="font-size:var(--body-size); color:var(--text-muted);">
+            Sẵn sàng giải đáp mọi thắc mắc và đi sâu vào từng hạng mục kỹ thuật trong phần Q&A.
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div> <!-- End slides-viewport -->
+
+  <!-- Bottom Left Keyboard Hint -->
+  <div style="position:fixed; bottom:clamp(1rem, 2vh, 1.8rem); left:clamp(1rem, 2.5vw, 2.5rem); display:flex; align-items:center; gap:12px; z-index:1000; font-family:var(--font-mono); font-size:var(--small-size); color:var(--text-muted); background:rgba(16,20,29,0.85); border:1px solid var(--border-card); border-radius:50px; padding:6px 16px; backdrop-filter:blur(12px);">
+    <span>⌨️ <strong style="color:#fff;">← / →</strong> Chuyển Slide</span>
+    <span>•</span>
+    <span><strong style="color:var(--neon-mint);">E</strong> Sửa trực tiếp</span>
+    <span>•</span>
+    <span><strong style="color:var(--neon-cyan);">F</strong> Toàn màn hình</span>
+  </div>
+
+  <!-- Floating Nav Controls -->
+  <div class="nav-controls">
+    <button class="btn-nav" id="btnPrev" title="Slide trước (Mũi tên trái / Page Up)">&#8592;</button>
+    <div class="slide-counter">
+      <span class="current" id="lblCurrentSlide">1</span> / <span id="lblTotalSlides">8</span>
+    </div>
+    <button class="btn-nav" id="btnNext" title="Slide sau (Mũi tên phải / Space / Page Down)">&#8594;</button>
+  </div>
+
+  <!-- Slide Presentation Controller & Live Editor Script -->
+  <script>
+    class ExecutiveSlideDeck {
+      constructor() {
+        this.slides = Array.from(document.querySelectorAll('.slide'));
+        this.totalSlides = this.slides.length;
+        this.currentIndex = 0;
+        this.isEditing = false;
+        this.storageKey = 'wellspring_seo_executive_slides_v1';
+
+        // Elements
+        this.lblCurrent = document.getElementById('lblCurrentSlide');
+        this.lblTotal = document.getElementById('lblTotalSlides');
+        this.progressBar = document.getElementById('progressIndicator');
+        this.btnPrev = document.getElementById('btnPrev');
+        this.btnNext = document.getElementById('btnNext');
+
+        this.editToggleBtn = document.getElementById('editToggleBtn');
+        this.editHotzone = document.getElementById('editHotzone');
+        this.editToolbar = document.getElementById('editToolbar');
+        this.btnSave = document.getElementById('btnSaveStorage');
+        this.btnExport = document.getElementById('btnExportHtml');
+        this.btnReset = document.getElementById('btnResetStorage');
+
+        this.init();
+      }
+
+      init() {
+        this.lblTotal.textContent = this.totalSlides;
+        this.restoreFromStorage();
+
+        // Check query param (?slide=1..8)
+        const urlParams = new URLSearchParams(window.location.search);
+        const slideParam = urlParams.get('slide');
+        if (slideParam) {
+          const idx = parseInt(slideParam, 10) - 1;
+          if (idx >= 0 && idx < this.totalSlides) {
+            this.currentIndex = idx;
+            this.slides.forEach((s, i) => s.classList.toggle('active', i === idx));
+          }
+        }
+
+        this.setupNavigation();
+        this.setupKeyboard();
+        this.setupTouch();
+        this.setupInlineEditing();
+
+        // Support ?edit=1 to start in edit mode directly
+        if (urlParams.get('edit') === '1') {
+          this.toggleEditMode();
+        }
+        this.updateView();
+      }
+
+      goToSlide(index) {
+        if (index < 0 || index >= this.totalSlides) return;
+        this.slides[this.currentIndex].classList.remove('active');
+        this.currentIndex = index;
+        this.slides[this.currentIndex].classList.add('active');
+        this.updateView();
+      }
+
+      nextSlide() {
+        if (this.currentIndex < this.totalSlides - 1) {
+          this.goToSlide(this.currentIndex + 1);
+        }
+      }
+
+      prevSlide() {
+        if (this.currentIndex > 0) {
+          this.goToSlide(this.currentIndex - 1);
+        }
+      }
+
+      updateView() {
+        this.lblCurrent.textContent = this.currentIndex + 1;
+        const progressPct = ((this.currentIndex + 1) / this.totalSlides) * 100;
+        this.progressBar.style.width = `${progressPct}%`;
+      }
+
+      setupNavigation() {
+        this.btnPrev.onclick = () => this.prevSlide();
+        this.btnNext.onclick = () => this.nextSlide();
+      }
+
+      setupKeyboard() {
+        window.addEventListener('keydown', (e) => {
+          // If editing text, do not navigate slides on space or arrows unless escaped
+          const isWriting = e.target.getAttribute('contenteditable') === 'true';
+          
+          if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+            if (!isWriting) {
+              e.preventDefault();
+              this.nextSlide();
+            }
+          } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+            if (!isWriting) {
+              e.preventDefault();
+              this.prevSlide();
+            }
+          } else if ((e.key === 'e' || e.key === 'E') && !isWriting) {
+            e.preventDefault();
+            this.toggleEditMode();
+          } else if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+            e.preventDefault();
+            this.saveToStorage();
+          } else if (e.key === 'f' || e.key === 'F') {
+            if (!isWriting) {
+              e.preventDefault();
+              if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(() => {});
+              } else {
+                document.exitFullscreen().catch(() => {});
+              }
+            }
+          }
+        });
+      }
+
+      setupTouch() {
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        window.addEventListener('touchstart', (e) => {
+          touchStartX = e.changedTouches[0].screenX;
+        }, { passive: true });
+
+        window.addEventListener('touchend', (e) => {
+          touchEndX = e.changedTouches[0].screenX;
+          if (touchStartX - touchEndX > 50) {
+            this.nextSlide(); // swipe left -> next
+          } else if (touchEndX - touchStartX > 50) {
+            this.prevSlide(); // swipe right -> prev
+          }
+        }, { passive: true });
+      }
+
+      /* ===========================================
+         INLINE EDITING SYSTEM
+         =========================================== */
+      setupInlineEditing() {
+        let hideTimeout = null;
+
+        // Hotzone hover
+        this.editHotzone.addEventListener('mouseenter', () => {
+          clearTimeout(hideTimeout);
+          this.editToggleBtn.classList.add('show');
+        });
+
+        this.editHotzone.addEventListener('mouseleave', () => {
+          hideTimeout = setTimeout(() => {
+            if (!this.isEditing) this.editToggleBtn.classList.remove('show');
+          }, 400);
+        });
+
+        this.editToggleBtn.addEventListener('mouseenter', () => {
+          clearTimeout(hideTimeout);
+        });
+
+        this.editToggleBtn.addEventListener('mouseleave', () => {
+          hideTimeout = setTimeout(() => {
+            if (!this.isEditing) this.editToggleBtn.classList.remove('show');
+          }, 400);
+        });
+
+        this.editToggleBtn.onclick = () => this.toggleEditMode();
+        this.editHotzone.onclick = () => this.toggleEditMode();
+
+        this.btnSave.onclick = () => this.saveToStorage();
+        this.btnExport.onclick = () => this.exportHtml();
+        this.btnReset.onclick = () => this.resetStorage();
+      }
+
+      toggleEditMode() {
+        this.isEditing = !this.isEditing;
+        document.body.classList.toggle('is-editing', this.isEditing);
+        this.editToggleBtn.classList.toggle('active', this.isEditing);
+        this.editToolbar.classList.toggle('active', this.isEditing);
+
+        // Make all text elements editable
+        const editableTargets = document.querySelectorAll('.slide h1, .slide h2, .slide p, .slide span, .slide li, .slide .card-title, .slide .card-desc, .slide .card-metric-huge, .slide .meta-brand, .slide .meta-tag');
+        
+        editableTargets.forEach(el => {
+          // Exclude buttons or technical counters
+          if (!el.closest('.nav-controls') && !el.closest('.edit-toolbar') && !el.closest('.edit-toggle-btn')) {
+            el.setAttribute('contenteditable', this.isEditing ? 'true' : 'false');
+          }
+        });
+
+        if (this.isEditing) {
+          this.editToggleBtn.innerHTML = '<span>❌ ĐÓNG SỬA (E)</span>';
+        } else {
+          this.editToggleBtn.innerHTML = '<span>✏️ SỬA SLIDE (E)</span>';
+        }
+      }
+
+      saveToStorage() {
+        const contentHtml = document.getElementById('slidesViewport').innerHTML;
+        localStorage.setItem(this.storageKey, contentHtml);
+        
+        const origText = this.btnSave.textContent;
+        this.btnSave.textContent = '✅ Đã lưu vào máy!';
+        setTimeout(() => { this.btnSave.textContent = origText; }, 2000);
+      }
+
+      restoreFromStorage() {
+        const saved = localStorage.getItem(this.storageKey);
+        if (saved) {
+          document.getElementById('slidesViewport').innerHTML = saved;
+          // Re-bind slide array
+          this.slides = Array.from(document.querySelectorAll('.slide'));
+          this.totalSlides = this.slides.length;
+          this.slides.forEach((s, idx) => {
+            s.classList.toggle('active', idx === this.currentIndex);
+          });
+        }
+      }
+
+      resetStorage() {
+        if (confirm("Khôi phục lại nội dung slide gốc từ báo cáo kỹ thuật ban đầu?")) {
+          localStorage.removeItem(this.storageKey);
+          window.location.reload();
+        }
+      }
+
+      exportHtml() {
+        // Clone document and remove temporary editing artifacts before download
+        const clone = document.documentElement.cloneNode(true);
+        const editableElements = clone.querySelectorAll('[contenteditable]');
+        editableElements.forEach(el => el.removeAttribute('contenteditable'));
+
+        const htmlString = "<!DOCTYPE html>\n" + clone.outerHTML;
+        const blob = new Blob([htmlString], { type: 'text/html;charset=utf-8' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = "Bao_Cao_SEO_Executive_Wellspring_2026.html";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      }
+    }
+
+    // Launch deck on load
+    window.addEventListener('DOMContentLoaded', () => {
+      new ExecutiveSlideDeck();
+    });
+  </script>
+</body>
+</html>
