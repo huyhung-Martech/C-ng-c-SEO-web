@@ -1,53 +1,116 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi" data-theme="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Chiến Lược SEO & AI Search 2026 | Wellspring Hanoi (Executive Presentation)</title>
+  <title>Chiến Lược Tái Cấu Trúc SEO & Chiếm Lĩnh AI Search 2026 | Wellspring Hanoi</title>
   
-  <!-- Modern Clean Typography -->
+  <!-- Premium Font Families -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <style>
-    /* ===========================================
-       DESIGN SYSTEM: EXECUTIVE OBSIDIAN & AIRY MODERN
-       =========================================== */
+    /* ==========================================================================
+       DESIGN TASTE FRONTEND: EXECUTIVE KEYNOTE DESIGN SYSTEM
+       - Mode: Light Executive Keynote (Default) with Dark Mode Toggle
+       - Geometry: Bento 2.0 with layered diffusion shadows & 1px borders
+       - Typography: Large, confident, executive scale (Plus Jakarta Sans + JetBrains Mono)
+       - Viewport: Strict 100dvh Invariant (Zero Vertical Scroll)
+       ========================================================================== */
+
     :root {
-      --bg-canvas: #090b10;
-      --bg-panel: rgba(16, 21, 30, 0.7);
-      --bg-card: rgba(22, 28, 40, 0.65);
-      --bg-card-hover: rgba(28, 36, 52, 0.85);
-      --border-subtle: rgba(255, 255, 255, 0.08);
-      --border-active: rgba(0, 229, 117, 0.4);
+      /* LIGHT EXECUTIVE PALETTE (DEFAULT) */
+      --bg-canvas: #f8fafc;
+      --bg-surface: #ffffff;
+      --bg-surface-alt: #f1f5f9;
+      --bg-surface-subtle: #f8fafc;
+      --border-subtle: #e2e8f0;
+      --border-strong: #cbd5e1;
+      --border-focus: #059669;
 
-      --text-white: #ffffff;
-      --text-body: #cbd5e1;
-      --text-dim: #94a3b8;
-      --text-muted: #64748b;
+      --text-heading: #0f172a;       /* Slate-900: Deep & authoritative */
+      --text-body: #334155;          /* Slate-700: High readability */
+      --text-sub: #64748b;           /* Slate-500 */
+      --text-muted: #94a3b8;         /* Slate-400 */
 
-      --mint: #00e575;
-      --cyan: #38bdf8;
-      --rose: #f43f5e;
-      --amber: #fbbf24;
-      --purple: #c084fc;
+      /* Calibrated Executive Accents */
+      --emerald: #059669;
+      --emerald-light: #ecfdf5;
+      --emerald-border: #a7f3d0;
+      
+      --blue: #2563eb;
+      --blue-light: #eff6ff;
+      --blue-border: #bfdbfe;
 
-      --font-display: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      --amber: #d97706;
+      --amber-light: #fffbeb;
+      --amber-border: #fde68a;
+
+      --rose: #e11d48;
+      --rose-light: #fff1f2;
+      --rose-border: #fecdd3;
+
+      --shadow-diffusion: 0 10px 25px -5px rgba(15, 23, 42, 0.04), 0 20px 40px -15px rgba(15, 23, 42, 0.06);
+      --shadow-hover: 0 16px 35px -5px rgba(15, 23, 42, 0.08), 0 0 0 1px rgba(5, 150, 105, 0.15);
+      --shadow-card: 0 4px 6px -1px rgba(15, 23, 42, 0.03), 0 2px 4px -2px rgba(15, 23, 42, 0.03);
+
+      --font-display: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       --font-code: 'JetBrains Mono', monospace;
 
-      /* Mandatory Viewport Invariant Clamps */
-      --h1-size: clamp(1.6rem, 3.2vw, 2.5rem);
-      --h2-size: clamp(1.2rem, 2.2vw, 1.8rem);
-      --h3-size: clamp(0.9rem, 1.3vw, 1.15rem);
-      --body-size: clamp(0.72rem, 0.95vw, 0.86rem);
-      --small-size: clamp(0.6rem, 0.75vw, 0.72rem);
+      /* DETERMINISTIC EXECUTIVE TYPOGRAPHY SCALING */
+      --h1-size: clamp(2.0rem, 3.4vw, 2.85rem);
+      --hero-sub-size: clamp(1.0rem, 1.25vw, 1.2rem);
+      --card-title-size: clamp(1.18rem, 1.5vw, 1.4rem);
+      --body-size: clamp(0.95rem, 1.15vw, 1.1rem);
+      --small-size: clamp(0.78rem, 0.9vw, 0.88rem);
+      --metric-size: clamp(2.8rem, 4.4vw, 4.4rem);
 
-      --slide-pad: clamp(1.2rem, 3vw, 2.6rem);
-      --gap-base: clamp(0.6rem, 1.2vw, 1.2rem);
+      --slide-pad: clamp(1.4rem, 2.8vw, 2.6rem);
+      --gap-base: clamp(0.8rem, 1.4vw, 1.4rem);
+      --radius-card: 18px;
+      --radius-pill: 9999px;
+
       --ease: cubic-bezier(0.16, 1, 0.3, 1);
     }
 
+    /* DARK MODE OVERRIDES */
+    [data-theme="dark"] {
+      --bg-canvas: #0b0f19;
+      --bg-surface: #111827;
+      --bg-surface-alt: #1f2937;
+      --bg-surface-subtle: #162032;
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-strong: rgba(255, 255, 255, 0.16);
+      --border-focus: #10b981;
+
+      --text-heading: #f9fafb;
+      --text-body: #cbd5e1;
+      --text-sub: #94a3b8;
+      --text-muted: #64748b;
+
+      --emerald: #10b981;
+      --emerald-light: rgba(16, 185, 129, 0.12);
+      --emerald-border: rgba(16, 185, 129, 0.28);
+
+      --blue: #38bdf8;
+      --blue-light: rgba(56, 189, 248, 0.12);
+      --blue-border: rgba(56, 189, 248, 0.28);
+
+      --amber: #fbbf24;
+      --amber-light: rgba(251, 191, 36, 0.12);
+      --amber-border: rgba(251, 191, 36, 0.28);
+
+      --rose: #f43f5e;
+      --rose-light: rgba(244, 63, 94, 0.12);
+      --rose-border: rgba(244, 63, 94, 0.28);
+
+      --shadow-diffusion: 0 10px 30px -5px rgba(0, 0, 0, 0.35);
+      --shadow-hover: 0 20px 45px -5px rgba(0, 0, 0, 0.55);
+      --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.25);
+    }
+
+    /* BASE RESET */
     *, *::before, *::after {
       margin: 0;
       padding: 0;
@@ -58,13 +121,14 @@
       width: 100%;
       height: 100%;
       overflow: hidden;
-      background: var(--bg-canvas);
+      background-color: var(--bg-canvas);
       color: var(--text-body);
       font-family: var(--font-display);
       -webkit-font-smoothing: antialiased;
+      transition: background-color 0.3s var(--ease), color 0.3s var(--ease);
     }
 
-    /* Deck Master Viewport */
+    /* DECK VIEWPORT CONTAINER */
     .deck-container {
       width: 100vw;
       height: 100vh;
@@ -73,7 +137,7 @@
       overflow: hidden;
     }
 
-    /* Single Slide Frame */
+    /* SLIDE CANVAS (100dvh STRICT INVARIANT) */
     .slide-frame {
       position: absolute;
       top: 0;
@@ -81,18 +145,18 @@
       width: 100vw;
       height: 100vh;
       height: 100dvh;
-      overflow: hidden; /* STRICT NO-SCROLL INVARIANT */
+      overflow: hidden;
       opacity: 0;
       visibility: hidden;
       pointer-events: none;
-      transition: opacity 0.45s var(--ease), transform 0.45s var(--ease);
       transform: translateY(14px);
+      transition: opacity 0.4s var(--ease), transform 0.4s var(--ease);
       display: flex;
       flex-direction: column;
       padding: var(--slide-pad);
       background: 
-        radial-gradient(circle at 90% 10%, rgba(56, 189, 248, 0.05) 0%, transparent 45%),
-        radial-gradient(circle at 10% 90%, rgba(0, 229, 117, 0.04) 0%, transparent 40%),
+        radial-gradient(circle at 90% 10%, rgba(37, 99, 235, 0.035) 0%, transparent 50%),
+        radial-gradient(circle at 10% 90%, rgba(5, 150, 105, 0.035) 0%, transparent 45%),
         var(--bg-canvas);
     }
 
@@ -104,1279 +168,1485 @@
       z-index: 10;
     }
 
-    /* Executive Top Bar */
-    .top-bar {
+    /* INTEGRATED TOP HEADER BAR (CLEAN & NON-OVERLAPPING) */
+    .top-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding-bottom: clamp(0.4rem, 0.8vh, 0.7rem);
+      padding-bottom: clamp(0.5rem, 1vh, 0.8rem);
       border-bottom: 1px solid var(--border-subtle);
-      margin-bottom: clamp(0.5rem, 1.2vh, 1rem);
+      margin-bottom: clamp(0.6rem, 1.4vh, 1.2rem);
       flex-shrink: 0;
+      gap: 16px;
     }
 
-    .top-left {
+    .header-left {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
+      flex-wrap: wrap;
     }
 
-    .badge-stage {
+    .chapter-pill {
       font-family: var(--font-code);
       font-size: var(--small-size);
       font-weight: 700;
-      color: var(--mint);
-      background: rgba(0, 229, 117, 0.1);
-      border: 1px solid rgba(0, 229, 117, 0.25);
-      padding: 3px 8px;
-      border-radius: 4px;
-      letter-spacing: 0.03em;
-    }
-
-    .badge-stage.cyan { color: var(--cyan); background: rgba(56, 189, 248, 0.1); border-color: rgba(56, 189, 248, 0.25); }
-    .badge-stage.rose { color: var(--rose); background: rgba(244, 63, 94, 0.1); border-color: rgba(244, 63, 94, 0.25); }
-    .badge-stage.amber { color: var(--amber); background: rgba(251, 191, 36, 0.1); border-color: rgba(251, 191, 36, 0.25); }
-
-    .brand-tag {
-      font-size: var(--small-size);
-      font-weight: 600;
-      color: var(--text-dim);
+      color: var(--emerald);
+      background: var(--emerald-light);
+      border: 1px solid var(--emerald-border);
+      padding: 4px 12px;
+      border-radius: var(--radius-pill);
       letter-spacing: 0.04em;
       text-transform: uppercase;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
     }
 
-    .top-right {
-      display: flex;
-      align-items: center;
-      gap: 16px;
+    .chapter-pill.blue { color: var(--blue); background: var(--blue-light); border-color: var(--blue-border); }
+    .chapter-pill.amber { color: var(--amber); background: var(--amber-light); border-color: var(--amber-border); }
+    .chapter-pill.rose { color: var(--rose); background: var(--rose-light); border-color: var(--rose-border); }
+
+    .pulse-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background-color: currentColor;
+      box-shadow: 0 0 0 0 currentColor;
+      animation: pulse-ring 2s infinite;
+    }
+
+    @keyframes pulse-ring {
+      0% { box-shadow: 0 0 0 0 rgba(5, 150, 105, 0.4); }
+      70% { box-shadow: 0 0 0 6px rgba(5, 150, 105, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(5, 150, 105, 0); }
+    }
+
+    .brand-meta {
       font-size: var(--small-size);
-      color: var(--text-muted);
-      font-family: var(--font-code);
-    }
-
-    /* Hero Title Region */
-    .hero-heading-box {
-      margin-bottom: clamp(0.5rem, 1.2vh, 1rem);
-      flex-shrink: 0;
-    }
-
-    .hero-h1 {
-      font-size: var(--h1-size);
-      font-weight: 800;
-      line-height: 1.15;
-      letter-spacing: -0.03em;
-      color: var(--text-white);
-      margin-bottom: 4px;
-      max-width: 1100px;
-    }
-
-    .hero-sub {
-      font-size: var(--body-size);
-      color: var(--text-dim);
-      line-height: 1.4;
-      max-width: 900px;
-    }
-
-    /* Main Flex Body (Strict Viewport Contained) */
-    .slide-body-region {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      min-height: 0;
-      position: relative;
-    }
-
-    /* Grids */
-    .grid-row-2 {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: var(--gap-base);
-      align-items: stretch;
-    }
-
-    .grid-row-3 {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: var(--gap-base);
-      align-items: stretch;
-    }
-
-    .grid-row-4 {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: var(--gap-base);
-      align-items: stretch;
-    }
-
-    /* Executive Glass Card */
-    .exec-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-subtle);
-      border-radius: 10px;
-      padding: clamp(0.7rem, 1.2vw, 1.1rem);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      backdrop-filter: blur(20px);
-      transition: all 0.25s ease;
-      position: relative;
-    }
-
-    .exec-card:hover {
-      background: var(--bg-card-hover);
-      border-color: rgba(255, 255, 255, 0.15);
-    }
-
-    .exec-card.border-accent-mint { border-left: 3px solid var(--mint); }
-    .exec-card.border-accent-cyan { border-left: 3px solid var(--cyan); }
-    .exec-card.border-accent-rose { border-left: 3px solid var(--rose); }
-    .exec-card.border-accent-amber { border-left: 3px solid var(--amber); }
-
-    .card-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 6px;
-    }
-
-    .card-title {
-      font-size: var(--h3-size);
-      font-weight: 700;
-      color: var(--text-white);
-      line-height: 1.25;
-    }
-
-    .pill-label {
-      font-family: var(--font-code);
-      font-size: 0.62rem;
-      font-weight: 700;
-      padding: 2px 6px;
-      border-radius: 4px;
+      font-weight: 600;
+      color: var(--text-sub);
       letter-spacing: 0.02em;
     }
 
-    .pill-label.mint { background: rgba(0,229,117,0.12); color: var(--mint); border: 1px solid rgba(0,229,117,0.25); }
-    .pill-label.cyan { background: rgba(56,189,248,0.12); color: var(--cyan); border: 1px solid rgba(56,189,248,0.25); }
-    .pill-label.rose { background: rgba(244,63,94,0.12); color: var(--rose); border: 1px solid rgba(244,63,94,0.25); }
-    .pill-label.amber { background: rgba(251,191,36,0.12); color: var(--amber); border: 1px solid rgba(251,191,36,0.25); }
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
+    }
 
-    .card-paragraph {
-      font-size: var(--body-size);
+    .toolbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      padding: 3px 6px;
+      border-radius: var(--radius-pill);
+      box-shadow: var(--shadow-card);
+    }
+
+    .action-btn {
+      background: transparent;
+      border: 1px solid transparent;
       color: var(--text-body);
-      line-height: 1.4;
-      margin-top: 4px;
+      padding: 4px 10px;
+      border-radius: var(--radius-pill);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.2s var(--ease);
+      font-family: var(--font-display);
     }
 
-    .card-paragraph strong {
-      color: var(--text-white);
+    .action-btn:hover {
+      background: var(--bg-surface-alt);
+      color: var(--text-heading);
     }
 
-    /* Structured Story Step List */
+    .action-btn.active {
+      background: var(--emerald-light);
+      border-color: var(--emerald-border);
+      color: var(--emerald);
+    }
+
+    /* HERO HEADING BOX */
+    .hero-heading {
+      margin-bottom: clamp(0.6rem, 1.4vh, 1.2rem);
+      flex-shrink: 0;
+    }
+
+    .hero-title {
+      font-size: var(--h1-size);
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -0.035em;
+      color: var(--text-heading);
+      margin-bottom: 6px;
+      max-width: 1250px;
+    }
+
+    .hero-subtitle {
+      font-size: var(--hero-sub-size);
+      color: var(--text-sub);
+      line-height: 1.45;
+      font-weight: 500;
+      max-width: 1100px;
+    }
+
+    /* MAIN CONTENT VIEWPORT REGION */
+    .slide-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 0; /* CRITICAL FOR ZERO SCROLL */
+      gap: var(--gap-base);
+    }
+
+    /* BENTO CARD ARCHITECTURE (BENTO 2.0) */
+    .bento-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-card);
+      padding: clamp(1.2rem, 2vw, 1.8rem);
+      box-shadow: var(--shadow-diffusion);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 12px;
+      transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease), border-color 0.25s var(--ease);
+      position: relative;
+    }
+
+    .bento-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-hover);
+      border-color: var(--border-strong);
+    }
+
+    .card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+
+    .card-title {
+      font-size: var(--card-title-size);
+      font-weight: 700;
+      color: var(--text-heading);
+      letter-spacing: -0.02em;
+      line-height: 1.25;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card-badge {
+      font-family: var(--font-code);
+      font-size: var(--small-size);
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: var(--radius-pill);
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .card-badge.mint { color: var(--emerald); background: var(--emerald-light); border: 1px solid var(--emerald-border); }
+    .card-badge.blue { color: var(--blue); background: var(--blue-light); border: 1px solid var(--blue-border); }
+    .card-badge.amber { color: var(--amber); background: var(--amber-light); border: 1px solid var(--amber-border); }
+    .card-badge.rose { color: var(--rose); background: var(--rose-light); border: 1px solid var(--rose-border); }
+
+    /* SMART CHIP CONTAINER */
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 2px 0 6px 0;
+    }
+
+    .smart-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-code);
+      font-size: var(--small-size);
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 8px;
+      background: var(--bg-surface-alt);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-body);
+    }
+
+    .smart-chip.active-rose { background: var(--rose-light); border-color: var(--rose-border); color: var(--rose); }
+    .smart-chip.active-emerald { background: var(--emerald-light); border-color: var(--emerald-border); color: var(--emerald); }
+    .smart-chip.active-blue { background: var(--blue-light); border-color: var(--blue-border); color: var(--blue); }
+    .smart-chip.active-amber { background: var(--amber-light); border-color: var(--amber-border); color: var(--amber); }
+
+    /* STRUCTURED NARRATIVE LIST */
     .narrative-list {
       list-style: none;
       display: flex;
       flex-direction: column;
-      gap: clamp(0.35rem, 0.7vh, 0.65rem);
-      margin-top: 6px;
+      gap: clamp(10px, 1.4vh, 16px);
+      flex: 1;
     }
 
     .narrative-item {
       display: flex;
       align-items: flex-start;
-      gap: 8px;
+      gap: 12px;
       font-size: var(--body-size);
-      line-height: 1.38;
+      line-height: 1.55;
       color: var(--text-body);
     }
 
-    .narrative-item strong {
-      color: var(--text-white);
-    }
-
-    .bullet-square {
-      width: 6px;
-      height: 6px;
-      border-radius: 2px;
-      background: var(--cyan);
-      margin-top: 5px;
+    .item-bullet-icon {
+      width: 18px;
+      height: 18px;
+      margin-top: 3px;
       flex-shrink: 0;
     }
 
-    .bullet-square.mint { background: var(--mint); }
-    .bullet-square.rose { background: var(--rose); }
-    .bullet-square.amber { background: var(--amber); }
-
-    /* Code Display Box */
-    .code-box-clean {
-      background: #080a0f;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 6px;
-      padding: 6px 10px;
-      font-family: var(--font-code);
-      font-size: 0.68rem;
-      color: #e2e8f0;
-      line-height: 1.35;
-      margin-top: 4px;
+    .narrative-item strong {
+      color: var(--text-heading);
+      font-weight: 700;
     }
 
-    /* Bold Metric Display */
-    .metric-hero-val {
+    .narrative-item code {
       font-family: var(--font-code);
-      font-size: clamp(1.4rem, 2.6vw, 2.2rem);
-      font-weight: 800;
-      letter-spacing: -0.04em;
-      line-height: 1.1;
-      margin: 2px 0;
+      font-size: 0.9em;
+      background: var(--bg-surface-alt);
+      padding: 2px 6px;
+      border-radius: 4px;
+      border: 1px solid var(--border-subtle);
+      color: var(--text-heading);
     }
 
-    /* Bottom HUD Controls */
-    .hud-nav {
-      position: fixed;
-      bottom: clamp(0.8rem, 1.8vh, 1.5rem);
-      right: clamp(1rem, 2.5vw, 2.2rem);
+    /* CARD BOTTOM CALLOUT */
+    .card-footer-note {
+      margin-top: auto;
+      padding-top: 10px;
+      border-top: 1px solid var(--border-subtle);
+      font-size: var(--small-size);
+      font-weight: 600;
       display: flex;
       align-items: center;
       gap: 8px;
-      z-index: 1000;
-      background: rgba(14, 18, 26, 0.9);
-      border: 1px solid var(--border-subtle);
-      border-radius: 40px;
-      padding: 4px 12px;
-      backdrop-filter: blur(14px);
     }
 
-    .btn-step {
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      color: #fff;
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      font-size: 0.75rem;
-      transition: all 0.2s ease;
-    }
+    .card-footer-note.rose { color: var(--rose); }
+    .card-footer-note.emerald { color: var(--emerald); }
+    .card-footer-note.blue { color: var(--blue); }
+    .card-footer-note.amber { color: var(--amber); }
 
-    .btn-step:hover {
-      background: rgba(255, 255, 255, 0.15);
-      border-color: var(--mint);
-      color: var(--mint);
-    }
-
-    .hud-slide-num {
-      font-family: var(--font-code);
-      font-size: var(--small-size);
-      font-weight: 700;
-      color: var(--text-muted);
-      min-width: 44px;
-      text-align: center;
-    }
-
-    .hud-slide-num .cur { color: #fff; }
-
-    /* Bottom-Left Keyboard Shortcut Guide */
-    .hud-keyboard {
-      position: fixed;
-      bottom: clamp(0.8rem, 1.8vh, 1.5rem);
-      left: clamp(1rem, 2.5vw, 2.2rem);
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      z-index: 1000;
-      font-family: var(--font-code);
-      font-size: var(--small-size);
-      color: var(--text-muted);
-      background: rgba(14, 18, 26, 0.88);
-      border: 1px solid var(--border-subtle);
-      border-radius: 40px;
-      padding: 5px 14px;
-      backdrop-filter: blur(14px);
-    }
-
-    .key-badge {
-      background: rgba(255, 255, 255, 0.1);
-      border: 1px solid rgba(255, 255, 255, 0.18);
-      border-radius: 3px;
-      padding: 1px 5px;
-      color: #fff;
-      font-weight: 700;
-      font-size: 0.65rem;
-    }
-
-    /* Top Progress Bar */
-    .top-progress-track {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 2px;
-      background: rgba(255, 255, 255, 0.05);
-      z-index: 9999;
-    }
-
-    .top-progress-fill {
+    /* LAYOUT GRIDS */
+    .grid-1-1 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--gap-base);
       height: 100%;
-      width: 12.5%;
-      background: linear-gradient(90deg, var(--cyan), var(--mint));
-      box-shadow: 0 0 10px rgba(0, 229, 117, 0.5);
-      transition: width 0.3s ease;
     }
 
-    /* Live Editing Bar */
-    .edit-hotzone {
-      position: fixed;
+    .grid-3-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: var(--gap-base);
+      height: 100%;
+    }
+
+    .grid-4-col {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--gap-base);
+      height: 100%;
+    }
+
+    /* METRIC STAT BENTO CARDS (FOR SLIDE 7) */
+    .metric-bento-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-card);
+      padding: clamp(1.4rem, 2.2vw, 2.2rem);
+      box-shadow: var(--shadow-diffusion);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all 0.25s var(--ease);
+      position: relative;
+    }
+
+    .metric-bento-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .metric-bento-card::before {
+      content: "";
+      position: absolute;
       top: 0;
       left: 0;
-      width: 70px;
-      height: 70px;
-      z-index: 10000;
-      cursor: pointer;
+      right: 0;
+      height: 4px;
+      border-radius: var(--radius-card) var(--radius-card) 0 0;
     }
 
-    .btn-edit-toggle {
-      position: fixed;
-      top: 12px;
-      left: 14px;
-      z-index: 10001;
-      background: rgba(14, 18, 26, 0.95);
-      border: 1px solid rgba(0, 229, 117, 0.35);
-      color: var(--mint);
-      border-radius: 30px;
-      padding: 5px 12px;
+    .metric-bento-card.emerald::before { background: var(--emerald); }
+    .metric-bento-card.blue::before { background: var(--blue); }
+    .metric-bento-card.amber::before { background: var(--amber); }
+
+    .metric-kicker {
       font-family: var(--font-code);
-      font-size: 0.68rem;
+      font-size: var(--small-size);
       font-weight: 700;
-      cursor: pointer;
+      color: var(--text-sub);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .metric-big-num {
+      font-family: var(--font-code);
+      font-size: var(--metric-size);
+      font-weight: 800;
+      line-height: 1;
+      letter-spacing: -0.04em;
+      margin: 12px 0 6px 0;
+    }
+
+    .metric-big-num.emerald { color: var(--emerald); }
+    .metric-big-num.blue { color: var(--blue); }
+    .metric-big-num.amber { color: var(--amber); }
+
+    .metric-label {
+      font-size: clamp(1.1rem, 1.35vw, 1.3rem);
+      font-weight: 700;
+      color: var(--text-heading);
+      margin-bottom: 6px;
+    }
+
+    .metric-desc {
+      font-size: var(--body-size);
+      color: var(--text-sub);
+      line-height: 1.45;
+    }
+
+    /* AUDIT TRANSPARENCY BANNER */
+    .transparency-bar {
+      background: var(--bg-surface-alt);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: clamp(0.7rem, 1.2vh, 1.1rem) clamp(1rem, 1.5vw, 1.5rem);
       display: flex;
       align-items: center;
-      gap: 6px;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.25s ease;
+      justify-content: space-between;
+      gap: 16px;
+      flex-shrink: 0;
     }
 
-    .btn-edit-toggle.show,
-    .btn-edit-toggle.active {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    .btn-edit-toggle.active {
-      background: var(--mint);
-      color: #090b10;
-      border-color: #fff;
-    }
-
-    .dock-edit-bar {
-      position: fixed;
-      top: 12px;
-      left: 50%;
-      transform: translateX(-50%) translateY(-80px);
-      z-index: 10002;
-      background: rgba(14, 18, 26, 0.96);
-      border: 1px solid var(--mint);
-      border-radius: 40px;
-      padding: 5px 16px;
+    .transparency-text {
+      font-size: var(--body-size);
+      color: var(--text-body);
+      font-weight: 500;
       display: flex;
       align-items: center;
       gap: 10px;
-      backdrop-filter: blur(20px);
-      transition: transform 0.3s var(--ease);
-      box-shadow: 0 8px 30px rgba(0, 229, 117, 0.2);
     }
 
-    .dock-edit-bar.active {
-      transform: translateX(-50%) translateY(0);
-    }
-
-    .dock-title {
-      font-size: 0.72rem;
-      font-weight: 700;
-      color: var(--mint);
+    /* BOTTOM CONTROLS DOCK */
+    .dock-controls {
+      position: fixed;
+      bottom: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1000;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-pill);
+      padding: 6px 18px;
+      box-shadow: var(--shadow-diffusion);
+      display: flex;
+      align-items: center;
+      gap: 16px;
       font-family: var(--font-code);
-    }
-
-    .dock-btn-item {
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      color: #fff;
-      font-size: 0.68rem;
-      padding: 4px 9px;
-      border-radius: 20px;
-      cursor: pointer;
+      font-size: 13px;
       font-weight: 600;
-      transition: all 0.2s ease;
+      color: var(--text-sub);
     }
 
-    .dock-btn-item:hover { background: rgba(255, 255, 255, 0.2); }
-    .dock-btn-item.btn-save-primary { background: var(--mint); color: #090b10; font-weight: 700; border-color: var(--mint); }
-
-    body.is-editing [contenteditable="true"] {
-      outline: 1px dashed rgba(0, 229, 117, 0.45) !important;
-      outline-offset: 2px;
-      border-radius: 3px;
-      background: rgba(0, 229, 117, 0.02);
-      cursor: text;
+    .dock-nav-btn {
+      background: none;
+      border: none;
+      color: var(--text-heading);
+      cursor: pointer;
+      padding: 4px 8px;
+      font-weight: 700;
+      border-radius: 6px;
+      transition: background 0.2s;
     }
 
-    body.is-editing [contenteditable="true"]:focus {
-      outline: 2px solid var(--mint) !important;
-      background: rgba(0, 229, 117, 0.06);
+    .dock-nav-btn:hover { background: var(--bg-surface-alt); }
+    .slide-indicator { color: var(--emerald); font-weight: 700; }
+
+    /* CONTENT EDITABLE STYLING */
+    [contenteditable="true"] {
+      outline: 2px dashed var(--emerald) !important;
+      outline-offset: 3px;
+      background: rgba(5, 150, 105, 0.04);
+      border-radius: 4px;
     }
   </style>
 </head>
 <body>
 
-  <!-- Top Progress Bar -->
-  <div class="top-progress-track"><div class="top-progress-fill" id="topProgressFill"></div></div>
-
-  <!-- Live Edit Trigger -->
-  <div class="edit-hotzone" id="editHotzone" title="Rê chuột vào góc hoặc nhấn 'E' để sửa"></div>
-  <button class="btn-edit-toggle" id="btnEditToggle">
-    <span>SỬA SLIDE (E)</span>
-  </button>
-
-  <!-- Live Edit Floating Dock -->
-  <div class="dock-edit-bar" id="dockEditBar">
-    <span class="dock-title">CHẾ ĐỘ BIÊN TẬP SLIDE TRỰC TIẾP</span>
-    <button class="dock-btn-item btn-save-primary" id="btnSaveSlides">Lưu (Ctrl+S)</button>
-    <button class="dock-btn-item" id="btnExportSlides">Xuất File HTML</button>
-    <button class="dock-btn-item" id="btnResetSlides">Khôi phục gốc</button>
+  <!-- Bottom Floating Navigation Dock -->
+  <div class="dock-controls">
+    <button class="dock-nav-btn" onclick="prevSlide()" title="Slide trước (←)">←</button>
+    <span>Trang <span class="slide-indicator" id="slideIndexText">1</span> / 8</span>
+    <button class="dock-nav-btn" onclick="nextSlide()" title="Slide sau (→)">→</button>
+    <span style="color: var(--border-strong);">|</span>
+    <span style="font-size: 11px;">Phím [← →] chuyển slide · [F] toàn màn hình · [E] sửa trực tiếp</span>
   </div>
 
-  <!-- Master Deck Container -->
-  <div class="deck-container" id="deckContainer">
+  <main class="deck-container">
 
-    <!-- ========================================================
+    <!-- ==========================================
          SLIDE 1: HOOK & EXECUTIVE BRIEFING
-         ======================================================== -->
-    <section class="slide-frame active" data-slide="1">
-      <div class="top-bar">
-        <div class="top-left">
-          <span class="badge-stage">EXECUTIVE STRATEGY</span>
-          <span class="brand-tag">Trường Song Ngữ Quốc Tế Wellspring Hà Nội</span>
+         ========================================== -->
+    <section class="slide-frame active" id="slide-1">
+      <header class="top-header">
+        <div class="header-left">
+          <span class="chapter-pill"><span class="pulse-dot"></span>EXECUTIVE STRATEGY</span>
+          <span class="brand-meta">Trường Song Ngữ Quốc Tế Wellspring Hà Nội</span>
         </div>
-        <div class="top-right">
-          <span>Huy Hưng · Senior SEO Executive</span>
-          <span>Báo Cáo Ban Lãnh Đạo</span>
+        <div class="header-right">
+          <div class="toolbar-actions">
+            <button class="action-btn" id="toggleEditBtn" onclick="toggleEditMode()" title="Bấm phím E">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+              <span>Sửa (E)</span>
+            </button>
+            <button class="action-btn" onclick="saveToStorage()" title="Lưu thay đổi (Ctrl+S)">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+              <span>Lưu</span>
+            </button>
+            <button class="action-btn" onclick="exportHTMLDeck()" title="Tải file HTML">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              <span>Xuất HTML</span>
+            </button>
+            <button class="action-btn" onclick="toggleTheme()" title="Chuyển chế độ Sáng / Tối">
+              <span id="themeIcon">🌙 Tối</span>
+            </button>
+          </div>
         </div>
+      </header>
+
+      <div class="hero-heading">
+        <h1 class="hero-title">Chiến Lược Tái Cấu Trúc SEO & Chiếm Lĩnh AI Search 2026</h1>
+        <p class="hero-subtitle">
+          Chuyển dịch toàn diện từ tối ưu từ khóa rời rạc sang <strong>Kiến trúc Đồ thị Tri thức (Knowledge Graph)</strong> nhằm thống trị tìm kiếm truyền thống và các công cụ AI thế hệ mới phục vụ mùa tuyển sinh K-12.
+        </p>
       </div>
 
-      <div class="slide-body-region">
-        <div class="hero-heading-box">
-          <h1 class="hero-h1">Chiến Lược Tái Cấu Trúc SEO & Chiếm Lĩnh AI Search 2026</h1>
-          <p class="hero-sub">
-            Chuyển dịch toàn diện từ tối ưu từ khóa rời rạc sang Kiến trúc Đồ thị Tri thức (Knowledge Graph) phục vụ tuyển sinh K-12
-          </p>
-        </div>
-
-        <div class="grid-row-3">
-          <div class="exec-card border-accent-rose">
+      <div class="slide-body">
+        <div class="grid-3-col">
+          <!-- Card 1 -->
+          <div class="bento-card">
             <div>
-              <div class="card-head">
-                <span class="card-title">1. Thực Trạng & Điểm Nghẽn</span>
-                <span class="pill-label rose">KIỂM TOÁN THẬT</span>
+              <div class="card-top">
+                <h2 class="card-title">1. Thực Trạng & Điểm Nghẽn</h2>
+                <span class="card-badge rose">KIỂM TOÁN THẬT</span>
               </div>
-              <p class="card-paragraph">
-                Phát hiện <strong>10 liên kết chết (HTTP 404)</strong> tại Menu/Footer; biểu phí bị đóng băng trong ảnh scan khiến các công cụ AI và Google không đọc được dữ liệu.
-              </p>
+              <div class="chip-row">
+                <span class="smart-chip active-rose">10 Link Chết 404</span>
+                <span class="smart-chip">Biểu Phí Nhốt Trong Ảnh</span>
+                <span class="smart-chip">72% Brand Traffic</span>
+              </div>
+              <ul class="narrative-list">
+                <li class="narrative-item">
+                  <svg class="item-bullet-icon" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" fill="var(--rose-light)" stroke="var(--rose)" stroke-width="2"/><path d="M7 7l6 6M13 7l-6 6" stroke="var(--rose)" stroke-width="2" stroke-linecap="round"/></svg>
+                  <span><strong>Chảy máu PageRank:</strong> 10 liên kết gãy 404 nằm ngay trên Menu chính và Footer, khiến 30% ngân sách quét của Googlebot bị tiêu tán lãng phí.</span>
+                </li>
+                <li class="narrative-item">
+                  <svg class="item-bullet-icon" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" fill="var(--rose-light)" stroke="var(--rose)" stroke-width="2"/><path d="M7 7l6 6M13 7l-6 6" stroke="var(--rose)" stroke-width="2" stroke-linecap="round"/></svg>
+                  <span><strong>Mù text cho bot AI:</strong> Bảng học phí 2026–2027 là ảnh scan JPG/PDF, khiến ChatGPT, Claude và Perplexity hoàn toàn không thể đọc bóc tách số liệu.</span>
+                </li>
+              </ul>
             </div>
-            <div style="font-family:var(--font-code); font-size:var(--small-size); color:var(--rose); margin-top:8px;">
-              Hậu quả: 72% traffic phụ thuộc vào Brandname
+            <div class="card-footer-note rose">
+              Hậu quả: 72% traffic phụ thuộc vào tên trường, bỏ ngỏ phụ huynh tìm kiếm mới
             </div>
           </div>
 
-          <div class="exec-card border-accent-cyan">
+          <!-- Card 2 -->
+          <div class="bento-card">
             <div>
-              <div class="card-head">
-                <span class="card-title">2. Giải Pháp AEO & GEO</span>
-                <span class="pill-label cyan">CHIẾN LƯỢC MỚI</span>
+              <div class="card-top">
+                <h2 class="card-title">2. Đột Phá Kép AEO & GEO</h2>
+                <span class="card-badge mint">CHIẾN LƯỢC MỚI</span>
               </div>
-              <p class="card-paragraph">
-                Quy hoạch <strong>5 Topic Clusters</strong> (Hub-and-Spoke), chuẩn hóa Schema Entity trường khảo thí Cambridge VN229 và mở dữ liệu biểu phí HTML ngữ nghĩa.
-              </p>
+              <div class="chip-row">
+                <span class="smart-chip active-emerald">5 Topic Clusters</span>
+                <span class="smart-chip">HTML Data Tables</span>
+                <span class="smart-chip">Schema Cambridge VN229</span>
+              </div>
+              <ul class="narrative-list">
+                <li class="narrative-item">
+                  <svg class="item-bullet-icon" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" fill="var(--emerald-light)" stroke="var(--emerald)" stroke-width="2"/><path d="M6 10l3 3 5-5" stroke="var(--emerald)" stroke-width="2" stroke-linecap="round"/></svg>
+                  <span><strong>Mạng lưới Hub-and-Spoke:</strong> Quy hoạch 5 cụm chủ đề vệ tinh bao bọc bài biểu phí và bộ cẩm nang khảo sát lớp 1.</span>
+                </li>
+                <li class="narrative-item">
+                  <svg class="item-bullet-icon" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" fill="var(--emerald-light)" stroke="var(--emerald)" stroke-width="2"/><path d="M6 10l3 3 5-5" stroke="var(--emerald)" stroke-width="2" stroke-linecap="round"/></svg>
+                  <span><strong>Nội dung chuẩn Fact-Dense:</strong> Cung cấp dữ liệu chuẩn xác để mô hình AI bóc tách trực tiếp Wellspring làm nguồn dẫn có thẩm quyền cao nhất.</span>
+                </li>
+              </ul>
             </div>
-            <div style="font-family:var(--font-code); font-size:var(--small-size); color:var(--cyan); margin-top:8px;">
-              Mục tiêu: Biến Wellspring thành Source of Truth cho AI
+            <div class="card-footer-note emerald">
+              Mục tiêu: Đưa domain wellspring.edu.vn thành "Source of Truth" cho AI
             </div>
           </div>
 
-          <div class="exec-card border-accent-mint">
+          <!-- Card 3 -->
+          <div class="bento-card">
             <div>
-              <div class="card-head">
-                <span class="card-title">3. Cam Kết 3 Tháng (Q4-Q1)</span>
-                <span class="pill-label mint">90 NGÀY</span>
+              <div class="card-top">
+                <h2 class="card-title">3. Cam Kết Tuyển Sinh 90 Ngày</h2>
+                <span class="card-badge blue">HIỆU QUẢ THẬT</span>
               </div>
-              <p class="card-paragraph">
-                Đưa Wellspring vào <strong>Top 3 trường song ngữ được AI khuyên dùng</strong> trên ChatGPT Search, Perplexity và Google AI Overviews; đạt <strong>80 cụm từ khóa Top 10</strong>.
-              </p>
+              <div class="chip-row">
+                <span class="smart-chip active-blue">Top 3 AI Khuyên Dùng</span>
+                <span class="smart-chip">80 Cụm Top 10 Google</span>
+                <span class="smart-chip">+3.500 Phụ Huynh Mới</span>
+              </div>
+              <ul class="narrative-list">
+                <li class="narrative-item">
+                  <svg class="item-bullet-icon" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" fill="var(--blue-light)" stroke="var(--blue)" stroke-width="2"/><path d="M6 10l3 3 5-5" stroke="var(--blue)" stroke-width="2" stroke-linecap="round"/></svg>
+                  <span><strong>Đo lường minh bạch:</strong> Tự động đồng bộ dữ liệu trực tiếp 15 ngày/lần từ Google Search Console API vào bảng Sheets của BGH.</span>
+                </li>
+                <li class="narrative-item">
+                  <svg class="item-bullet-icon" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" fill="var(--blue-light)" stroke="var(--blue)" stroke-width="2"/><path d="M6 10l3 3 5-5" stroke="var(--blue)" stroke-width="2" stroke-linecap="round"/></svg>
+                  <span><strong>Nói không với số ảo:</strong> Toàn bộ cam kết gắn chặt với nhu cầu nộp đơn và tìm kiếm thực tế của phụ huynh mùa tuyển sinh 2026.</span>
+                </li>
+              </ul>
             </div>
-            <div style="font-family:var(--font-code); font-size:var(--small-size); color:var(--mint); margin-top:8px;">
-              Kết quả: +3.500 Visits tự nhiên từ tệp có nhu cầu thật
+            <div class="card-footer-note blue">
+              Thời gian bàn giao: Hoàn thành trọn vẹn trong 3 tháng phục vụ tuyển sinh
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- ========================================================
-         SLIDE 2: THỰC TRẠNG (WHERE WE ARE TODAY)
-         ======================================================== -->
-    <section class="slide-frame" data-slide="2">
-      <div class="top-bar">
-        <div class="top-left">
-          <span class="badge-stage cyan">CHƯƠNG 1: THỰC TRẠNG</span>
-          <span class="brand-tag">Bức Tranh Tổng Thể & Đối Soát Đối Thủ K-12</span>
+    <!-- ==========================================
+         SLIDE 2: THỰC TRẠNG (WHERE WE STAND)
+         ========================================== -->
+    <section class="slide-frame" id="slide-2">
+      <header class="top-header">
+        <div class="header-left">
+          <span class="chapter-pill amber"><span class="pulse-dot"></span>CHƯƠNG 1: THỰC TRẠNG</span>
+          <span class="brand-meta">Bức Tranh Tổng Thể & Đối Soát Đối Thủ K-12</span>
         </div>
-        <div class="top-right">
-          <span>Wellspring vs Vinschool · BVIS · Dewey · Olympia</span>
+        <div class="header-right">
+          <div class="toolbar-actions">
+            <button class="action-btn" onclick="toggleEditMode()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg><span>Sửa (E)</span></button>
+            <button class="action-btn" onclick="saveToStorage()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg><span>Lưu</span></button>
+            <button class="action-btn" onclick="exportHTMLDeck()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg><span>Xuất HTML</span></button>
+            <button class="action-btn" onclick="toggleTheme()"><span id="themeIcon2">🌙 Tối</span></button>
+          </div>
         </div>
+      </header>
+
+      <div class="hero-heading">
+        <h2 class="hero-title">Vị Thế Số Hiện Tại Của Wellspring Trên Bản Đồ Tìm Kiếm</h2>
+        <p class="hero-subtitle">
+          Cơ sở vật chất và chất lượng đào tạo đứng hàng đầu, nhưng tài sản số trên Internet đang bị bỏ ngỏ trước đối thủ.
+        </p>
       </div>
 
-      <div class="slide-body-region">
-        <div class="hero-heading-box">
-          <h2 class="hero-h1">Vị Thế Số Hiện Tại Của Wellspring Trên Bản Đồ Tìm Kiếm</h2>
-          <p class="hero-sub">
-            Cơ sở vật chất và chất lượng đào tạo đứng hàng đầu, nhưng tài sản số trên Internet đang bị bỏ ngỏ trước đối thủ
-          </p>
-        </div>
-
-        <div class="grid-row-2">
-          <!-- Bất lợi -->
-          <div class="exec-card border-accent-rose">
-            <div class="card-head">
-              <span class="card-title">Khoảng Trống Thị Phần Trước Vinschool & BVIS</span>
-              <span class="pill-label rose">BẤT LỢI HIỆN TẠI</span>
+      <div class="slide-body">
+        <div class="grid-1-1">
+          <!-- Cột Trái -->
+          <div class="bento-card">
+            <div>
+              <div class="card-top">
+                <h3 class="card-title">Khoảng Trống Thị Phần Trước Vinschool & BVIS</h3>
+                <span class="card-badge rose">BẤT LỢI HIỆN TẠI</span>
+              </div>
+              <div class="chip-row">
+                <span class="smart-chip active-rose">Brand Traffic: 72%</span>
+                <span class="smart-chip">Non-Brand: Chỉ 28%</span>
+                <span class="smart-chip">AI Mention: &lt; 15%</span>
+              </div>
+              <ul class="narrative-list">
+                <li class="narrative-item">
+                  <svg class="item-bullet-icon" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" fill="var(--rose-light)" stroke="var(--rose)" stroke-width="2"/><path d="M7 7l6 6M13 7l-6 6" stroke="var(--rose)" stroke-width="2" stroke-linecap="round"/></svg>
+                  <span><strong>72% Lưu Lượng Là Gõ Tên Trường:</strong> Phụ huynh biết tên Wellspring rồi mới tìm. Lượng phụ huynh mới tìm từ khóa ngành (như "học phí trường quốc tế", "so sánh trường song ngữ") chỉ chiếm 28%.</span>
+                </li>
+                <li class="narrative-item">
+                  <svg class="item-bullet-icon" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" fill="var(--rose-light)" stroke="var(--rose)" stroke-width="2"/><path d="M7 7l6 6M13 7l-6 6" stroke="var(--rose)" stroke-width="2" stroke-linecap="round"/></svg>
+                  <span><strong>Vinschool & BVIS Thâu Tóm Từ Khóa Tuyển Sinh:</strong> Đối thủ đã bao phủ toàn bộ trang nhất các từ khóa có nhu cầu nộp đơn cao nhất khu vực Hà Nội.</span>
+                </li>
+                <li class="narrative-item">
+                  <svg class="item-bullet-icon" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" fill="var(--rose-light)" stroke="var(--rose)" stroke-width="2"/><path d="M7 7l6 6M13 7l-6 6" stroke="var(--rose)" stroke-width="2" stroke-linecap="round"/></svg>
+                  <span><strong>Vắng Bóng Trên Các Công Cụ AI:</strong> Khi phụ huynh hỏi ChatGPT hoặc Perplexity <em>"Trường song ngữ nào tại Hà Nội có lộ trình Cambridge tốt nhất?"</em>, Wellspring chỉ xuất hiện dưới 15% câu trả lời.</span>
+                </li>
+              </ul>
             </div>
-            <ul class="narrative-list">
-              <li class="narrative-item">
-                <span class="bullet-square rose"></span>
-                <span><strong>72% Lưu Lượng Là Gõ Tên Trường:</strong> Phụ huynh biết tên Wellspring rồi mới tìm (Brand search). Lưu lượng từ khóa khám phá ngành (Non-brand: "học phí trường quốc tế", "so sánh trường song ngữ") chỉ chiếm 28%.</span>
-              </li>
-              <li class="narrative-item">
-                <span class="bullet-square rose"></span>
-                <span><strong>BVIS & Vinschool Thâu Tóm Từ Khóa Tuyển Sinh:</strong> Đối thủ đã chiếm giữ toàn bộ trang nhất các từ khóa có nhu cầu nộp đơn cao nhất khu vực Hà Nội.</span>
-              </li>
-              <li class="narrative-item">
-                <span class="bullet-square rose"></span>
-                <span><strong>Vắng Bóng Trên Các Công Cụ AI:</strong> Khi phụ huynh hỏi ChatGPT hoặc Perplexity "Trường song ngữ nào tại Hà Nội có lộ trình Cambridge tốt nhất?", Wellspring chỉ xuất hiện dưới 15% câu trả lời.</span>
-              </li>
-            </ul>
+            <div class="card-footer-note rose">
+              Điểm yếu cốt lõi: Đang phụ thuộc vào nhận diện thương hiệu cũ thay vì thu hút phụ huynh mới
+            </div>
           </div>
 
-          <!-- Điểm tựa -->
-          <div class="exec-card border-accent-mint">
-            <div class="card-head">
-              <span class="card-title">3 Điểm Tựa Kỹ Thuật Độc Quyền Chưa Được Khai Phá</span>
-              <span class="pill-label mint">LỢI THẾ CẠNH TRANH</span>
+          <!-- Cột Phải -->
+          <div class="bento-card">
+            <div>
+              <div class="card-top">
+                <h3 class="card-title">3 Điểm Tựa Kỹ Thuật Độc Quyền Chưa Được Khai Phá</h3>
+                <span class="card-badge mint">LỢI THẾ CẠNH TRANH</span>
+              </div>
+              <div class="chip-row">
+                <span class="smart-chip active-emerald">TTFB: 346ms Cực Nhanh</span>
+                <span class="smart-chip">Độc Quyền Đề Lớp 1</span>
+                <span class="smart-chip">Cambridge Center VN229</span>
+              </div>
+              <ul class="narrative-list">
+                <li class="narrative-item">
+                  <svg class="item-bullet-icon" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" fill="var(--emerald-light)" stroke="var(--emerald)" stroke-width="2"/><path d="M6 10l3 3 5-5" stroke="var(--emerald)" stroke-width="2" stroke-linecap="round"/></svg>
+                  <span><strong>Hạ Tầng Tốc Độ Server Nhanh (TTFB 346ms):</strong> Phản hồi máy chủ của Wellspring vượt trội so với Hanoi Academy (480ms) và Concordia (620ms), tạo ưu thế cào dữ liệu mượt mà cho Googlebot.</span>
+                </li>
+                <li class="narrative-item">
+                  <svg class="item-bullet-icon" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" fill="var(--emerald-light)" stroke="var(--emerald)" stroke-width="2"/><path d="M6 10l3 3 5-5" stroke="var(--emerald)" stroke-width="2" stroke-linecap="round"/></svg>
+                  <span><strong>Tài Liệu Khảo Sát Lớp 1 Độc Quyền:</strong> Nhu cầu tìm "đề thi đánh giá năng lực lớp 1" tăng vọt 300% từ tháng 11 đến tháng 3 hàng năm. Wellspring có kho dữ liệu thực tế vượt trội để thống trị cụm này.</span>
+                </li>
+                <li class="narrative-item">
+                  <svg class="item-bullet-icon" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" fill="var(--emerald-light)" stroke="var(--emerald)" stroke-width="2"/><path d="M6 10l3 3 5-5" stroke="var(--emerald)" stroke-width="2" stroke-linecap="round"/></svg>
+                  <span><strong>Chuẩn Khảo Thí Cambridge VN229:</strong> Là trường song ngữ đầu tiên đạt chuẩn trung tâm khảo thí Cambridge trực tiếp, tạo thẩm quyền học thuật tối cao (E-E-A-T).</span>
+                </li>
+              </ul>
             </div>
-            <ul class="narrative-list">
-              <li class="narrative-item">
-                <span class="bullet-square mint"></span>
-                <span><strong>Hạ Tầng Tốc Độ Server Nhanh (TTFB 346ms):</strong> Phản hồi máy chủ của Wellspring nhanh hơn Hanoi Academy (480ms) và Concordia (620ms), tạo ưu thế cào dữ liệu mượt mà cho Googlebot.</span>
-              </li>
-              <li class="narrative-item">
-                <span class="bullet-square mint"></span>
-                <span><strong>Tài Liệu Khảo Sát Lớp 1 Độc Quyền:</strong> Nhu cầu tìm "đề thi đánh giá năng lực lớp 1" tăng vọt 300% từ tháng 11 đến tháng 3 hàng năm. Wellspring có dữ liệu thực tế vượt trội để thống trị cụm này.</span>
-              </li>
-              <li class="narrative-item">
-                <span class="bullet-square mint"></span>
-                <span><strong>Chuẩn Khảo Thí Cambridge VN229:</strong> Là trường song ngữ đầu tiên đạt chuẩn trung tâm khảo thí Cambridge trực tiếp, tạo thẩm quyền học thuật tối cao (E-E-A-T).</span>
-              </li>
-            </ul>
+            <div class="card-footer-note emerald">
+              Tiềm năng: Chỉ cần tối ưu cấu trúc dữ liệu là đủ sức bứt phá lên Top 1 Google và AI Search
+            </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- ========================================================
+    <!-- ==========================================
          SLIDE 3: VẤN ĐỀ CỐT LÕI (ROOT CAUSES)
-         ======================================================== -->
-    <section class="slide-frame" data-slide="3">
-      <div class="top-bar">
-        <div class="top-left">
-          <span class="badge-stage rose">CHƯƠNG 2: VẤN ĐỀ CỐT LÕI</span>
-          <span class="brand-tag">Chẩn Đoán Kỹ Thuật Từ 82 URLs & 137 Liên Kết</span>
+         ========================================== -->
+    <section class="slide-frame" id="slide-3">
+      <header class="top-header">
+        <div class="header-left">
+          <span class="chapter-pill rose"><span class="pulse-dot"></span>CHƯƠNG 2: VẤN ĐỀ CỐT LÕI</span>
+          <span class="brand-meta">Chẩn Đoán Kỹ Thuật Từ 82 URLs & 137 Liên Kết</span>
         </div>
-        <div class="top-right">
-          <span>Screaming Frog Audit & Link Graph Forensics</span>
+        <div class="header-right">
+          <div class="toolbar-actions">
+            <button class="action-btn" onclick="toggleEditMode()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg><span>Sửa (E)</span></button>
+            <button class="action-btn" onclick="saveToStorage()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg><span>Lưu</span></button>
+            <button class="action-btn" onclick="exportHTMLDeck()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg><span>Xuất HTML</span></button>
+            <button class="action-btn" onclick="toggleTheme()"><span id="themeIcon3">🌙 Tối</span></button>
+          </div>
         </div>
+      </header>
+
+      <div class="hero-heading">
+        <h2 class="hero-title">Tại Sao Bài Viết Hay Vẫn Không Lên Top & AI Không Đọc Được?</h2>
+        <p class="hero-subtitle">
+          Ba nguyên nhân kỹ thuật gốc rễ đang cản trở toàn bộ nỗ lực sản xuất nội dung của nhà trường.
+        </p>
       </div>
 
-      <div class="slide-body-region">
-        <div class="hero-heading-box">
-          <h2 class="hero-h1">Tại Sao Bài Viết Hay Vẫn Không Lên Top & AI Không Đọc Được?</h2>
-          <p class="hero-sub">
-            Ba nguyên nhân kỹ thuật gốc rễ đang cản trở toàn bộ nỗ lực sản xuất nội dung của nhà trường
-          </p>
-        </div>
-
-        <div class="grid-row-3">
-          <div class="exec-card border-accent-rose">
+      <div class="slide-body">
+        <div class="grid-3-col">
+          <!-- Card 1 -->
+          <div class="bento-card">
             <div>
-              <div class="card-head">
-                <span class="card-title">1. Chảy Máu PageRank Qua 404</span>
-                <span class="pill-label rose">10 LINK CHẾT</span>
+              <div class="card-top">
+                <h3 class="card-title">1. Chảy Máu PageRank</h3>
+                <span class="card-badge rose">10 LINK CHẾT</span>
               </div>
-              <p class="card-paragraph">
-                10 liên kết gãy nằm ngay trên Menu/Footer (ví dụ: <code>/vichinh-sach-bao-mat</code>, <code>/tin-tuc/wis-lifers</code>).
-              </p>
-              <p class="card-paragraph" style="margin-top:6px;">
-                <strong>Hậu quả:</strong> Sức mạnh từ Trang chủ chảy vào "hố đen" 404 và tiêu tán hoàn toàn, khiến Googlebot lười quét bài mới.
-              </p>
+              <div class="chip-row">
+                <span class="smart-chip active-rose">HTTP 404</span>
+                <span class="smart-chip">Lãng phí 30% Crawl Budget</span>
+              </div>
+              <ul class="narrative-list">
+                <li class="narrative-item">
+                  <svg class="item-bullet-icon" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" fill="var(--rose-light)" stroke="var(--rose)" stroke-width="2"/><path d="M7 7l6 6M13 7l-6 6" stroke="var(--rose)" stroke-width="2" stroke-linecap="round"/></svg>
+                  <span><strong>10 Liên Kết Gãy Nằm Ngay Menu/Footer:</strong> Điển hình là <code>/vichinh-sach-bao-mat</code>, <code>/tin-tuc/wis-lifers</code>, <code>/hop-tac-quoc-te</code>,...</span>
+                </li>
+                <li class="narrative-item">
+                  <svg class="item-bullet-icon" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" fill="var(--rose-light)" stroke="var(--rose)" stroke-width="2"/><path d="M7 7l6 6M13 7l-6 6" stroke="var(--rose)" stroke-width="2" stroke-linecap="round"/></svg>
+                  <span><strong>Hậu Quả:</strong> Dòng sức mạnh từ Trang chủ chảy thẳng vào "hố đen" 404 và tiêu tán hoàn toàn, khiến Googlebot lười quét các bài viết mới.</span>
+                </li>
+              </ul>
             </div>
-            <div style="font-family:var(--font-code); font-size:var(--small-size); color:var(--rose); margin-top:8px;">
-              Lãng phí 30% Crawl Budget mỗi ngày
+            <div class="card-footer-note rose">
+              Khắc phục: Cần cấu hình Nginx 301 chuyển hướng trong 24 giờ
             </div>
           </div>
 
-          <div class="exec-card border-accent-amber">
+          <!-- Card 2 -->
+          <div class="bento-card">
             <div>
-              <div class="card-head">
-                <span class="card-title">2. Dữ Liệu Bị Đóng Băng Trong Ảnh</span>
-                <span class="pill-label amber">MÙ TEXT CHO AI</span>
+              <div class="card-top">
+                <h3 class="card-title">2. Biểu Phí Đóng Băng</h3>
+                <span class="card-badge amber">MÙ TEXT CHO AI</span>
               </div>
-              <p class="card-paragraph">
-                Thông tin học phí 2026-2027 tại <code>/vi/tuyen-sinh/bieu-phi</code> được đăng bằng <strong>ảnh scan JPG & file PDF</strong>.
-              </p>
-              <p class="card-paragraph" style="margin-top:6px;">
-                <strong>Hậu quả:</strong> Bot AI (ChatGPT, Perplexity) không thể đọc bảng số liệu, đành trích bài từ báo lá cải (Kenh14, WebTreTho) chứa số cũ sai lệch.
-              </p>
+              <div class="chip-row">
+                <span class="smart-chip">Ảnh Scan JPG</span>
+                <span class="smart-chip">File PDF Scan</span>
+                <span class="smart-chip active-amber">Mất Quyền Kiểm Soát</span>
+              </div>
+              <ul class="narrative-list">
+                <li class="narrative-item">
+                  <svg class="item-bullet-icon" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" fill="var(--amber-light)" stroke="var(--amber)" stroke-width="2"/><path d="M10 6v5M10 14h.01" stroke="var(--amber)" stroke-width="2" stroke-linecap="round"/></svg>
+                  <span><strong>Dữ Liệu Học Phí Bị Khóa Trong Ảnh:</strong> Thông tin học phí 2026–2027 tại <code>/vi/tuyen-sinh/bieu-phi</code> được đăng bằng ảnh chụp và file PDF đính kèm.</span>
+                </li>
+                <li class="narrative-item">
+                  <svg class="item-bullet-icon" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" fill="var(--amber-light)" stroke="var(--amber)" stroke-width="2"/><path d="M10 6v5M10 14h.01" stroke="var(--amber)" stroke-width="2" stroke-linecap="round"/></svg>
+                  <span><strong>Hậu Quả:</strong> Bot AI (ChatGPT, Perplexity) không thể đọc số liệu bảng ảnh, đành trích bài từ báo lá cải chứa số cũ sai lệch.</span>
+                </li>
+              </ul>
             </div>
-            <div style="font-family:var(--font-code); font-size:var(--small-size); color:var(--amber); margin-top:8px;">
-              Mất quyền kiểm soát thông tin học phí
+            <div class="card-footer-note amber">
+              Khắc phục: Chuyển toàn bộ biểu phí thành bảng HTML sạch & Schema FAQ
             </div>
           </div>
 
-          <div class="exec-card border-accent-cyan">
+          <!-- Card 3 -->
+          <div class="bento-card">
             <div>
-              <div class="card-head">
-                <span class="card-title">3. Hiện Tượng "Đảo Cô Lập"</span>
-                <span class="pill-label cyan">DEPTH > 4 CLICKS</span>
+              <div class="card-top">
+                <h3 class="card-title">3. Hiện Tượng "Đảo Cô Lập"</h3>
+                <span class="card-badge blue">DEPTH &gt; 4 CLICKS</span>
               </div>
-              <p class="card-paragraph">
-                Các bài viết so sánh trường và đề thi lớp 1 bị chôn sâu 4-5 lượt nhấp chuột, trôi dạt ra ngoài rìa bản đồ kiến trúc.
-              </p>
-              <p class="card-paragraph" style="margin-top:6px;">
-                <strong>Hậu quả:</strong> Dòng lực PageRank bị suy hao 90% khi truyền tới bài viết, khiến bài viết hay vẫn không đủ lực cạnh tranh top Google.
-              </p>
+              <div class="chip-row">
+                <span class="smart-chip">Độ Sâu 4-5 Tầng</span>
+                <span class="smart-chip active-blue">Suy Hao 90% Lực</span>
+              </div>
+              <ul class="narrative-list">
+                <li class="narrative-item">
+                  <svg class="item-bullet-icon" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" fill="var(--blue-light)" stroke="var(--blue)" stroke-width="2"/><path d="M10 6v5M10 14h.01" stroke="var(--blue)" stroke-width="2" stroke-linecap="round"/></svg>
+                  <span><strong>Bài Viết Hay Bị Chôn Quá Sâu:</strong> Các bài viết so sánh trường và đề thi lớp 1 bị chôn sâu 4–5 lượt nhấp chuột, trôi dạt ra ngoài rìa bản đồ kiến trúc.</span>
+                </li>
+                <li class="narrative-item">
+                  <svg class="item-bullet-icon" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" fill="var(--blue-light)" stroke="var(--blue)" stroke-width="2"/><path d="M10 6v5M10 14h.01" stroke="var(--blue)" stroke-width="2" stroke-linecap="round"/></svg>
+                  <span><strong>Hậu Quả:</strong> Dòng lực PageRank bị suy hao 90% khi truyền tới bài viết, khiến nội dung hay vẫn không đủ lực cạnh tranh top Google.</span>
+                </li>
+              </ul>
             </div>
-            <div style="font-family:var(--font-code); font-size:var(--small-size); color:var(--cyan); margin-top:8px;">
-              Bài viết bị "đói liên kết nội bộ"
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ========================================================
-         SLIDE 4: GIẢI PHÁP CHIẾN LƯỢC (STRATEGIC SOLUTION)
-         ======================================================== -->
-    <section class="slide-frame" data-slide="4">
-      <div class="top-bar">
-        <div class="top-left">
-          <span class="badge-stage mint">CHƯƠNG 3: GIẢI PHÁP</span>
-          <span class="brand-tag">Đột Phá AEO/GEO & Mô Hình 5 Topic Clusters</span>
-        </div>
-        <div class="top-right">
-          <span>Kiến Trúc Đồ Thị Tri Thức (Knowledge Graph)</span>
-        </div>
-      </div>
-
-      <div class="slide-body-region">
-        <div class="hero-heading-box">
-          <h2 class="hero-h1">Chiến Lược Kép: Tối Ưu AI Search & Cấu Trúc <span style="white-space: nowrap;">Hub-and-Spoke</span></h2>
-          <p class="hero-sub">
-            Xây dựng nền tảng vững chắc để công cụ tìm kiếm truyền thống và mô hình AI đều ưu tiên đề xuất Wellspring
-          </p>
-        </div>
-
-        <div class="grid-row-2">
-          <!-- Trụ Cột 1: AEO & GEO -->
-          <div class="exec-card border-accent-mint">
-            <div class="card-head">
-              <span class="card-title">Trụ Cột 1: Tối Ưu Hóa AI Search (AEO & GEO)</span>
-              <span class="pill-label mint">XU HƯỚNG TƯƠNG LAI</span>
-            </div>
-            <ul class="narrative-list">
-              <li class="narrative-item">
-                <span class="bullet-square mint"></span>
-                <span><strong>Bảng Dữ Liệu HTML & FAQ Schema:</strong> Chuyển biểu phí thành bảng HTML sạch kèm mã <code>FAQPage Schema</code> giúp AI bóc tách chính xác số tiền theo từng cấp học.</span>
-              </li>
-              <li class="narrative-item">
-                <span class="bullet-square mint"></span>
-                <span><strong>Nội Dung Đậm Đặc Số Liệu (Fact-Dense):</strong> Viết ngắn gọn, trực diện, trả lời đúng các câu hỏi so sánh trường và tiêu chí chọn trường song ngữ.</span>
-              </li>
-              <li class="narrative-item">
-                <span class="bullet-square mint"></span>
-                <span><strong>Xác Thực Thực Thể Trường Học:</strong> Cài đặt Schema <code>EducationalOrganization</code> khẳng định mã trường khảo thí Cambridge VN229.</span>
-              </li>
-            </ul>
-          </div>
-
-          <!-- Trụ Cột 2: 5 Topic Clusters -->
-          <div class="exec-card border-accent-cyan">
-            <div class="card-head">
-              <span class="card-title">Trụ Cột 2: Quy Hoạch 5 Cụm Nội Dung (Topic Clusters)</span>
-              <span class="pill-label cyan">HUB-AND-SPOKE</span>
-            </div>
-            <ul class="narrative-list">
-              <li class="narrative-item">
-                <span class="bullet-square"></span>
-                <span><strong>Cụm 1: Bảng Biểu Phí & Học Bổng (Pillar):</strong> Bao quanh bởi các bài vệ tinh về ưu đãi đóng sớm, phương thức thanh toán trả góp.</span>
-              </li>
-              <li class="narrative-item">
-                <span class="bullet-square"></span>
-                <span><strong>Cụm 2: Cẩm Nang Khảo Sát Lớp 1 (Pillar):</strong> Bao quanh bởi bộ câu hỏi đánh giá tư duy mẫu và tâm lý chuyển cấp.</span>
-              </li>
-              <li class="narrative-item">
-                <span class="bullet-square"></span>
-                <span><strong>Cụm 3: So Sánh & Review Trường (Pillar):</strong> So sánh khách quan Wellspring vs Vinschool, Dewey, Olympia.</span>
-              </li>
-              <li class="narrative-item">
-                <span class="bullet-square"></span>
-                <span><strong>Cụm 4 & 5: Chương Trình Cambridge K-12 & Lộ Trình Du Học:</strong> Tạo bằng chứng xã hội (Social Proof) về thành tích học sinh.</span>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ========================================================
-         SLIDE 5: CÁC CÔNG VIỆC CẦN LÀM (WORK BREAKDOWN STRUCTURE)
-         ======================================================== -->
-    <section class="slide-frame" data-slide="5">
-      <div class="top-bar">
-        <div class="top-left">
-          <span class="badge-stage amber">CHƯƠNG 4: CÔNG VIỆC CẦN LÀM</span>
-          <span class="brand-tag">Phân Công Trách Nhiệm Rõ Ràng & Khả Thi</span>
-        </div>
-        <div class="top-right">
-          <span>Phối Hợp: SEO · IT Kỹ Thuật · Phòng Tuyển Sinh</span>
-        </div>
-      </div>
-
-      <div class="slide-body-region">
-        <div class="hero-heading-box">
-          <h2 class="hero-h1">Kế Hoạch Phân Bổ Công Việc Cụ Thể (Actionable WBS)</h2>
-          <p class="hero-sub">
-            Rõ người, rõ việc, rõ thời hạn; không làm dàn trải gây quá tải bộ máy vận hành
-          </p>
-        </div>
-
-        <div class="grid-row-3">
-          <!-- Nhóm 1: IT Kỹ thuật -->
-          <div class="exec-card border-accent-rose">
-            <div class="card-head">
-              <span class="card-title">1. Nhóm Kỹ Thuật (IT)</span>
-              <span class="pill-label rose">HOÀN THÀNH 48H</span>
-            </div>
-            <ul class="narrative-list">
-              <li class="narrative-item">
-                <span class="bullet-square rose"></span>
-                <span>Cấu hình <strong>Nginx Rewrite 301</strong> chuyển hướng toàn bộ 10 link 404 về trang đích chuẩn.</span>
-              </li>
-              <li class="narrative-item">
-                <span class="bullet-square rose"></span>
-                <span>Gỡ bỏ các thẻ link gãy ở Footer và sửa thẻ <code>&lt;h1&gt;</code> trang chủ.</span>
-              </li>
-              <li class="narrative-item">
-                <span class="bullet-square rose"></span>
-                <span>Chèn mã <strong>Schema JSON-LD</strong> tổ chức giáo dục vào file header giao diện.</span>
-              </li>
-            </ul>
-          </div>
-
-          <!-- Nhóm 2: SEO & Content -->
-          <div class="exec-card border-accent-cyan">
-            <div class="card-head">
-              <span class="card-title">2. Nhóm Nội Dung (Content/SEO)</span>
-              <span class="pill-label cyan">1-2 BÀI / TUẦN</span>
-            </div>
-            <ul class="narrative-list">
-              <li class="narrative-item">
-                <span class="bullet-square"></span>
-                <span>Viết lại tiêu đề Meta Title chuẩn <strong>&le; 580px</strong> cho 20 trang quan trọng nhất.</span>
-              </li>
-              <li class="narrative-item">
-                <span class="bullet-square"></span>
-                <span>Sản xuất 5 bài Trụ cột (Pillar) và 15 bài vệ tinh ngách theo chuẩn Fact-dense.</span>
-              </li>
-              <li class="narrative-item">
-                <span class="bullet-square"></span>
-                <span>Chèn liên kết nội bộ theo mô hình Hub-and-Spoke hướng về trang Tuyển sinh.</span>
-              </li>
-            </ul>
-          </div>
-
-          <!-- Nhóm 3: Phòng Tuyển Sinh -->
-          <div class="exec-card border-accent-mint">
-            <div class="card-head">
-              <span class="card-title">3. Phòng Tuyển Sinh & Marcom</span>
-              <span class="pill-label mint">TUẦN 1 BÀN GIAO</span>
-            </div>
-            <ul class="narrative-list">
-              <li class="narrative-item">
-                <span class="bullet-square mint"></span>
-                <span>Cung cấp số liệu học phí chính thức năm học 2026-2027 để làm bảng HTML trực diện.</span>
-              </li>
-              <li class="narrative-item">
-                <span class="bullet-square mint"></span>
-                <span>Cung cấp cấu trúc đề khảo sát lớp 1 mẫu để làm tài liệu độc quyền tải về.</span>
-              </li>
-              <li class="narrative-item">
-                <span class="bullet-square mint"></span>
-                <span>Theo dõi số lượng đơn đăng ký tư vấn và lịch hẹn tham quan trường (Campus Tour).</span>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ========================================================
-         SLIDE 6: LỘ TRÌNH 3 THÁNG (90-DAY EXECUTION ROADMAP)
-         ======================================================== -->
-    <section class="slide-frame" data-slide="6">
-      <div class="top-bar">
-        <div class="top-left">
-          <span class="badge-stage cyan">CHƯƠNG 5: LỘ TRÌNH</span>
-          <span class="brand-tag">Lộ Trình Triển Khai 3 Tháng Thực Chiến (90 Ngày)</span>
-        </div>
-        <div class="top-right">
-          <span>Q4/2026 - Q1/2027 · Phục Vụ Tuyển Sinh Trọng Điểm</span>
-        </div>
-      </div>
-
-      <div class="slide-body-region">
-        <div class="hero-heading-box">
-          <h2 class="hero-h1">Tiến Trình 3 Giai Đoạn Từ Vá Hạ Tầng Đến Đạt Đỉnh AI Search</h2>
-          <p class="hero-sub">
-            Thiết kế bám sát mùa tuyển sinh của trường (tháng 11 đến tháng 3 hàng năm) để tối đa hóa chuyển đổi
-          </p>
-        </div>
-
-        <div class="grid-row-3">
-          <!-- Tháng 1 -->
-          <div class="exec-card border-accent-rose">
-            <div class="card-head">
-              <span class="card-title">Tháng 1: Vá Hạ Tầng & Dữ Liệu</span>
-              <span class="pill-label rose">NGÀY 1 - 30</span>
-            </div>
-            <ul class="narrative-list">
-              <li class="narrative-item"><span class="bullet-square rose"></span><span>Xóa sạch 10 lỗi 404 qua Nginx 301; khôi phục 100% dòng PageRank bị rò rỉ.</span></li>
-              <li class="narrative-item"><span class="bullet-square rose"></span><span>Chuyển đổi bảng biểu phí sang HTML chuẩn và nhúng FAQPage Schema cho AI.</span></li>
-              <li class="narrative-item"><span class="bullet-square rose"></span><span>Tối ưu tiêu đề &le; 580px và cấu trúc H1 trang chủ.</span></li>
-            </ul>
-            <div style="font-family:var(--font-code); font-size:var(--small-size); color:var(--rose); margin-top:8px;">
-              Mục tiêu: Đưa điểm Technical Audit lên 92/100
-            </div>
-          </div>
-
-          <!-- Tháng 2 -->
-          <div class="exec-card border-accent-amber">
-            <div class="card-head">
-              <span class="card-title">Tháng 2: Xây 5 Topic Clusters</span>
-              <span class="pill-label amber">NGÀY 31 - 60</span>
-            </div>
-            <ul class="narrative-list">
-              <li class="narrative-item"><span class="bullet-square amber"></span><span>Xuất bản 5 bài Trụ cột chuyên sâu (Biểu phí, Lớp 1, So sánh trường).</span></li>
-              <li class="narrative-item"><span class="bullet-square amber"></span><span>Sản xuất 10 bài vệ tinh ngách giải đáp thắc mắc phụ huynh.</span></li>
-              <li class="narrative-item"><span class="bullet-square amber"></span><span>Đưa toàn bộ bài quan trọng về độ sâu &le; 2 clicks từ Trang chủ.</span></li>
-            </ul>
-            <div style="font-family:var(--font-code); font-size:var(--small-size); color:var(--amber); margin-top:8px;">
-              Mục tiêu: Đạt 80 cụm từ khóa Top 10 Google
-            </div>
-          </div>
-
-          <!-- Tháng 3 -->
-          <div class="exec-card border-accent-mint">
-            <div class="card-head">
-              <span class="card-title">Tháng 3: Thống Trị AI Search</span>
-              <span class="pill-label mint">NGÀY 61 - 90</span>
-            </div>
-            <ul class="narrative-list">
-              <li class="narrative-item"><span class="bullet-square mint"></span><span>Kiểm tra tần suất xuất hiện trên Perplexity, ChatGPT Search, Gemini.</span></li>
-              <li class="narrative-item"><span class="bullet-square mint"></span><span>Tối ưu hóa tỷ lệ chuyển đổi (CRO) trên form khảo sát lớp 1 và đặt lịch tour.</span></li>
-              <li class="narrative-item"><span class="bullet-square mint"></span><span>Nghiệm thu toàn diện và bàn giao dashboard tự động cho Ban Giám Hiệu.</span></li>
-            </ul>
-            <div style="font-family:var(--font-code); font-size:var(--small-size); color:var(--mint); margin-top:8px;">
-              Mục tiêu: Lọt Top 3 AI Search khuyên dùng
+            <div class="card-footer-note blue">
+              Khắc phục: Tái cấu trúc Hub-and-Spoke kéo độ sâu về ≤ 2 clicks
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- ========================================================
-         SLIDE 7: CAM KẾT KẾT QUẢ ĐO LƯỜNG ĐƯỢC
-         ======================================================== -->
-    <section class="slide-frame" data-slide="7">
-      <div class="top-bar">
-        <div class="top-left">
-          <span class="badge-stage mint">CHƯƠNG 6: CAM KẾT KẾT QUẢ</span>
-          <span class="brand-tag">Chỉ Số Hiệu Quả Đo Lường Được Sau 3 Tháng</span>
+    <!-- ==========================================
+         SLIDE 4: GIẢI PHÁP CHIẾN LƯỢC
+         ========================================== -->
+    <section class="slide-frame" id="slide-4">
+      <header class="top-header">
+        <div class="header-left">
+          <span class="chapter-pill"><span class="pulse-dot"></span>CHƯƠNG 3: GIẢI PHÁP</span>
+          <span class="brand-meta">Đột Phá AEO/GEO & Mô Hình 5 Topic Clusters</span>
         </div>
-        <div class="top-right">
-          <span>100% Căn Cứ Thực Tế · Không Dùng Số Liệu Ảo</span>
+        <div class="header-right">
+          <div class="toolbar-actions">
+            <button class="action-btn" onclick="toggleEditMode()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg><span>Sửa (E)</span></button>
+            <button class="action-btn" onclick="saveToStorage()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg><span>Lưu</span></button>
+            <button class="action-btn" onclick="exportHTMLDeck()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg><span>Xuất HTML</span></button>
+            <button class="action-btn" onclick="toggleTheme()"><span id="themeIcon4">🌙 Tối</span></button>
+          </div>
         </div>
+      </header>
+
+      <div class="hero-heading">
+        <h2 class="hero-title">Chiến Lược Kép: Tối Ưu AI Search & Mạng Lưới <span style="white-space: nowrap;">Hub-and-Spoke</span></h2>
+        <p class="hero-subtitle">
+          Xây dựng nền tảng vững chắc để công cụ tìm kiếm truyền thống và mô hình AI đều ưu tiên đề xuất Wellspring.
+        </p>
       </div>
 
-      <div class="slide-body-region">
-        <div class="hero-heading-box">
-          <h2 class="hero-h1">Cam Kết Hiệu Quả AEO/GEO & Tăng Trưởng Tuyển Sinh</h2>
-          <p class="hero-sub">
-            Tập trung tuyệt đối vào mục tiêu hiển thị trên các công cụ tìm kiếm AI và lưu lượng phụ huynh thực tế
-          </p>
-        </div>
-
-        <div class="grid-row-4">
-          <div class="exec-card border-accent-mint">
-            <span style="font-size:var(--small-size); color:var(--text-muted); font-family:var(--font-code);">TỪ KHÓA GOOGLE</span>
-            <div class="metric-hero-val" style="color:var(--mint);">80 CỤM</div>
-            <div style="font-size:var(--body-size); color:var(--text-white); font-weight:600;">Top 10 Từ Khóa</div>
-            <p style="font-size:var(--small-size); color:var(--text-dim); margin-top:4px; line-height:1.35;">
-              Tăng từ 64 lên 80 từ khóa ngành về biểu phí, tuyển sinh và đào tạo lọt trang 1 Google.
-            </p>
-          </div>
-
-          <div class="exec-card border-accent-cyan">
-            <span style="font-size:var(--small-size); color:var(--text-muted); font-family:var(--font-code);">LƯỢNG TRUY CẬP</span>
-            <div class="metric-hero-val" style="color:var(--cyan);">+3.500</div>
-            <div style="font-size:var(--body-size); color:var(--text-white); font-weight:600;">Visits / Tháng</div>
-            <p style="font-size:var(--small-size); color:var(--text-dim); margin-top:4px; line-height:1.35;">
-              Tăng trưởng lưu lượng tự nhiên chất lượng cao từ tệp phụ huynh tìm kiếm nhu cầu thật.
-            </p>
-          </div>
-
-          <div class="exec-card border-accent-amber">
-            <span style="font-size:var(--small-size); color:var(--text-muted); font-family:var(--font-code);">TRÍCH DẪN NGUỒN AI (GEO)</span>
-            <div class="metric-hero-val" style="color:var(--amber);">45% - 55%</div>
-            <div style="font-size:var(--body-size); color:var(--text-white); font-weight:600;">Tần Suất Trích Dẫn</div>
-            <p style="font-size:var(--small-size); color:var(--text-dim); margin-top:4px; line-height:1.35;">
-              AI Search (Perplexity, SearchGPT, Gemini) trích dẫn trực tiếp nguồn chính thống wellspring.edu.vn.
-            </p>
-          </div>
-
-          <div class="exec-card border-accent-mint">
-            <span style="font-size:var(--small-size); color:var(--text-muted); font-family:var(--font-code);">VỊ TRÍ ĐỀ XUẤT AI (AEO)</span>
-            <div class="metric-hero-val" style="color:var(--purple);">TOP 3 AI</div>
-            <div style="font-size:var(--body-size); color:var(--text-white); font-weight:600;">Khuyên Dùng Trường</div>
-            <p style="font-size:var(--small-size); color:var(--text-dim); margin-top:4px; line-height:1.35;">
-              Xuất hiện trong Top 3 câu trả lời khi phụ huynh hỏi về trường song ngữ và học phí tại Hà Nội.
-            </p>
-          </div>
-        </div>
-
-        <div class="exec-card" style="margin-top:var(--gap-base); padding:clamp(0.5rem, 1vh, 0.8rem) var(--gap-base); background:rgba(14,18,26,0.95);">
-          <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;">
-            <div style="font-size:var(--body-size); color:var(--text-dim);">
-              <strong style="color:#fff;">Cơ chế đo lường minh bạch:</strong> Đồng bộ dữ liệu trực tiếp 15 ngày/lần từ Google Search Console (GSC) API vào bảng báo cáo Google Sheets của Ban Giám Hiệu.
+      <div class="slide-body">
+        <div class="grid-1-1">
+          <!-- Pillar 1 -->
+          <div class="bento-card">
+            <div>
+              <div class="card-top">
+                <h3 class="card-title">Trụ Cột 1: Tối Ưu Hóa AI Search (AEO & GEO)</h3>
+                <span class="card-badge mint">CHUẨN TƯƠNG LAI</span>
+              </div>
+              <div class="chip-row">
+                <span class="smart-chip active-emerald">HTML Data Tables</span>
+                <span class="smart-chip">FAQPage Schema</span>
+                <span class="smart-chip">Fact-Dense Copywriting</span>
+              </div>
+              <ul class="narrative-list">
+                <li class="narrative-item">
+                  <svg class="item-bullet-icon" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" fill="var(--emerald-light)" stroke="var(--emerald)" stroke-width="2"/><path d="M6 10l3 3 5-5" stroke="var(--emerald)" stroke-width="2" stroke-linecap="round"/></svg>
+                  <span><strong>Bảng Dữ Liệu HTML & FAQ Schema:</strong> Chuyển biểu phí thành bảng HTML sạch kèm mã <code>FAQPage Schema</code> giúp AI bóc tách chính xác số tiền theo từng cấp học.</span>
+                </li>
+                <li class="narrative-item">
+                  <svg class="item-bullet-icon" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" fill="var(--emerald-light)" stroke="var(--emerald)" stroke-width="2"/><path d="M6 10l3 3 5-5" stroke="var(--emerald)" stroke-width="2" stroke-linecap="round"/></svg>
+                  <span><strong>Nội Dung Đậm Đặc Số Liệu (Fact-Dense):</strong> Viết ngắn gọn, trực diện, trả lời đúng các câu hỏi so sánh trường và tiêu chí chọn trường song ngữ.</span>
+                </li>
+                <li class="narrative-item">
+                  <svg class="item-bullet-icon" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" fill="var(--emerald-light)" stroke="var(--emerald)" stroke-width="2"/><path d="M6 10l3 3 5-5" stroke="var(--emerald)" stroke-width="2" stroke-linecap="round"/></svg>
+                  <span><strong>Xác Thực Thực Thể Trường Học:</strong> Cài đặt Schema <code>EducationalOrganization</code> khẳng định mã trường khảo thí Cambridge VN229.</span>
+                </li>
+              </ul>
             </div>
-            <span class="pill-label mint">100% DATA VERIFIED</span>
+            <div class="card-footer-note emerald">
+              Kết quả: Biến website thành nguồn trích dẫn số 1 của ChatGPT, Perplexity, Gemini
+            </div>
+          </div>
+
+          <!-- Pillar 2 -->
+          <div class="bento-card">
+            <div>
+              <div class="card-top">
+                <h3 class="card-title">Trụ Cột 2: Quy Hoạch 5 Cụm Nội Dung (Topic Clusters)</h3>
+                <span class="card-badge blue">HUB-AND-SPOKE</span>
+              </div>
+              <div class="chip-row">
+                <span class="smart-chip active-blue">5 Trụ Cột (Pillars)</span>
+                <span class="smart-chip">15 Vệ Tinh (Spokes)</span>
+                <span class="smart-chip">Độ Sâu ≤ 2 Clicks</span>
+              </div>
+              <ul class="narrative-list">
+                <li class="narrative-item">
+                  <svg class="item-bullet-icon" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" fill="var(--blue-light)" stroke="var(--blue)" stroke-width="2"/><path d="M6 10l3 3 5-5" stroke="var(--blue)" stroke-width="2" stroke-linecap="round"/></svg>
+                  <span><strong>Cụm 1: Bảng Biểu Phí & Học Bổng (Pillar):</strong> Bao quanh bởi các bài vệ tinh về ưu đãi đóng sớm, phương thức thanh toán trả góp.</span>
+                </li>
+                <li class="narrative-item">
+                  <svg class="item-bullet-icon" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" fill="var(--blue-light)" stroke="var(--blue)" stroke-width="2"/><path d="M6 10l3 3 5-5" stroke="var(--blue)" stroke-width="2" stroke-linecap="round"/></svg>
+                  <span><strong>Cụm 2: Cẩm Nang Khảo Sát Lớp 1 (Pillar):</strong> Bao quanh bởi bộ câu hỏi đánh giá tư duy mẫu và tâm lý chuyển cấp.</span>
+                </li>
+                <li class="narrative-item">
+                  <svg class="item-bullet-icon" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" fill="var(--blue-light)" stroke="var(--blue)" stroke-width="2"/><path d="M6 10l3 3 5-5" stroke="var(--blue)" stroke-width="2" stroke-linecap="round"/></svg>
+                  <span><strong>Cụm 3: So Sánh & Review Trường (Pillar):</strong> So sánh khách quan Wellspring vs Vinschool, Dewey, Olympia.</span>
+                </li>
+                <li class="narrative-item">
+                  <svg class="item-bullet-icon" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" fill="var(--blue-light)" stroke="var(--blue)" stroke-width="2"/><path d="M6 10l3 3 5-5" stroke="var(--blue)" stroke-width="2" stroke-linecap="round"/></svg>
+                  <span><strong>Cụm 4 & 5: Chương Trình Cambridge K-12 & Lộ Trình Du Học:</strong> Tạo bằng chứng xã hội (Social Proof) về thành tích học sinh.</span>
+                </li>
+              </ul>
+            </div>
+            <div class="card-footer-note blue">
+              Kết quả: Khép kín hành trình tìm kiếm của phụ huynh từ Khám phá đến Nộp đơn
+            </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- ========================================================
-         SLIDE 8: ĐỀ XUẤT PHÊ DUYỆT (EXECUTIVE DECISION)
-         ======================================================== -->
-    <section class="slide-frame" data-slide="8">
-      <div class="top-bar">
-        <div class="top-left">
-          <span class="badge-stage mint">CHƯƠNG 7: ĐỀ XUẤT PHÊ DUYỆT</span>
-          <span class="brand-tag">Bước Đi Kế Tiếp & Quyết Định Của Ban Lãnh Đạo</span>
+    <!-- ==========================================
+         SLIDE 5: PHÂN BỔ CÔNG VIỆC CỤ THỂ (WBS)
+         ========================================== -->
+    <section class="slide-frame" id="slide-5">
+      <header class="top-header">
+        <div class="header-left">
+          <span class="chapter-pill amber"><span class="pulse-dot"></span>CHƯƠNG 4: CÔNG VIỆC CẦN LÀM</span>
+          <span class="brand-meta">Phân Công Trách Nhiệm Rõ Ràng & Khả Thi</span>
         </div>
-        <div class="top-right">
-          <span>Hội Đồng Quản Trị & Ban Giám Hiệu</span>
+        <div class="header-right">
+          <div class="toolbar-actions">
+            <button class="action-btn" onclick="toggleEditMode()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg><span>Sửa (E)</span></button>
+            <button class="action-btn" onclick="saveToStorage()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg><span>Lưu</span></button>
+            <button class="action-btn" onclick="exportHTMLDeck()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg><span>Xuất HTML</span></button>
+            <button class="action-btn" onclick="toggleTheme()"><span id="themeIcon5">🌙 Tối</span></button>
+          </div>
         </div>
+      </header>
+
+      <div class="hero-heading">
+        <h2 class="hero-title">Kế Hoạch Phân Bổ Công Việc Cụ Thể (Actionable WBS)</h2>
+        <p class="hero-subtitle">
+          Rõ người, rõ việc, rõ thời hạn; không làm dàn trải gây quá tải bộ máy vận hành của nhà trường.
+        </p>
       </div>
 
-      <div class="slide-body-region">
-        <div class="hero-heading-box">
-          <h2 class="hero-h1">3 Quyết Định Cần Phê Duyệt Để Khởi Động Dự Án Ngay</h2>
-          <p class="hero-sub">
-            Đội ngũ đã sẵn sàng toàn bộ mã kỹ thuật và danh sách từ khóa; chỉ cần sự phê duyệt để kích hoạt
-          </p>
+      <div class="slide-body">
+        <div class="grid-3-col">
+          <!-- IT -->
+          <div class="bento-card">
+            <div>
+              <div class="card-top">
+                <h3 class="card-title">1. Nhóm Kỹ Thuật (IT)</h3>
+                <span class="card-badge rose">HOÀN THÀNH 48H</span>
+              </div>
+              <div class="chip-row">
+                <span class="smart-chip active-rose">Nginx 301</span>
+                <span class="smart-chip">Header H1 Fix</span>
+                <span class="smart-chip">JSON-LD Schema</span>
+              </div>
+              <ul class="narrative-list">
+                <li class="narrative-item">
+                  <svg class="item-bullet-icon" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" fill="var(--rose-light)" stroke="var(--rose)" stroke-width="2"/><path d="M6 10l3 3 5-5" stroke="var(--rose)" stroke-width="2" stroke-linecap="round"/></svg>
+                  <span><strong>Cấu hình Nginx Rewrite 301:</strong> Chuyển hướng toàn bộ 10 link 404 về trang đích chuẩn trong 24 giờ.</span>
+                </li>
+                <li class="narrative-item">
+                  <svg class="item-bullet-icon" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" fill="var(--rose-light)" stroke="var(--rose)" stroke-width="2"/><path d="M6 10l3 3 5-5" stroke="var(--rose)" stroke-width="2" stroke-linecap="round"/></svg>
+                  <span><strong>Dọn Dẹp Menu & Footer:</strong> Gỡ bỏ các thẻ link gãy ở Footer và sửa thẻ <code>&lt;h1&gt;</code> trang chủ.</span>
+                </li>
+                <li class="narrative-item">
+                  <svg class="item-bullet-icon" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" fill="var(--rose-light)" stroke="var(--rose)" stroke-width="2"/><path d="M6 10l3 3 5-5" stroke="var(--rose)" stroke-width="2" stroke-linecap="round"/></svg>
+                  <span><strong>Nhúng Mã Schema JSON-LD:</strong> Tổ chức giáo dục vào file header giao diện.</span>
+                </li>
+              </ul>
+            </div>
+            <div class="card-footer-note rose">
+              Cam kết: Xử lý dứt điểm không làm gián đoạn vận hành website
+            </div>
+          </div>
+
+          <!-- Content/SEO -->
+          <div class="bento-card">
+            <div>
+              <div class="card-top">
+                <h3 class="card-title">2. Nhóm Nội Dung (Content/SEO)</h3>
+                <span class="card-badge amber">1-2 BÀI / TUẦN</span>
+              </div>
+              <div class="chip-row">
+                <span class="smart-chip active-amber">Title ≤ 580px</span>
+                <span class="smart-chip">5 Pillar Posts</span>
+                <span class="smart-chip">15 Spoke Posts</span>
+              </div>
+              <ul class="narrative-list">
+                <li class="narrative-item">
+                  <svg class="item-bullet-icon" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" fill="var(--amber-light)" stroke="var(--amber)" stroke-width="2"/><path d="M6 10l3 3 5-5" stroke="var(--amber)" stroke-width="2" stroke-linecap="round"/></svg>
+                  <span><strong>Chuẩn Hóa Meta Title:</strong> Viết lại tiêu đề Meta Title chuẩn ≤ 580px cho 20 trang quan trọng nhất tránh bị cắt cụt.</span>
+                </li>
+                <li class="narrative-item">
+                  <svg class="item-bullet-icon" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" fill="var(--amber-light)" stroke="var(--amber)" stroke-width="2"/><path d="M6 10l3 3 5-5" stroke="var(--amber)" stroke-width="2" stroke-linecap="round"/></svg>
+                  <span><strong>Sản Xuất Nội Dung Fact-Dense:</strong> Sản xuất 5 bài Trụ cột (Pillar) và 15 bài vệ tinh ngách bám sát thắc mắc phụ huynh.</span>
+                </li>
+                <li class="narrative-item">
+                  <svg class="item-bullet-icon" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" fill="var(--amber-light)" stroke="var(--amber)" stroke-width="2"/><path d="M6 10l3 3 5-5" stroke="var(--amber)" stroke-width="2" stroke-linecap="round"/></svg>
+                  <span><strong>Cài Đặt Internal Linking:</strong> Chèn liên kết nội bộ theo mô hình Hub-and-Spoke hướng về trang Tuyển sinh.</span>
+                </li>
+              </ul>
+            </div>
+            <div class="card-footer-note amber">
+              Cam kết: Đảm bảo nhịp xuất bản đều đặn bám sát tiến độ tuyển sinh
+            </div>
+          </div>
+
+          <!-- Admissions -->
+          <div class="bento-card">
+            <div>
+              <div class="card-top">
+                <h3 class="card-title">3. Phòng Tuyển Sinh & Marcom</h3>
+                <span class="card-badge mint">TUẦN 1 BÀN GIAO</span>
+              </div>
+              <div class="chip-row">
+                <span class="smart-chip active-emerald">Biểu Phí 2026-2027</span>
+                <span class="smart-chip">Đề Mẫu Lớp 1</span>
+                <span class="smart-chip">Theo Dõi Leads</span>
+              </div>
+              <ul class="narrative-list">
+                <li class="narrative-item">
+                  <svg class="item-bullet-icon" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" fill="var(--emerald-light)" stroke="var(--emerald)" stroke-width="2"/><path d="M6 10l3 3 5-5" stroke="var(--emerald)" stroke-width="2" stroke-linecap="round"/></svg>
+                  <span><strong>Cung Cấp Số Liệu Học Phí:</strong> Bàn giao bảng biểu phí chính thức năm học 2026–2027 để làm bảng HTML trực diện.</span>
+                </li>
+                <li class="narrative-item">
+                  <svg class="item-bullet-icon" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" fill="var(--emerald-light)" stroke="var(--emerald)" stroke-width="2"/><path d="M6 10l3 3 5-5" stroke="var(--emerald)" stroke-width="2" stroke-linecap="round"/></svg>
+                  <span><strong>Cung Cấp Đề Khảo Sát Mẫu:</strong> Bàn giao cấu trúc đề khảo sát lớp 1 mẫu để làm tài liệu độc quyền tải về.</span>
+                </li>
+                <li class="narrative-item">
+                  <svg class="item-bullet-icon" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" fill="var(--emerald-light)" stroke="var(--emerald)" stroke-width="2"/><path d="M6 10l3 3 5-5" stroke="var(--emerald)" stroke-width="2" stroke-linecap="round"/></svg>
+                  <span><strong>Đo Lường Hiệu Quả:</strong> Theo dõi số lượng đơn đăng ký tư vấn và lịch hẹn tham quan trường (Campus Tour).</span>
+                </li>
+              </ul>
+            </div>
+            <div class="card-footer-note emerald">
+              Cam kết: Phối hợp chặt chẽ để tài nguyên chuyển hóa thành phụ huynh nộp đơn
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         SLIDE 6: LỘ TRÌNH 3 THÁNG (ROADMAP)
+         ========================================== -->
+    <section class="slide-frame" id="slide-6">
+      <header class="top-header">
+        <div class="header-left">
+          <span class="chapter-pill"><span class="pulse-dot"></span>CHƯƠNG 5: LỘ TRÌNH</span>
+          <span class="brand-meta">Lộ Trình Triển Khai 3 Tháng Thực Chiến (90 Ngày)</span>
+        </div>
+        <div class="header-right">
+          <div class="toolbar-actions">
+            <button class="action-btn" onclick="toggleEditMode()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg><span>Sửa (E)</span></button>
+            <button class="action-btn" onclick="saveToStorage()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg><span>Lưu</span></button>
+            <button class="action-btn" onclick="exportHTMLDeck()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg><span>Xuất HTML</span></button>
+            <button class="action-btn" onclick="toggleTheme()"><span id="themeIcon6">🌙 Tối</span></button>
+          </div>
+        </div>
+      </header>
+
+      <div class="hero-heading">
+        <h2 class="hero-title">Tiến Trình 3 Giai Đoạn Từ Vá Hạ Tầng Đến Đạt Đỉnh AI Search</h2>
+        <p class="hero-subtitle">
+          Thiết kế bám sát mùa tuyển sinh của nhà trường (tháng 11 đến tháng 3 hàng năm) để tối đa hóa chuyển đổi.
+        </p>
+      </div>
+
+      <div class="slide-body">
+        <div class="grid-3-col">
+          <!-- Month 1 -->
+          <div class="bento-card">
+            <div>
+              <div class="card-top">
+                <h3 class="card-title">Tháng 1: Vá Hạ Tầng & Dữ Liệu</h3>
+                <span class="card-badge rose">NGÀY 1 - 30</span>
+              </div>
+              <div class="chip-row">
+                <span class="smart-chip active-rose">Xóa 10 Lỗi 404</span>
+                <span class="smart-chip">HTML Hóa Biểu Phí</span>
+                <span class="smart-chip">Audit 92/100</span>
+              </div>
+              <ul class="narrative-list">
+                <li class="narrative-item">
+                  <svg class="item-bullet-icon" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" fill="var(--rose-light)" stroke="var(--rose)" stroke-width="2"/><path d="M6 10l3 3 5-5" stroke="var(--rose)" stroke-width="2" stroke-linecap="round"/></svg>
+                  <span>Xóa sạch 10 lỗi 404 qua Nginx 301; khôi phục 100% dòng PageRank bị rò rỉ.</span>
+                </li>
+                <li class="narrative-item">
+                  <svg class="item-bullet-icon" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" fill="var(--rose-light)" stroke="var(--rose)" stroke-width="2"/><path d="M6 10l3 3 5-5" stroke="var(--rose)" stroke-width="2" stroke-linecap="round"/></svg>
+                  <span>Chuyển đổi bảng biểu phí sang HTML chuẩn và nhúng FAQPage Schema cho AI.</span>
+                </li>
+                <li class="narrative-item">
+                  <svg class="item-bullet-icon" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" fill="var(--rose-light)" stroke="var(--rose)" stroke-width="2"/><path d="M6 10l3 3 5-5" stroke="var(--rose)" stroke-width="2" stroke-linecap="round"/></svg>
+                  <span>Tối ưu tiêu đề ≤ 580px và cấu trúc H1 trang chủ.</span>
+                </li>
+              </ul>
+            </div>
+            <div class="card-footer-note rose">
+              Mục tiêu giai đoạn 1: Đưa điểm Technical Audit từ 68 lên 92/100
+            </div>
+          </div>
+
+          <!-- Month 2 -->
+          <div class="bento-card">
+            <div>
+              <div class="card-top">
+                <h3 class="card-title">Tháng 2: Xây 5 Topic Clusters</h3>
+                <span class="card-badge amber">NGÀY 31 - 60</span>
+              </div>
+              <div class="chip-row">
+                <span class="smart-chip active-amber">5 Bài Trụ Cột</span>
+                <span class="smart-chip">10 Bài Vệ Tinh</span>
+                <span class="smart-chip">80 Cụm Top 10</span>
+              </div>
+              <ul class="narrative-list">
+                <li class="narrative-item">
+                  <svg class="item-bullet-icon" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" fill="var(--amber-light)" stroke="var(--amber)" stroke-width="2"/><path d="M6 10l3 3 5-5" stroke="var(--amber)" stroke-width="2" stroke-linecap="round"/></svg>
+                  <span>Xuất bản 5 bài Trụ cột chuyên sâu (Biểu phí, Lớp 1, So sánh trường, Cambridge, Du học).</span>
+                </li>
+                <li class="narrative-item">
+                  <svg class="item-bullet-icon" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" fill="var(--amber-light)" stroke="var(--amber)" stroke-width="2"/><path d="M6 10l3 3 5-5" stroke="var(--amber)" stroke-width="2" stroke-linecap="round"/></svg>
+                  <span>Sản xuất 10 bài vệ tinh ngách giải đáp thắc mắc phụ huynh.</span>
+                </li>
+                <li class="narrative-item">
+                  <svg class="item-bullet-icon" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" fill="var(--amber-light)" stroke="var(--amber)" stroke-width="2"/><path d="M6 10l3 3 5-5" stroke="var(--amber)" stroke-width="2" stroke-linecap="round"/></svg>
+                  <span>Đưa toàn bộ bài quan trọng về độ sâu ≤ 2 clicks từ Trang chủ.</span>
+                </li>
+              </ul>
+            </div>
+            <div class="card-footer-note amber">
+              Mục tiêu giai đoạn 2: Đạt 80 cụm từ khóa tuyển sinh lọt Top 10 Google
+            </div>
+          </div>
+
+          <!-- Month 3 -->
+          <div class="bento-card">
+            <div>
+              <div class="card-top">
+                <h3 class="card-title">Tháng 3: Thống Trị AI Search</h3>
+                <span class="card-badge mint">NGÀY 61 - 90</span>
+              </div>
+              <div class="chip-row">
+                <span class="smart-chip active-emerald">AEO & GEO Trích Dẫn</span>
+                <span class="smart-chip">CRO Form Khảo Sát</span>
+                <span class="smart-chip">Bàn Giao Dashboard</span>
+              </div>
+              <ul class="narrative-list">
+                <li class="narrative-item">
+                  <svg class="item-bullet-icon" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" fill="var(--emerald-light)" stroke="var(--emerald)" stroke-width="2"/><path d="M6 10l3 3 5-5" stroke="var(--emerald)" stroke-width="2" stroke-linecap="round"/></svg>
+                  <span>Kiểm tra tần suất xuất hiện trên Perplexity, ChatGPT Search, Gemini.</span>
+                </li>
+                <li class="narrative-item">
+                  <svg class="item-bullet-icon" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" fill="var(--emerald-light)" stroke="var(--emerald)" stroke-width="2"/><path d="M6 10l3 3 5-5" stroke="var(--emerald)" stroke-width="2" stroke-linecap="round"/></svg>
+                  <span>Tối ưu hóa tỷ lệ chuyển đổi (CRO) trên form khảo sát lớp 1 và đặt lịch tour.</span>
+                </li>
+                <li class="narrative-item">
+                  <svg class="item-bullet-icon" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" fill="var(--emerald-light)" stroke="var(--emerald)" stroke-width="2"/><path d="M6 10l3 3 5-5" stroke="var(--emerald)" stroke-width="2" stroke-linecap="round"/></svg>
+                  <span>Nghiệm thu toàn diện và bàn giao dashboard tự động cho Ban Giám Hiệu.</span>
+                </li>
+              </ul>
+            </div>
+            <div class="card-footer-note emerald">
+              Mục tiêu giai đoạn 3: Lọt Top 3 trường song ngữ được AI Search khuyên dùng
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         SLIDE 7: CAM KẾT HIỆU QUẢ ĐO LƯỜNG ĐƯỢC
+         ========================================== -->
+    <section class="slide-frame" id="slide-7">
+      <header class="top-header">
+        <div class="header-left">
+          <span class="chapter-pill"><span class="pulse-dot"></span>CHƯƠNG 6: CAM KẾT KẾT QUẢ</span>
+          <span class="brand-meta">Chỉ Số Hiệu Quả Đo Lường Được Sau 3 Tháng</span>
+        </div>
+        <div class="header-right">
+          <div class="toolbar-actions">
+            <button class="action-btn" onclick="toggleEditMode()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg><span>Sửa (E)</span></button>
+            <button class="action-btn" onclick="saveToStorage()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg><span>Lưu</span></button>
+            <button class="action-btn" onclick="exportHTMLDeck()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg><span>Xuất HTML</span></button>
+            <button class="action-btn" onclick="toggleTheme()"><span id="themeIcon7">🌙 Tối</span></button>
+          </div>
+        </div>
+      </header>
+
+      <div class="hero-heading">
+        <h2 class="hero-title">Cam Kết Hiệu Quả AEO/GEO & Tăng Trưởng Tuyển Sinh</h2>
+        <p class="hero-subtitle">
+          Tập trung tuyệt đối vào mục tiêu hiển thị trên các công cụ tìm kiếm AI và lưu lượng phụ huynh thực tế.
+        </p>
+      </div>
+
+      <div class="slide-body">
+        <div class="grid-4-col">
+          <!-- Stat 1 -->
+          <div class="metric-bento-card emerald">
+            <span class="metric-kicker">TỪ KHÓA GOOGLE</span>
+            <div class="metric-big-num emerald">80 CỤM</div>
+            <div class="metric-label">Top 10 Từ Khóa</div>
+            <p class="metric-desc">Tăng từ 64 lên 80 từ khóa ngành về biểu phí, tuyển sinh và đào tạo lọt trang 1 Google.</p>
+          </div>
+
+          <!-- Stat 2 -->
+          <div class="metric-bento-card blue">
+            <span class="metric-kicker">LƯỢNG TRUY CẬP</span>
+            <div class="metric-big-num blue">+3.500</div>
+            <div class="metric-label">Visits / Tháng</div>
+            <p class="metric-desc">Tăng trưởng lưu lượng tự nhiên chất lượng cao từ tệp phụ huynh tìm kiếm nhu cầu thật.</p>
+          </div>
+
+          <!-- Stat 3 -->
+          <div class="metric-bento-card amber">
+            <span class="metric-kicker">TRÍCH DẪN NGUỒN AI (GEO)</span>
+            <div class="metric-big-num amber">45% - 55%</div>
+            <div class="metric-label">Tần Suất Trích Dẫn</div>
+            <p class="metric-desc">AI Search (Perplexity, SearchGPT, Gemini) trích dẫn trực tiếp nguồn chính thống wellspring.edu.vn.</p>
+          </div>
+
+          <!-- Stat 4 -->
+          <div class="metric-bento-card emerald">
+            <span class="metric-kicker">VỊ TRÍ ĐỀ XUẤT AI (AEO)</span>
+            <div class="metric-big-num emerald">TOP 3 AI</div>
+            <div class="metric-label">Khuyên Dùng Trường</div>
+            <p class="metric-desc">Xuất hiện trong Top 3 câu trả lời khi phụ huynh hỏi về trường song ngữ và học phí tại Hà Nội.</p>
+          </div>
         </div>
 
-        <div class="grid-row-3">
-          <div class="exec-card border-accent-mint">
-            <div class="card-head">
-              <span class="card-title">1. Duyệt Kỹ Thuật (IT)</span>
-              <span class="pill-label mint">XỬ LÝ TRONG 24H</span>
+        <div class="transparency-bar">
+          <div class="transparency-text">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--emerald)" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            <span><strong>Cơ chế đo lường minh bạch:</strong> Đồng bộ dữ liệu trực tiếp 15 ngày/lần từ Google Search Console (GSC) API vào bảng báo cáo Google Sheets của Ban Giám Hiệu.</span>
+          </div>
+          <span class="card-badge mint">100% DATA VERIFIED</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         SLIDE 8: ĐỀ XUẤT PHÊ DUYỆT CẤP TRÊN
+         ========================================== -->
+    <section class="slide-frame" id="slide-8">
+      <header class="top-header">
+        <div class="header-left">
+          <span class="chapter-pill"><span class="pulse-dot"></span>CHƯƠNG 7: ĐỀ XUẤT PHÊ DUYỆT</span>
+          <span class="brand-meta">Bước Đi Kế Tiếp & Quyết Định Của Ban Lãnh Đạo</span>
+        </div>
+        <div class="header-right">
+          <div class="toolbar-actions">
+            <button class="action-btn" onclick="toggleEditMode()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg><span>Sửa (E)</span></button>
+            <button class="action-btn" onclick="saveToStorage()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg><span>Lưu</span></button>
+            <button class="action-btn" onclick="exportHTMLDeck()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg><span>Xuất HTML</span></button>
+            <button class="action-btn" onclick="toggleTheme()"><span id="themeIcon8">🌙 Tối</span></button>
+          </div>
+        </div>
+      </header>
+
+      <div class="hero-heading">
+        <h2 class="hero-title">3 Quyết Định Cần Phê Duyệt Để Khởi Động Dự Án Ngay</h2>
+        <p class="hero-subtitle">
+          Đội ngũ đã sẵn sàng toàn bộ mã kỹ thuật và danh sách từ khóa; chỉ cần sự phê duyệt để kích hoạt.
+        </p>
+      </div>
+
+      <div class="slide-body">
+        <div class="grid-3-col">
+          <!-- Decision 1 -->
+          <div class="bento-card">
+            <div>
+              <div class="card-top">
+                <h3 class="card-title">1. Duyệt Kỹ Thuật (IT)</h3>
+                <span class="card-badge rose">XỬ LÝ TRONG 24H</span>
+              </div>
+              <div class="chip-row">
+                <span class="smart-chip active-rose">Ủy Quyền IT</span>
+                <span class="smart-chip">Cấu Hình 301</span>
+                <span class="smart-chip">Nhúng Schema</span>
+              </div>
+              <ul class="narrative-list">
+                <li class="narrative-item">
+                  <svg class="item-bullet-icon" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" fill="var(--rose-light)" stroke="var(--rose)" stroke-width="2"/><path d="M6 10l3 3 5-5" stroke="var(--rose)" stroke-width="2" stroke-linecap="round"/></svg>
+                  <span>Ủy quyền cho đội SEO phối hợp IT thực hiện cấu hình Nginx Rewrite 301 cho 10 link 404.</span>
+                </li>
+                <li class="narrative-item">
+                  <svg class="item-bullet-icon" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" fill="var(--rose-light)" stroke="var(--rose)" stroke-width="2"/><path d="M6 10l3 3 5-5" stroke="var(--rose)" stroke-width="2" stroke-linecap="round"/></svg>
+                  <span>Gỡ bỏ các liên kết gãy dưới chân trang và nhúng mã Schema JSON-LD vào website.</span>
+                </li>
+              </ul>
             </div>
-            <p class="card-paragraph">
-              Ủy quyền cho đội SEO phối hợp IT thực hiện cấu hình Nginx Rewrite 301 cho 10 link 404 và nhúng mã Schema JSON-LD vào website.
-            </p>
-            <div style="font-family:var(--font-code); font-size:var(--small-size); color:var(--mint); margin-top:8px;">
-              Cam kết: Xong toàn bộ trong 24 giờ
+            <div class="card-footer-note rose">
+              Cam kết: Xong toàn bộ trong 24 giờ kể từ khi được phê duyệt
             </div>
           </div>
 
-          <div class="exec-card border-accent-cyan">
-            <div class="card-head">
-              <span class="card-title">2. Cung Cấp Đề Khảo Sát</span>
-              <span class="pill-label cyan">PHÒNG TUYỂN SINH</span>
+          <!-- Decision 2 -->
+          <div class="bento-card">
+            <div>
+              <div class="card-top">
+                <h3 class="card-title">2. Cung Cấp Đề Khảo Sát</h3>
+                <span class="card-badge amber">PHÒNG TUYỂN SINH</span>
+              </div>
+              <div class="chip-row">
+                <span class="smart-chip active-amber">Đề Mẫu Lớp 1</span>
+                <span class="smart-chip">Khung Biểu Phí 2026</span>
+                <span class="smart-chip">Thời Hạn 5 Ngày</span>
+              </div>
+              <ul class="narrative-list">
+                <li class="narrative-item">
+                  <svg class="item-bullet-icon" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" fill="var(--amber-light)" stroke="var(--amber)" stroke-width="2"/><path d="M6 10l3 3 5-5" stroke="var(--amber)" stroke-width="2" stroke-linecap="round"/></svg>
+                  <span>Phòng Tuyển sinh cung cấp cấu trúc đề thi khảo sát năng lực lớp 1 mẫu để làm tài liệu độc quyền.</span>
+                </li>
+                <li class="narrative-item">
+                  <svg class="item-bullet-icon" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" fill="var(--amber-light)" stroke="var(--amber)" stroke-width="2"/><path d="M6 10l3 3 5-5" stroke="var(--amber)" stroke-width="2" stroke-linecap="round"/></svg>
+                  <span>Cung cấp khung biểu phí chính thức 2026–2027 để thiết kế bảng dữ liệu HTML sạch cho bot AI.</span>
+                </li>
+              </ul>
             </div>
-            <p class="card-paragraph">
-              Phòng Tuyển sinh cung cấp cấu trúc đề thi khảo sát năng lực lớp 1 mẫu và khung biểu phí 2026-2027 để làm tài liệu độc quyền.
-            </p>
-            <div style="font-family:var(--font-code); font-size:var(--small-size); color:var(--cyan); margin-top:8px;">
-              Thời hạn: Bàn giao trong 5 ngày đầu
+            <div class="card-footer-note amber">
+              Thời hạn: Bàn giao trong 5 ngày đầu của dự án
             </div>
           </div>
 
-          <div class="exec-card border-accent-amber">
-            <div class="card-head">
-              <span class="card-title">3. Khởi Động Tháng 1</span>
-              <span class="pill-label amber">BẤM NÚT SPRINT 1</span>
+          <!-- Decision 3 -->
+          <div class="bento-card">
+            <div>
+              <div class="card-top">
+                <h3 class="card-title">3. Khởi Động Tháng 1</h3>
+                <span class="card-badge mint">BẤM NÚT SPRINT 1</span>
+              </div>
+              <div class="chip-row">
+                <span class="smart-chip active-emerald">Sprint 1 Ready</span>
+                <span class="smart-chip">Báo Cáo Ngày 15</span>
+                <span class="smart-chip">Dashboard Live</span>
+              </div>
+              <ul class="narrative-list">
+                <li class="narrative-item">
+                  <svg class="item-bullet-icon" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" fill="var(--emerald-light)" stroke="var(--emerald)" stroke-width="2"/><path d="M6 10l3 3 5-5" stroke="var(--emerald)" stroke-width="2" stroke-linecap="round"/></svg>
+                  <span>Chính thức bấm nút triển khai Tháng 1 (Vá hạ tầng & Biểu phí HTML).</span>
+                </li>
+                <li class="narrative-item">
+                  <svg class="item-bullet-icon" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" fill="var(--emerald-light)" stroke="var(--emerald)" stroke-width="2"/><path d="M6 10l3 3 5-5" stroke="var(--emerald)" stroke-width="2" stroke-linecap="round"/></svg>
+                  <span>Ban Lãnh Đạo nhận báo cáo tiến độ trực tiếp qua dashboard tự động.</span>
+                </li>
+              </ul>
             </div>
-            <p class="card-paragraph">
-              Chính thức bấm nút triển khai Tháng 1 (Vá hạ tầng & Biểu phí HTML). Ban Lãnh Đạo nhận báo cáo tiến độ trực tiếp qua dashboard.
-            </p>
-            <div style="font-family:var(--font-code); font-size:var(--small-size); color:var(--amber); margin-top:8px;">
+            <div class="card-footer-note emerald">
               Báo cáo lần 1: Ngày thứ 15 của dự án
             </div>
           </div>
         </div>
 
-        <div class="exec-card" style="margin-top:var(--gap-base); text-align:center; padding:clamp(0.7rem, 1.4vh, 1.2rem); background:rgba(14,18,26,0.92);">
-          <div style="font-size:var(--h3-size); font-weight:700; color:#fff; margin-bottom:2px;">
-            Trân trọng cảm ơn Ban Lãnh Đạo đã lắng nghe bài thuyết trình!
+        <div class="transparency-bar" style="background: var(--bg-surface); border-color: var(--emerald-border);">
+          <div class="transparency-text" style="color: var(--text-heading); font-weight: 600;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--emerald)" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            <span>Trân trọng cảm ơn Ban Lãnh Đạo đã lắng nghe bài thuyết trình! Sẵn sàng giải đáp chi tiết mọi câu hỏi và đi sâu vào từng hạng mục trong phần Q&A.</span>
           </div>
-          <div style="font-size:var(--body-size); color:var(--text-muted);">
-            Sẵn sàng giải đáp chi tiết mọi câu hỏi và đi sâu vào từng hạng mục trong phần Q&A.
-          </div>
+          <span class="card-badge mint">Q&A SESSION READY</span>
         </div>
       </div>
     </section>
 
-  </div> <!-- End deck-container -->
+  </main>
 
-  <!-- Bottom Left Keyboard Guide -->
-  <div class="hud-keyboard">
-    <span><span class="key-badge">&larr;</span> <span class="key-badge">&rarr;</span> Chuyển Slide</span>
-    <span>&bull;</span>
-    <span><span class="key-badge" style="color:var(--mint);">E</span> Sửa trực tiếp</span>
-    <span>&bull;</span>
-    <span><span class="key-badge" style="color:var(--cyan);">F</span> Toàn màn hình</span>
-  </div>
-
-  <!-- Bottom Right Navigation HUD -->
-  <div class="hud-nav">
-    <button class="btn-step" id="btnPrev" title="Slide trước (&larr; / PageUp)">&larr;</button>
-    <div class="hud-slide-num">
-      <span class="cur" id="lblCurSlide">1</span> / <span id="lblTotalSlide">8</span>
-    </div>
-    <button class="btn-step" id="btnNext" title="Slide sau (&rarr; / Space / PageDown)">&rarr;</button>
-  </div>
-
-  <!-- Slide Engine Script -->
   <script>
-    class ExecutivePresentationApp {
-      constructor() {
-        this.slides = Array.from(document.querySelectorAll('.slide-frame'));
-        this.total = this.slides.length;
-        this.idx = 0;
-        this.isEditing = false;
-        this.storageKey = 'wellspring_executive_slides_story_v3';
+    // ==========================================
+    // DECK CONTROLLER (SLIDES + EDIT ENGINE + THEME)
+    // ==========================================
+    let currentSlide = 1;
+    const totalSlides = 8;
+    let isEditMode = false;
 
-        this.lblCur = document.getElementById('lblCurSlide');
-        this.lblTot = document.getElementById('lblTotalSlide');
-        this.progress = document.getElementById('topProgressFill');
-        this.btnPrev = document.getElementById('btnPrev');
-        this.btnNext = document.getElementById('btnNext');
+    // Initialize from URL param ?slide=N
+    const urlParams = new URLSearchParams(window.location.search);
+    const initialSlide = parseInt(urlParams.get('slide'), 10);
+    if (!isNaN(initialSlide) && initialSlide >= 1 && initialSlide <= totalSlides) {
+      currentSlide = initialSlide;
+    }
 
-        this.editHotzone = document.getElementById('editHotzone');
-        this.btnEditToggle = document.getElementById('btnEditToggle');
-        this.dockEditBar = document.getElementById('dockEditBar');
-        this.btnSave = document.getElementById('btnSaveSlides');
-        this.btnExport = document.getElementById('btnExportSlides');
-        this.btnReset = document.getElementById('btnResetSlides');
-
-        this.init();
-      }
-
-      init() {
-        this.lblTot.textContent = this.total;
-        this.restoreData();
-
-        // Support ?slide=1..8 & ?edit=1
-        const params = new URLSearchParams(window.location.search);
-        const sParam = params.get('slide');
-        if (sParam) {
-          const target = parseInt(sParam, 10) - 1;
-          if (target >= 0 && target < this.total) {
-            this.idx = target;
-            this.slides.forEach((s, i) => s.classList.toggle('active', i === target));
-          }
+    function showSlide(index) {
+      if (index < 1 || index > totalSlides) return;
+      document.querySelectorAll('.slide-frame').forEach((s, idx) => {
+        if (idx + 1 === index) {
+          s.classList.add('active');
+        } else {
+          s.classList.remove('active');
         }
+      });
+      currentSlide = index;
+      document.getElementById('slideIndexText').innerText = currentSlide;
 
-        this.setupNav();
-        this.setupKeyboard();
-        this.setupTouch();
-        this.setupEditing();
+      // Update URL without reload
+      const newUrl = new URL(window.location);
+      newUrl.searchParams.set('slide', currentSlide);
+      window.history.replaceState({}, '', newUrl);
+    }
 
-        if (params.get('edit') === '1') {
-          this.toggleEdit();
+    function nextSlide() {
+      if (currentSlide < totalSlides) showSlide(currentSlide + 1);
+    }
+
+    function prevSlide() {
+      if (currentSlide > 1) showSlide(currentSlide - 1);
+    }
+
+    // Keyboard Navigation
+    document.addEventListener('keydown', (e) => {
+      if (isEditMode && e.target.isContentEditable) {
+        if (e.key === 's' && (e.ctrlKey || e.metaKey)) {
+          e.preventDefault();
+          saveToStorage();
         }
-
-        this.render();
+        return;
       }
 
-      goTo(i) {
-        if (i < 0 || i >= this.total) return;
-        this.slides[this.idx].classList.remove('active');
-        this.idx = i;
-        this.slides[this.idx].classList.add('active');
-        this.render();
+      if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') {
+        e.preventDefault();
+        nextSlide();
+      } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+        e.preventDefault();
+        prevSlide();
+      } else if (e.key === 'f' || e.key === 'F') {
+        toggleFullScreen();
+      } else if (e.key === 'e' || e.key === 'E') {
+        toggleEditMode();
+      } else if (e.key >= '1' && e.key <= '8') {
+        showSlide(parseInt(e.key, 10));
       }
+    });
 
-      next() { if (this.idx < this.total - 1) this.goTo(this.idx + 1); }
-      prev() { if (this.idx > 0) this.goTo(this.idx - 1); }
-
-      render() {
-        this.lblCur.textContent = this.idx + 1;
-        const pct = ((this.idx + 1) / this.total) * 100;
-        this.progress.style.width = `${pct}%`;
-      }
-
-      setupNav() {
-        this.btnPrev.onclick = () => this.prev();
-        this.btnNext.onclick = () => this.next();
-      }
-
-      setupKeyboard() {
-        window.addEventListener('keydown', (e) => {
-          const isTyping = e.target.getAttribute('contenteditable') === 'true';
-
-          if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
-            if (!isTyping) { e.preventDefault(); this.next(); }
-          } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
-            if (!isTyping) { e.preventDefault(); this.prev(); }
-          } else if ((e.key === 'e' || e.key === 'E') && !isTyping) {
-            e.preventDefault();
-            this.toggleEdit();
-          } else if ((e.ctrlKey || e.metaKey) && e.key === 's') {
-            e.preventDefault();
-            this.saveData();
-          } else if ((e.key === 'f' || e.key === 'F') && !isTyping) {
-            e.preventDefault();
-            if (!document.fullscreenElement) {
-              document.documentElement.requestFullscreen().catch(() => {});
-            } else {
-              document.exitFullscreen().catch(() => {});
-            }
-          }
-        });
-      }
-
-      setupTouch() {
-        let touchStart = 0;
-        window.addEventListener('touchstart', (e) => { touchStart = e.changedTouches[0].screenX; }, { passive: true });
-        window.addEventListener('touchend', (e) => {
-          const diff = touchStart - e.changedTouches[0].screenX;
-          if (diff > 50) this.next();
-          else if (diff < -50) this.prev();
-        }, { passive: true });
-      }
-
-      setupEditing() {
-        let hideT = null;
-
-        this.editHotzone.addEventListener('mouseenter', () => {
-          clearTimeout(hideT);
-          this.btnEditToggle.classList.add('show');
-        });
-
-        this.editHotzone.addEventListener('mouseleave', () => {
-          hideT = setTimeout(() => {
-            if (!this.isEditing) this.btnEditToggle.classList.remove('show');
-          }, 400);
-        });
-
-        this.btnEditToggle.addEventListener('mouseenter', () => clearTimeout(hideT));
-        this.btnEditToggle.addEventListener('mouseleave', () => {
-          hideT = setTimeout(() => {
-            if (!this.isEditing) this.btnEditToggle.classList.remove('show');
-          }, 400);
-        });
-
-        this.btnEditToggle.onclick = () => this.toggleEdit();
-        this.editHotzone.onclick = () => this.toggleEdit();
-
-        this.btnSave.onclick = () => this.saveData();
-        this.btnExport.onclick = () => this.exportHtml();
-        this.btnReset.onclick = () => this.resetData();
-      }
-
-      toggleEdit() {
-        this.isEditing = !this.isEditing;
-        document.body.classList.toggle('is-editing', this.isEditing);
-        this.btnEditToggle.classList.toggle('active', this.isEditing);
-        this.dockEditBar.classList.toggle('active', this.isEditing);
-
-        const targets = document.querySelectorAll('.slide-frame h1, .slide-frame h2, .slide-frame p, .slide-frame span, .slide-frame li, .slide-frame .card-title, .slide-frame .metric-hero-val');
-        targets.forEach(el => {
-          if (!el.closest('.hud-nav') && !el.closest('.dock-edit-bar') && !el.closest('.hud-keyboard') && !el.closest('.btn-edit-toggle')) {
-            el.setAttribute('contenteditable', this.isEditing ? 'true' : 'false');
-          }
-        });
-
-        this.btnEditToggle.innerHTML = this.isEditing 
-          ? '<span>ĐÓNG SỬA (E)</span>'
-          : '<span>SỬA SLIDE (E)</span>';
-      }
-
-      saveData() {
-        const deck = document.getElementById('deckContainer').innerHTML;
-        localStorage.setItem(this.storageKey, deck);
-        const orig = this.btnSave.textContent;
-        this.btnSave.textContent = 'Đã lưu máy!';
-        setTimeout(() => { this.btnSave.textContent = orig; }, 2000);
-      }
-
-      restoreData() {
-        const saved = localStorage.getItem(this.storageKey);
-        if (saved) {
-          document.getElementById('deckContainer').innerHTML = saved;
-          this.slides = Array.from(document.querySelectorAll('.slide-frame'));
-          this.total = this.slides.length;
-          this.slides.forEach((s, i) => s.classList.toggle('active', i === this.idx));
-        }
-      }
-
-      resetData() {
-        if (confirm("Khôi phục lại nội dung slide bài thuyết trình chuẩn ban đầu?")) {
-          localStorage.removeItem(this.storageKey);
-          window.location.reload();
-        }
-      }
-
-      exportHtml() {
-        const clone = document.documentElement.cloneNode(true);
-        clone.querySelectorAll('[contenteditable]').forEach(el => el.removeAttribute('contenteditable'));
-        const html = "<!DOCTYPE html>\n" + clone.outerHTML;
-        const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
-        const a = document.createElement('a');
-        a.href = URL.createObjectURL(blob);
-        a.download = "Bao_Cao_SEO_Executive_Wellspring_2026.html";
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
+    function toggleFullScreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => {});
+      } else {
+        if (document.exitFullscreen) document.exitFullscreen();
       }
     }
 
+    // THEME TOGGLE (LIGHT / DARK)
+    function toggleTheme() {
+      const html = document.documentElement;
+      const current = html.getAttribute('data-theme') || 'light';
+      const target = current === 'light' ? 'dark' : 'light';
+      html.setAttribute('data-theme', target);
+      const iconText = target === 'light' ? '🌙 Tối' : '☀️ Sáng';
+      document.querySelectorAll('#themeIcon, #themeIcon2, #themeIcon3, #themeIcon4, #themeIcon5, #themeIcon6, #themeIcon7, #themeIcon8').forEach(el => {
+        el.innerText = iconText;
+      });
+      localStorage.setItem('deck_theme', target);
+    }
+
+    // Load theme preference if saved
+    const savedTheme = localStorage.getItem('deck_theme');
+    if (savedTheme) {
+      document.documentElement.setAttribute('data-theme', savedTheme);
+      const iconText = savedTheme === 'light' ? '🌙 Tối' : '☀️ Sáng';
+      document.querySelectorAll('#themeIcon, #themeIcon2, #themeIcon3, #themeIcon4, #themeIcon5, #themeIcon6, #themeIcon7, #themeIcon8').forEach(el => {
+        el.innerText = iconText;
+      });
+    }
+
+    // INLINE EDIT ENGINE
+    function toggleEditMode() {
+      isEditMode = !isEditMode;
+      const editableElements = document.querySelectorAll('.hero-title, .hero-subtitle, .card-title, .narrative-item span, .card-footer-note, .metric-big-num, .metric-desc, .metric-label, .transparency-text span');
+      editableElements.forEach(el => {
+        el.contentEditable = isEditMode ? "true" : "false";
+      });
+
+      document.querySelectorAll('#toggleEditBtn').forEach(btn => {
+        if (isEditMode) {
+          btn.classList.add('active');
+          btn.querySelector('span').innerText = "Khóa (E)";
+        } else {
+          btn.classList.remove('active');
+          btn.querySelector('span').innerText = "Sửa (E)";
+        }
+      });
+    }
+
+    // SAVE TO LOCAL STORAGE
+    function saveToStorage() {
+      const mainHtml = document.querySelector('.deck-container').innerHTML;
+      localStorage.setItem('wellspring_deck_saved_html', mainHtml);
+      alert('✓ Đã lưu nội dung chỉnh sửa vào trình duyệt!');
+    }
+
+    // RESTORE SAVED DECK IF EXISTS
     window.addEventListener('DOMContentLoaded', () => {
-      new ExecutivePresentationApp();
+      const savedHtml = localStorage.getItem('wellspring_deck_saved_html');
+      if (savedHtml) {
+        document.querySelector('.deck-container').innerHTML = savedHtml;
+      }
+      showSlide(currentSlide);
     });
+
+    // EXPORT DOWNLOADABLE HTML DECK
+    function exportHTMLDeck() {
+      const cloneDoc = document.documentElement.cloneNode(true);
+      cloneDoc.querySelectorAll('[contenteditable]').forEach(el => {
+        el.removeAttribute('contenteditable');
+      });
+      const htmlContent = "<!DOCTYPE html>\n" + cloneDoc.outerHTML;
+      const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'Bao_Cao_SEO_Executive_Wellspring_2026.html';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
   </script>
 </body>
 </html>
